@@ -8,14 +8,14 @@
 #include "pch.h"
 #include <SDL.h>
 
-#include "Engine.h"
+#include "engine.h"
 
 
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
     m_EngineShutdown = false;
-    
+
 	// Create Systems
     mRenderSystem = new RenderSystem();
     mEventSystem = new EventSystem();
@@ -38,7 +38,7 @@ Engine::Engine()
 	floor->renderComponent =  new RenderComponent( mRenderSystem, cube );
 	floor->mPosition = Ogre::Vector3( 0,0,0 );
 	floor->renderComponent->setAsBox(10.0f,0.5f,10.0f);
-	
+
 
 }
 
@@ -80,7 +80,7 @@ void Engine::handle( Event* e )
     {
         case EV_KeyPress:
             KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
-            switch (ke->m_Keycode)
+            switch (ke->mKeycode)
             {
 				case SDL_SCANCODE_ESCAPE: // Escape
                    m_EngineShutdown = true;
@@ -101,7 +101,7 @@ Camera* Engine::createCamera()
 {
     Camera* cam = new Camera( mRenderSystem->getRenderWindow(), mRenderSystem->getSceneMgr(), mRenderSystem->getRootSceneNode() );
     mRenderSystem->getCameraList()->push_back( cam );
-    
+
     cam->init();
     return cam;
 }

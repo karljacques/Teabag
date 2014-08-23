@@ -3,11 +3,12 @@ Thumbs.db
 ehthumbs.db
 
 # Large files
-bin/
-dependencies/
-dependencies-build/
-dependencies-src/
-ipch/
+/bin
+/dependencies
+/dependencies-build
+/dependencies-src
+/ipch
+/build
 *.pch
 *.sdf
 
@@ -45,3 +46,7 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+# exclude cmake for now
+CMakeLists.txt
+*cmake

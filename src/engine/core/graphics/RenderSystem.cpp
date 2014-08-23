@@ -13,23 +13,28 @@
 RenderSystem::RenderSystem()
 {
     m_Root = new Ogre::Root("","","Ogre.log");
-    
+
     // Load the GL Rendersystem and set up
 	Ogre::String renderer = "RenderSystem_GL";
 
-#ifdef OGRE_DEBUG_MODE
+    // TheComet: *nix requires a relative path
+#ifndef WIN32
+    renderer = Ogre::String("./") + renderer;
+#endif
+
+#if defined(_DEBUG) && defined(WIN32)
 	renderer.append("_d");
 #endif
 
     m_Root->loadPlugin( renderer );
-    
+
     Ogre::RenderSystem* renderSystem = m_Root->getAvailableRenderers()[0];
 
     m_Root->setRenderSystem(renderSystem);
-    
+
     Ogre::NameValuePairList lParams;
-    
-    lParams["FSAA"] = "0"; 
+
+    lParams["FSAA"] = "0";
     lParams["vsync"] = "true";
     lParams["macAPI"] = "carbon";
 
@@ -45,7 +50,7 @@ RenderSystem::RenderSystem()
 	SDL_SysWMinfo info;
 	SDL_VERSION(&info.version);
 	SDL_GetWindowWMInfo( mSDLWindow, &info );
-	
+
 	size_t winHandle = reinterpret_cast<size_t>(info.info.win.window);
 	lParams["externalWindowHandle"] = Ogre::StringConverter::toString(winHandle);
 
@@ -57,7 +62,7 @@ RenderSystem::RenderSystem()
     m_RenderWindow = m_Root->createRenderWindow( "Window", 800, 600, false, &lParams );
 
     m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC );
-    
+
     m_RootSceneNode = m_SceneMgr->getRootSceneNode();
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Media");
 

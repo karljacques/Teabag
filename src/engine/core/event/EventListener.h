@@ -10,19 +10,19 @@
 #define __YorkshireTea__EventListener__
 
 #include <iostream>
-#include "Event.h"
+#include "event.h"
 
 class EventListener
 {
 public:
-    
+
     virtual void handle( Event* e ) = 0;
-    
+
     void    setEventType( int eventType );
     int     getEventType( );
 private:
 
     int m_EventType;
-    
+
 };
 #endif /* defined(__YorkshireTea__EventListener__) */

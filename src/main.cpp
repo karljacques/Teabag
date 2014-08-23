@@ -13,7 +13,11 @@
 extern "C"
 #endif
 
+#ifdef WIN32
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+#else
+int main()
+#endif
 {
     Engine* engine = new Engine();
     engine->createCamera();
@@ -22,12 +26,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	cam->m_SceneNode->setPosition( 0.0f,12.0f, 20.0f );
 	cam->m_Camera->lookAt( 0,0.0f,0.0f );
 
-    
+
     while( !engine->isShuttingDown() )
     {
         engine->update();
     }
-    
+
     delete engine;
 	return 0;
 }

@@ -18,20 +18,20 @@
 class EventSystem
 {
 public:
-    
+
     EventSystem();
-    
+
     void dispatchEvent( Event* e );
-    
+
     void handleEvents();
-    
+
     void registerListener( EventListener* e );
     void deregisterListener( EventListener* e );
-    
+
 private:
-    
-    std::queue<Event*> m_EventList;
-    std::deque<EventListener*> m_EventListeners;
-    
+
+    std::queue<Event*> mEventList;
+    std::deque<EventListener*> mEventListeners;
+
 };
 #endif /* defined(__YorkshireTea__eventSystem__) */

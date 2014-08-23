@@ -9,7 +9,7 @@
 #ifndef __YorkshireTea__gfxSystem__
 #define __YorkshireTea__gfxSystem__
 
-#include "Camera.h"
+#include "camera.h"
 
 class Camera;
     

@@ -22,32 +22,32 @@ enum EV_EventType
 
 class Event
 {
-    
+
 public:
-    
+
     Event( int eventType );
-    
+
     int     getEventType();
-    
+
 private:
-    
+
     int     mEventType;
-    
+
 };
 
 class MouseEvent : public Event
 {
 public:
     MouseEvent( int eventType );
-    
+
     int m_MouseMoveX;
     int m_MouseMoveY;
     int m_MouseMoveZ;
-    
+
     int m_MouseX;
     int m_MouseY;
     int m_MouseZ;
-    
+
     int m_MouseButton;
     bool m_Released;
     bool m_Pressed;
@@ -57,11 +57,11 @@ class KeyboardEvent : public Event
 {
 public:
     KeyboardEvent( int eventType );
-    
-    bool m_Pressed;
-    bool m_Released;
-    
-    int m_Keycode;
+
+    bool mPressed;
+    bool mReleased;
+
+    int mKeycode;
 };
 
 #endif /* defined(__YorkshireTea__event__) */

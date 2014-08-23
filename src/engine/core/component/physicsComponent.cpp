@@ -17,12 +17,12 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 {
 	btCollisionShape* boxShape = new  btBoxShape( btVector3( x,y,z ));
 
+	btVector3 nullVector(0,0,0);
+	boxShape->calculateLocalInertia( 1, nullVector);
 
-	boxShape->calculateLocalInertia( 1, btVector3(0,0,0));
-
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( 1, 
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( 1,
 		new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3(0,50,0)))
-		, boxShape, btVector3(0,0,0));
+		, boxShape, nullVector);
 	mBody = new btRigidBody(fallRigidBodyCI);
 	mPhysicsManager->getDiscreteDynamicsWorld()->addRigidBody(mBody);
 }

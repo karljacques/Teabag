@@ -11,6 +11,10 @@ ehthumbs.db
 /build
 *.pch
 *.sdf
+*.opensdf
+
+# pointless sharing
+*.log
 
 # Folder config file
 Desktop.ini

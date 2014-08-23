@@ -56,6 +56,8 @@ RenderSystem::RenderSystem()
 
 #else
 	lParams["currentGLContext"] = Ogre::String("True");
+	size_t winHandle = reinterpret_cast<size_t>(info.info.x11.window);
+	lParams["externalWindowHandle"] = Ogre::StringConverter::toString(winHandle);
 #endif
 
     m_Root->initialise( false, "", "" );

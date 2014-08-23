@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6C0CC3ED-24AE-4A36-8008-55DD933A9855}</ProjectGuid>
+    <RootNamespace>teabag</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\Karl\Documents\Development\teabag\dependencies\bullet\src\BulletDynamics;C:\Users\Karl\Documents\Development\teabag\dependencies\bullet\src\BulletCollision;$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\bin\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\include;$(ProjectDir)\dependencies\raknet\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\bullet\lib\release;$(ProjectDir)\dependencies\ogre\lib\release;$(ProjectDir)\dependencies\raknet\lib\release;$(ProjectDir)\dependencies\sdl\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/Zm1000 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OgreMain_d.lib;SDL2.lib;ws2_32.lib;RakNetDLL.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>
+      </SubSystem>
+    </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\engine\core\component\component.cpp" />
+    <ClCompile Include="src\engine\core\component\entity.cpp" />
+    <ClCompile Include="src\engine\core\component\physicsComponent.cpp" />
+    <ClCompile Include="src\engine\core\component\renderComponent.cpp" />
+    <ClCompile Include="src\engine\core\event\event.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\EventListener.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\eventSystem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\camera.cpp" />
+    <ClCompile Include="src\engine\core\graphics\RenderSystem.cpp" />
+    <ClCompile Include="src\engine\core\input\inputSystem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\networking\networkSystem.cpp" />
+    <ClCompile Include="src\engine\core\physics\physicsManager.cpp" />
+    <ClCompile Include="src\engine\engine.cpp" />
+    <ClCompile Include="src\engine\terrain\sector.cpp" />
+    <ClCompile Include="src\engine\terrain\terrain.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\engine\core\component\component.h" />
+    <ClInclude Include="src\engine\core\component\entity.h" />
+    <ClInclude Include="src\engine\core\component\physicsComponent.h" />
+    <ClInclude Include="src\engine\core\component\renderComponent.h" />
+    <ClInclude Include="src\engine\core\event\event.h" />
+    <ClInclude Include="src\engine\core\event\EventListener.h" />
+    <ClInclude Include="src\engine\core\event\eventSystem.h" />
+    <ClInclude Include="src\engine\core\graphics\camera.h" />
+    <ClInclude Include="src\engine\core\graphics\RenderSystem.h" />
+    <ClInclude Include="src\engine\core\input\inputSystem.h" />
+    <ClInclude Include="src\engine\core\networking\networkSystem.h" />
+    <ClInclude Include="src\engine\core\physics\physicsManager.h" />
+    <ClInclude Include="src\engine\engine.h" />
+    <ClInclude Include="src\engine\terrain\sector.h" />
+    <ClInclude Include="src\engine\terrain\terrain.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\pch.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\engine\engine.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\terrain\sector.cpp">
+      <Filter>engine\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\terrain\terrain.cpp">
+      <Filter>engine\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\EventListener.cpp">
+      <Filter>engine\core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\eventSystem.cpp">
+      <Filter>engine\core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\camera.cpp">
+      <Filter>engine\core\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\event.cpp">
+      <Filter>engine\core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\input\inputSystem.cpp">
+      <Filter>engine\core\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\engine\core\networking\networkSystem.cpp">
+      <Filter>engine\core\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\RenderSystem.cpp">
+      <Filter>engine\core\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\physics\physicsManager.cpp">
+      <Filter>engine\core\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\component\component.cpp">
+      <Filter>engine\core\component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\component\entity.cpp">
+      <Filter>engine\core\component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\component\renderComponent.cpp">
+      <Filter>engine\core\component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\component\physicsComponent.cpp">
+      <Filter>engine\core\component</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\engine\engine.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\terrain\sector.h">
+      <Filter>engine\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\terrain\terrain.h">
+      <Filter>engine\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\EventListener.h">
+      <Filter>engine\core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\eventSystem.h">
+      <Filter>engine\core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\graphics\camera.h">
+      <Filter>engine\core\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\event.h">
+      <Filter>engine\core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\input\inputSystem.h">
+      <Filter>engine\core\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\engine\core\networking\networkSystem.h">
+      <Filter>engine\core\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\graphics\RenderSystem.h">
+      <Filter>engine\core\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\physics\physicsManager.h">
+      <Filter>engine\core\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\component.h">
+      <Filter>engine\core\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\entity.h">
+      <Filter>engine\core\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\renderComponent.h">
+      <Filter>engine\core\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\physicsComponent.h">
+      <Filter>engine\core\component</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="engine">
+      <UniqueIdentifier>{d83ab77d-d06d-43b5-b93e-d0e1b3bf57e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core">
+      <UniqueIdentifier>{8092c0d1-bcd6-4bc7-9f06-fac6c29040c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\terrain">
+      <UniqueIdentifier>{7c16ef9b-7f14-4c1e-862b-03ed64caee24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\event">
+      <UniqueIdentifier>{640f8cbe-6163-4988-83a4-4d7129f79803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\graphics">
+      <UniqueIdentifier>{2d239896-626e-4ff5-9776-b956e502ebf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\input">
+      <UniqueIdentifier>{feb1981a-2913-4996-84f5-e8588a7e2061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\physics">
+      <UniqueIdentifier>{4e5cba0f-fc4f-4a25-917b-146b4418f007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\networking">
+      <UniqueIdentifier>{766d0b42-3b2b-48ce-8546-b1e02d7202e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\component">
+      <UniqueIdentifier>{67dd428b-b7f1-4a97-94ab-f296584ec620}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

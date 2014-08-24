@@ -26,7 +26,6 @@ int main()
 	cam->m_SceneNode->setPosition( 0.0f,12.0f, 20.0f );
 	cam->m_Camera->lookAt( 0,0.0f,0.0f );
 
-
     while( !engine->isShuttingDown() )
     {
         engine->update();

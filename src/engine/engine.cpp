@@ -59,7 +59,6 @@ void Engine::update()
 	mTimeSinceLastUpdate.reset();
 
 	// Update systems and managers
-    mRenderSystem->renderOneFrame();
     mInputSystem->update();
     mEventSystem->handleEvents();
 	mPhysicsManager->update( dt );
@@ -68,6 +67,8 @@ void Engine::update()
 	for( auto i = mEntities.begin(); i != mEntities.end(); i++ )
 		(*i)->update( dt );
 
+    // render after everything is updated
+    mRenderSystem->renderOneFrame();
 }
 
 bool Engine::isShuttingDown()

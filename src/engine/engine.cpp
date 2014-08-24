@@ -46,19 +46,22 @@ Engine::~Engine()
 {
 	SDL_Quit();
 
+    delete mEventSystem;
+    delete mInputSystem;
 	delete mRenderSystem;
-	delete mInputSystem;
-	delete mEventSystem;
+
 
 }
 void Engine::update()
 {
+    // Make sure to pump messages in all render windows
+    Ogre::WindowEventUtilities::messagePump();
+
 	// Calculate timestep
 	double dt = mTimeSinceLastUpdate.getMilliseconds()/1000.0;
 	mTimeSinceLastUpdate.reset();
 
 	// Update systems and managers
-    mRenderSystem->renderOneFrame();
     mInputSystem->update();
     mEventSystem->handleEvents();
 	mPhysicsManager->update( dt );
@@ -67,6 +70,8 @@ void Engine::update()
 	for( auto i = mEntities.begin(); i != mEntities.end(); i++ )
 		(*i)->update( dt );
 
+    // render after everything is updated
+    mRenderSystem->renderOneFrame();
 }
 
 bool Engine::isShuttingDown()

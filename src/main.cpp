@@ -9,11 +9,11 @@
 #include "main.h"
 #include "engine/engine.h"
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C"
 #endif
 
-#ifdef WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #else
 int main()
@@ -25,7 +25,6 @@ int main()
 	Camera* cam = engine->getGfxSystem()->getCameraList()->front();
 	cam->m_SceneNode->setPosition( 0.0f,12.0f, 20.0f );
 	cam->m_Camera->lookAt( 0,0.0f,0.0f );
-
 
     while( !engine->isShuttingDown() )
     {

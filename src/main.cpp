@@ -9,11 +9,11 @@
 #include "main.h"
 #include "engine/engine.h"
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C"
 #endif
 
-#ifdef WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #else
 int main()

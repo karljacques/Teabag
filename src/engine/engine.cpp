@@ -54,6 +54,9 @@ Engine::~Engine()
 }
 void Engine::update()
 {
+    // Make sure to pump messages in all render windows
+    Ogre::WindowEventUtilities::messagePump();
+
 	// Calculate timestep
 	double dt = mTimeSinceLastUpdate.getMilliseconds()/1000.0;
 	mTimeSinceLastUpdate.reset();

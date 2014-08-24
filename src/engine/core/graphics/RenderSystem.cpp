@@ -66,6 +66,8 @@ RenderSystem::RenderSystem()
     m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC );
 
     m_RootSceneNode = m_SceneMgr->getRootSceneNode();
+
+	// TODO initialise resource group
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Media");
 
 	m_SceneMgr->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));

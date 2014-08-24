@@ -46,9 +46,10 @@ Engine::~Engine()
 {
 	SDL_Quit();
 
+    delete mEventSystem;
+    delete mInputSystem;
 	delete mRenderSystem;
-	delete mInputSystem;
-	delete mEventSystem;
+
 
 }
 void Engine::update()

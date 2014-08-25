@@ -11,12 +11,11 @@ public:
 	Component(void);
 	~Component(void);
 
-	virtual void update( double dt ) = 0;
-
 	void registerListener( EventListener* comp );
 	void deregisterListener( EventListener* comp );
 
 	void dispatch( Event* e );
+	virtual void update( double dt );
 	
 protected:
 	// Components listening for updates on this one

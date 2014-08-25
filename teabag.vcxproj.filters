@@ -36,17 +36,20 @@
     <ClCompile Include="src\engine\core\physics\physicsManager.cpp">
       <Filter>engine\core\physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\component\component.cpp">
-      <Filter>engine\core\component</Filter>
+    <ClCompile Include="src\engine\core\component\base\component.cpp">
+      <Filter>engine\core\component\base</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\component\entity.cpp">
-      <Filter>engine\core\component</Filter>
+    <ClCompile Include="src\engine\core\component\base\entity.cpp">
+      <Filter>engine\core\component\base</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\component\renderComponent.cpp">
-      <Filter>engine\core\component</Filter>
+    <ClCompile Include="src\engine\core\component\render\renderComponent.cpp">
+      <Filter>engine\core\component\render</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\component\physicsComponent.cpp">
-      <Filter>engine\core\component</Filter>
+    <ClCompile Include="src\engine\core\component\physics\physicsComponent.cpp">
+      <Filter>engine\core\component\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\component\base\positionComponent.cpp">
+      <Filter>engine\core\component\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,17 +88,23 @@
     <ClInclude Include="src\engine\core\physics\physicsManager.h">
       <Filter>engine\core\physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\component\component.h">
-      <Filter>engine\core\component</Filter>
+    <ClInclude Include="src\engine\core\component\base\component.h">
+      <Filter>engine\core\component\base</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\component\entity.h">
-      <Filter>engine\core\component</Filter>
+    <ClInclude Include="src\engine\core\component\base\entity.h">
+      <Filter>engine\core\component\base</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\component\renderComponent.h">
-      <Filter>engine\core\component</Filter>
+    <ClInclude Include="src\engine\core\component\render\renderComponent.h">
+      <Filter>engine\core\component\render</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\component\physicsComponent.h">
-      <Filter>engine\core\component</Filter>
+    <ClInclude Include="src\engine\core\component\physics\physicsComponent.h">
+      <Filter>engine\core\component\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\base\positionComponent.h">
+      <Filter>engine\core\component\base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +134,15 @@
     </Filter>
     <Filter Include="engine\core\component">
       <UniqueIdentifier>{67dd428b-b7f1-4a97-94ab-f296584ec620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\component\base">
+      <UniqueIdentifier>{8f6a9cc8-d67f-437c-a55c-a7223f8cb479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\component\render">
+      <UniqueIdentifier>{1159ac4b-fea2-4dfb-af9e-4a3a226e9b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\component\physics">
+      <UniqueIdentifier>{a6516965-4617-4c12-be4b-309eac6b08be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

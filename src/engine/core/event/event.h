@@ -10,6 +10,8 @@
 #define __YorkshireTea__event__
 
 #include <iostream>
+#include <Math/float3.h>
+#include <Math/Quat.h>
 
 enum EV_EventType
 {
@@ -70,16 +72,8 @@ class MovementEvent : public Event
 public:
 	MovementEvent( int EV_EventType );
 
-	// TODO replace with geomathlib vectors
-	float x;
-	float y;
-	float z;
-
-	// TODO replace with geomathlib quaternions
-	float i;
-	float j;
-	float k;
-	float w;
+	float3 mPosition;
+	Quat mOrientation;
 };
 
 #endif /* defined(__YorkshireTea__event__) */

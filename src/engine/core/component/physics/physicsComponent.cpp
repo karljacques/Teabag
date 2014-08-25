@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "physicsComponent.h"
-#include "entity.h"
+#include "engine/core/component/base/entity.h"
 
 PhysicsComponent::PhysicsComponent( PhysicsManager* physicsManager, Entity* ent )
 {
@@ -33,9 +33,7 @@ void PhysicsComponent::update(  double dt  )
 	//mParent->mPosition = Ogre::Vector3( mBody->getWorldTransform().getOrigin().getX(),mBody->getWorldTransform().getOrigin().getY(),mBody->getWorldTransform().getOrigin().getZ() );
 
 	MovementEvent* e = new MovementEvent(EV_Movement);
-	e->x = mBody->getWorldTransform().getOrigin().getX();
-	e->y = mBody->getWorldTransform().getOrigin().getY();
-	e->z = mBody->getWorldTransform().getOrigin().getZ();
+	e->mPosition = mBody->getWorldTransform().getOrigin();
 
 	dispatch( e );
 }

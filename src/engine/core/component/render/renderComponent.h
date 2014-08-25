@@ -1,9 +1,10 @@
 #ifndef renderComponent_h__
 #define renderComponent_h__
 
-#include "component.h"
+#include "engine/core/component/base/component.h"
 #include "engine/core/graphics/RenderSystem.h"
 #include "engine/core/event/EventListener.h"
+#include "common.h"
 
 class RenderComponent : public Component, public EventListener
 {

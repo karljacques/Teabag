@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Karl\Documents\Development\teabag\dependencies\bullet\src\BulletDynamics;C:\Users\Karl\Documents\Development\teabag\dependencies\bullet\src\BulletCollision;$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(ProjectDir)\dependencies\MathGeoLib\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\bin\$(Configuration)\obj\</IntDir>
@@ -80,10 +80,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine\core\component\component.cpp" />
-    <ClCompile Include="src\engine\core\component\entity.cpp" />
-    <ClCompile Include="src\engine\core\component\physicsComponent.cpp" />
-    <ClCompile Include="src\engine\core\component\renderComponent.cpp" />
+    <ClCompile Include="src\engine\core\component\base\component.cpp" />
+    <ClCompile Include="src\engine\core\component\base\entity.cpp" />
+    <ClCompile Include="src\engine\core\component\base\positionComponent.cpp" />
+    <ClCompile Include="src\engine\core\component\physics\physicsComponent.cpp" />
+    <ClCompile Include="src\engine\core\component\render\renderComponent.cpp" />
     <ClCompile Include="src\engine\core\event\event.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -109,10 +110,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\core\component\component.h" />
-    <ClInclude Include="src\engine\core\component\entity.h" />
-    <ClInclude Include="src\engine\core\component\physicsComponent.h" />
-    <ClInclude Include="src\engine\core\component\renderComponent.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\engine\core\component\base\component.h" />
+    <ClInclude Include="src\engine\core\component\base\entity.h" />
+    <ClInclude Include="src\engine\core\component\base\positionComponent.h" />
+    <ClInclude Include="src\engine\core\component\physics\physicsComponent.h" />
+    <ClInclude Include="src\engine\core\component\render\renderComponent.h" />
     <ClInclude Include="src\engine\core\event\event.h" />
     <ClInclude Include="src\engine\core\event\EventListener.h" />
     <ClInclude Include="src\engine\core\event\eventSystem.h" />

@@ -5,12 +5,17 @@
 //  Created by Karl Jacques on 26/05/2014.
 //
 //
+
 #include "pch.h"
 #include <SDL.h>
 
+
+
 #include "engine.h"
-#include "engine/core/component/physicsComponent.h"
-#include "engine/core/component/renderComponent.h"
+#include "engine/core/component/physics/physicsComponent.h"
+#include "engine/core/component/render/renderComponent.h"
+#include "engine/core/component/base/positionComponent.h"
+
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -32,11 +37,15 @@ Engine::Engine()
 	c->setAsBox(1.0f,1.0f,1.0f);
 	cube->addComponent(c);
 
+	PositionComponent* n = new PositionComponent();
+	cube->addComponent( n );
+	n->registerListener( c );
+	
 	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager, cube );
 	p->setAsBox( 1.0f, 1.0f, 1.0f );	
 	p->registerListener( c );
+	p->registerListener( n );
 	cube->addComponent( p );
-
 }
 
 Engine::~Engine()

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "renderComponent.h"
-#include "entity.h"
+#include "engine/core/component/base/entity.h"
 
 
 RenderComponent::RenderComponent( RenderSystem* renderSystem, Entity* ent )
@@ -56,6 +56,6 @@ void RenderComponent::handle(  Event* e  )
 	if( e->getEventType() == EV_Movement )
 	{
 		MovementEvent* me = static_cast<MovementEvent*>(e);
-		this->mSceneNode->setPosition( me->x, me->y, me->z);
+		this->mSceneNode->setPosition( me->mPosition );
 	}
 }

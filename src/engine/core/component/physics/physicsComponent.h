@@ -1,8 +1,9 @@
 #ifndef physicsComponent_h__
 #define physicsComponent_h__
 
-#include "component.h"
+#include "engine/core/component/base/component.h"
 #include "engine/core/physics/physicsManager.h"
+#include "common.h"
 
 class PhysicsComponent :
 	public Component

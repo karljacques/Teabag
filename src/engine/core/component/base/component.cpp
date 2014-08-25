@@ -16,6 +16,7 @@ void Component::registerListener( EventListener* comp )
 	mListeners.push_back(comp);
 }
 
+
 void Component::deregisterListener( EventListener* comp )
 {
 	for (auto i = mListeners.begin(); i != mListeners.end(); i++ ) {
@@ -33,4 +34,12 @@ void Component::dispatch( Event* e )
 {
 	for( auto i=mListeners.begin(); i!=mListeners.end(); i++ )
 		(*i)->handle( e );
+
+	// Delete dispatched event
+	delete e;
+}
+
+void Component::update( double dt )
+{
+
 }

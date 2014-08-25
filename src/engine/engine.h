@@ -8,7 +8,7 @@
 #include "core/graphics/RenderSystem.h"
 #include "core/input/inputSystem.h"
 #include "core/event/eventSystem.h"
-#include "core/component/entity.h"
+#include "core/component/base/entity.h"
 #include "core/physics/physicsManager.h"
 #include "terrain/terrain.h"
 

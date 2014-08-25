@@ -17,7 +17,8 @@ enum EV_EventType
     EV_MousePress,
     EV_MouseRelease,
     EV_KeyPress,
-    EV_KeyRelease
+    EV_KeyRelease,
+	EV_Movement
 };
 
 class Event
@@ -62,6 +63,23 @@ public:
     bool mReleased;
 
     int mKeycode;
+};
+
+class MovementEvent : public Event
+{
+public:
+	MovementEvent( int EV_EventType );
+
+	// TODO replace with geomathlib vectors
+	float x;
+	float y;
+	float z;
+
+	// TODO replace with geomathlib quaternions
+	float i;
+	float j;
+	float k;
+	float w;
 };
 
 #endif /* defined(__YorkshireTea__event__) */

@@ -48,7 +48,6 @@ RenderSystem::RenderSystem()
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	size_t winHandle = reinterpret_cast<size_t>(info.info.win.window);
 	lParams["externalWindowHandle"] = Ogre::StringConverter::toString(winHandle);
-		lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);
 #elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
 	size_t winHandle = reinterpret_cast<size_t>(info.info.x11.window);
 	lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);

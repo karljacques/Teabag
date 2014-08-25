@@ -33,11 +33,12 @@ Engine::Engine()
 
 	cube->physicsComponent = new PhysicsComponent( mPhysicsManager, cube );
 	cube->physicsComponent->setAsBox( 1.0f, 1.0f, 1.0f );
+	cube->physicsComponent->registerListener( cube->renderComponent );
 
 	Entity* floor = createEntity();
 	floor->renderComponent =  new RenderComponent( mRenderSystem, cube );
 	floor->mPosition = Ogre::Vector3( 0,0,0 );
-	floor->renderComponent->setAsBox(10.0f,0.5f,10.0f);
+	floor->renderComponent->setAsBox(10.0f,0.1f,10.0f);
 
 
 }

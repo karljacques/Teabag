@@ -27,3 +27,8 @@ KeyboardEvent::KeyboardEvent( int eventType ):Event(eventType)
 {
     
 }
+
+MovementEvent::MovementEvent( int eventType ):Event(eventType)
+{
+
+}

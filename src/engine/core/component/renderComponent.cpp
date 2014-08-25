@@ -17,7 +17,7 @@ RenderComponent::~RenderComponent(void)
 
 void RenderComponent::update( double dt )
 {
-	this->mSceneNode->setPosition( mParent->mPosition );
+	//this->mSceneNode->setPosition( mParent->mPosition );
 }
 
 void RenderComponent::setAsBox( float x, float y, float z )
@@ -49,4 +49,13 @@ void RenderComponent::setAsBox( float x, float y, float z )
 
 	this->mObject = cube;
 	this->mSceneNode->attachObject(mObject);
+}
+
+void RenderComponent::handle(  Event* e  )
+{
+	if( e->getEventType() == EV_Movement )
+	{
+		MovementEvent* me = static_cast<MovementEvent*>(e);
+		this->mSceneNode->setPosition( me->x, me->y, me->z);
+	}
 }

@@ -30,5 +30,12 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 void PhysicsComponent::update(  double dt  )
 {
 	//TODO Updates entity data here
-	mParent->mPosition = Ogre::Vector3( mBody->getWorldTransform().getOrigin().getX(),mBody->getWorldTransform().getOrigin().getY(),mBody->getWorldTransform().getOrigin().getZ() );
+	//mParent->mPosition = Ogre::Vector3( mBody->getWorldTransform().getOrigin().getX(),mBody->getWorldTransform().getOrigin().getY(),mBody->getWorldTransform().getOrigin().getZ() );
+
+	MovementEvent* e = new MovementEvent(EV_Movement);
+	e->x = mBody->getWorldTransform().getOrigin().getX();
+	e->y = mBody->getWorldTransform().getOrigin().getY();
+	e->z = mBody->getWorldTransform().getOrigin().getZ();
+
+	dispatch( e );
 }

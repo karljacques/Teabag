@@ -18,7 +18,7 @@ public:
 
     virtual void handle( Event* e ) = 0;
 
-    void    setEventType( int eventType );
+    void    setEventType( const int eventType );
     int     getEventType( );
 private:
 

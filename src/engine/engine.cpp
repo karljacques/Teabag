@@ -9,8 +9,8 @@
 #include <SDL.h>
 
 #include "engine.h"
-
-
+#include "engine/core/component/physicsComponent.h"
+#include "engine/core/component/renderComponent.h"
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -28,18 +28,14 @@ Engine::Engine()
 
 	// Create a cube, spin it
 	Entity* cube = createEntity();
-	cube->renderComponent =  new RenderComponent( mRenderSystem, cube );
-	cube->renderComponent->setAsBox(1.0f,1.0f,1.0f);
+	RenderComponent* c =  new RenderComponent( mRenderSystem, cube );
+	c->setAsBox(1.0f,1.0f,1.0f);
+	cube->addComponent(c);
 
-	cube->physicsComponent = new PhysicsComponent( mPhysicsManager, cube );
-	cube->physicsComponent->setAsBox( 1.0f, 1.0f, 1.0f );
-	cube->physicsComponent->registerListener( cube->renderComponent );
-
-	Entity* floor = createEntity();
-	floor->renderComponent =  new RenderComponent( mRenderSystem, cube );
-	floor->mPosition = Ogre::Vector3( 0,0,0 );
-	floor->renderComponent->setAsBox(10.0f,0.1f,10.0f);
-
+	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager, cube );
+	p->setAsBox( 1.0f, 1.0f, 1.0f );	
+	p->registerListener( c );
+	cube->addComponent( p );
 
 }
 
@@ -50,9 +46,8 @@ Engine::~Engine()
     delete mEventSystem;
     delete mInputSystem;
 	delete mRenderSystem;
-
-
 }
+
 void Engine::update()
 {
     // Make sure to pump messages in all render windows

@@ -79,9 +79,16 @@ RenderSystem::RenderSystem()
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Media");
 }
 
+
 RenderSystem::~RenderSystem()
 {
+
+	// Shut down ogre
+	m_SceneMgr->clearScene();
+	m_Root->destroySceneManager( m_SceneMgr );
+
     delete m_Root;
+
 }
 
 Ogre::Root* RenderSystem::getOgreRoot()
@@ -115,3 +122,10 @@ void RenderSystem::renderOneFrame()
 }
 
 
+Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"*/)
+{
+	static std::map<Ogre::String, int> countMap;
+	if (countMap.find(prefix) == countMap.end())
+		countMap[prefix] = 0;
+	return prefix + std::to_string(++countMap[prefix]);
+}

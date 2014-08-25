@@ -7,6 +7,7 @@ class PhysicsManager
 {
 public:
 	PhysicsManager();
+	~PhysicsManager();
 
 	void update( double dt );
 

@@ -28,6 +28,11 @@ PhysicsManager::PhysicsManager()
 
 }
 
+PhysicsManager::~PhysicsManager()
+{
+	delete mWorld;
+}
+
 void PhysicsManager::update( double dt )
 {
 	mWorld->stepSimulation( 1.0/60.0f ,10 );

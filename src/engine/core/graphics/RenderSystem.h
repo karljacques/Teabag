@@ -30,6 +30,7 @@ public:
         
     // Functions
     void            renderOneFrame();
+	Ogre::String	generateName(const Ogre::String& prefix /*= "Unnamed"*/);
    
 private:
         
@@ -39,7 +40,7 @@ private:
     Ogre::RenderWindow*   m_RenderWindow;
     Ogre::SceneNode*      m_RootSceneNode;
         
-    // Mutliple Viewport and Camera support
+    // Multiple Viewport and Camera support
     std::vector<Camera*>    m_CameraList;
         
         

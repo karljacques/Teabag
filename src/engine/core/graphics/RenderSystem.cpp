@@ -31,7 +31,7 @@ RenderSystem::RenderSystem()
 												SDL_WINDOWPOS_CENTERED,
 												windowWidth,
 												windowHeight,
-												SDL_WINDOW_RESIZABLE // TODO Add window resize support
+												SDL_WINDOWPOS_CENTERED|SDL_WINDOW_RESIZABLE // TODO Add window resize support
 											);
 
     // Prepare Ogre render window parameters
@@ -47,12 +47,15 @@ RenderSystem::RenderSystem()
 	SDL_GetWindowWMInfo( mSDLWindow, &info );
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	size_t winHandle = reinterpret_cast<size_t>(info.info.win.window);
+	lParams["externalWindowHandle"] = Ogre::StringConverter::toString(winHandle);
+		lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);
 #elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
 	size_t winHandle = reinterpret_cast<size_t>(info.info.x11.window);
+	lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);
 #else
 #   error Defined OGRE_PLATFORM not supported
 #endif
-    lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);
+    
 
     // Load the GL Rendersystem and set up
 	Ogre::String renderer = "./RenderSystem_GL";
@@ -72,14 +75,8 @@ RenderSystem::RenderSystem()
 
     // Cache root scene node
     m_RootSceneNode = m_SceneMgr->getRootSceneNode();
-<<<<<<< HEAD
-
-	// TODO initialise resource group
-    Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Media");
-=======
->>>>>>> d765aa11486de7a5e6b825e58c5f272ed5d79480
-
-
+	
+	// TODO initialize resource group
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Media");
 }
 

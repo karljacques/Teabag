@@ -15,6 +15,7 @@ ehthumbs.db
 
 # pointless sharing
 *.log
+*.suo
 
 # Folder config file
 Desktop.ini

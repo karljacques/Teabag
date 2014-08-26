@@ -2,10 +2,9 @@
 #include "physicsComponent.h"
 #include "engine/core/component/base/entity.h"
 
-PhysicsComponent::PhysicsComponent( PhysicsManager* physicsManager, Entity* ent )
+PhysicsComponent::PhysicsComponent( PhysicsManager* physicsManager )
 {
 	mPhysicsManager = physicsManager;
-	mParent = ent;
 }
 
 

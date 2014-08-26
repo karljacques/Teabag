@@ -54,6 +54,10 @@
     <ClCompile Include="src\engine\core\component\render\cameraComponent.cpp">
       <Filter>engine\core\component\render</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\world\staticGeometry.cpp">
+      <Filter>engine\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\world\entityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -112,6 +116,10 @@
     <ClInclude Include="src\engine\core\component\render\cameraComponent.h">
       <Filter>engine\core\component\render</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\world\staticGeometry.h">
+      <Filter>engine\world</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\world\entityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -149,6 +157,9 @@
     </Filter>
     <Filter Include="engine\core\component\physics">
       <UniqueIdentifier>{a6516965-4617-4c12-be4b-309eac6b08be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\world">
+      <UniqueIdentifier>{64733b7e-334a-4b67-8cb9-0ff750828747}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

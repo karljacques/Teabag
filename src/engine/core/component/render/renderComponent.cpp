@@ -3,9 +3,8 @@
 #include "engine/core/component/base/entity.h"
 
 
-RenderComponent::RenderComponent( RenderSystem* renderSystem, Entity* ent )
+RenderComponent::RenderComponent( RenderSystem* renderSystem )
 {
-	mParent = ent;
 	mRenderSystem = renderSystem;
 	mSceneNode = renderSystem->getRootSceneNode()->createChildSceneNode();
 }

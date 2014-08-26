@@ -10,10 +10,9 @@
 #include <SDL.h>
 
 #include "engine.h"
-#include "engine/core/component/physics/physicsComponent.h"
-#include "engine/core/component/render/renderComponent.h"
-#include "engine/core/component/base/positionComponent.h"
 #include "engine/core/component/render/cameraComponent.h"
+#include "engine/world/entityManager.h"
+#include "engine/world/staticGeometry.h"
 
 Engine::Engine()
 {
@@ -32,7 +31,7 @@ Engine::Engine()
 
 	// Create a cube, spin it
 	Entity* cube = createEntity();
-	RenderComponent* c =  new RenderComponent( mRenderSystem, cube );
+	RenderComponent* c =  new RenderComponent( mRenderSystem );
 	c->setAsBox(1.0f,3.0f,1.0f);
 	cube->addComponent(c);
 
@@ -40,25 +39,18 @@ Engine::Engine()
 	cube->addComponent( n );
 	n->registerListener( c );
 	
-	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager, cube );
-	btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f ) );
-	p->initialise( shapex, 5.0, float3(0,50,0), Quat( 1.0, 0.9,0,0.2 ) );	
+	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager );
+	btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
+	p->initialise( shapex, 5.0, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
 	p->registerListener( c );
 	p->registerListener( n );
 	cube->addComponent( p );
 
-	// floor
-	Entity* floor = createEntity();
-	RenderComponent* r = new RenderComponent( mRenderSystem, floor );
-	r->setAsBox( 100.0f, 0.1f, 100.0f );
-	floor->addComponent( r );
+	// Static Geometry
+	EntityManager* entityManager = new EntityManager();
+	StaticGeometry* staticGeometry = new StaticGeometry( entityManager, mRenderSystem, mPhysicsManager );
 
-	PhysicsComponent* pc = new PhysicsComponent( mPhysicsManager, floor );
-	btCollisionShape* shape = new btBoxShape( float3(10.0f,0.1f, 10.0f ) );
-	pc->initialise( shape, 0, float3(0,0,0) );
-	floor->addComponent( pc );
-
-	pc->registerListener( r );
+	staticGeometry->addGeometry( float3( 0,0,0), float3( 10.0f, 1.0f, 10.0f ), float3(0,0,0));
 
 	// Camera
 	Entity* camera = createEntity();
@@ -72,7 +64,7 @@ Engine::Engine()
 	camera->addComponent(cc);
 	camera->addComponent(cpc);
 
-	cc->setPosition( float3(0,1.0f,20.0f) );
+	cc->setPosition( float3(0,0.0f,40.0f) );
 	cc->lookAt( float3(0,0,0) );
 
 }

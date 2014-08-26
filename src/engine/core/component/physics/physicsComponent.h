@@ -9,7 +9,7 @@ class PhysicsComponent :
 	public Component
 {
 public:
-	PhysicsComponent( PhysicsManager* physicsManager, Entity* ent );
+	PhysicsComponent( PhysicsManager* physicsManager );
 	~PhysicsComponent(void);
 
 	void setAsBox( float x, float y, float z );

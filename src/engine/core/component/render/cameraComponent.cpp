@@ -33,7 +33,7 @@ void CameraComponent::handle( Event* e )
 	{
 		MovementEvent* me = static_cast<MovementEvent*>(e);
 		mSceneNode->setPosition( me->mPosition );
-		mSceneNode->setOrientation( me->mOrientation );
+		mCamera->setOrientation( me->mOrientation );
 	}
 }
 

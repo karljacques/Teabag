@@ -9,7 +9,7 @@
 class RenderComponent : public Component, public EventListener
 {
 public:
-	RenderComponent( RenderSystem* renderSystem, Entity* ent );
+	RenderComponent( RenderSystem* renderSystem);
 	~RenderComponent(void);
 
 	void update( double dt );

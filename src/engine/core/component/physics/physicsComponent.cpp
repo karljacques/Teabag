@@ -26,6 +26,7 @@ void PhysicsComponent::update(  double dt  )
 
 	MovementEvent* e = new MovementEvent(EV_Movement);
 	e->mPosition = mBody->getWorldTransform().getOrigin();
+	e->mOrientation = mBody->getWorldTransform().getRotation();
 
 	dispatch( e );
 }
@@ -35,7 +36,7 @@ void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float
 	btVector3 nullVector(0,0,0);
 	shape->calculateLocalInertia( 1, nullVector);
 
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( 1,
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass,
 		new btDefaultMotionState( btTransform( orientation, position))
 		, shape, nullVector);
 

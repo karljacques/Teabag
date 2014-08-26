@@ -40,10 +40,25 @@ Engine::Engine()
 	n->registerListener( c );
 	
 	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager, cube );
-	p->setAsBox( 1.0f, 1.0f, 1.0f );	
+	btCollisionShape* shapex = new btBoxShape( float3(1.0f,1.0f, 1.0f ) );
+	p->initialise( shapex, 5.0, float3(0,50,0), Quat( 1.0, 0.9,0,0.2 ) );	
 	p->registerListener( c );
 	p->registerListener( n );
 	cube->addComponent( p );
+
+	// floor
+	Entity* floor = createEntity();
+	RenderComponent* r = new RenderComponent( mRenderSystem, floor );
+	r->setAsBox( 100.0f, 0.01f, 100.0f );
+	floor->addComponent( r );
+
+	PhysicsComponent* pc = new PhysicsComponent( mPhysicsManager, floor );
+	btCollisionShape* shape = new btBoxShape( float3(10.0f,0.1f, 10.0f ) );
+	pc->initialise( shape, 0, float3(0,0,0) );
+	floor->addComponent( pc );
+
+	pc->registerListener( r );
+
 }
 
 Engine::~Engine()

@@ -20,11 +20,7 @@ int main()
 #endif
 {
     Engine* engine = new Engine();
-    engine->createCamera();
 
-	Camera* cam = engine->getGfxSystem()->getCameraList()->front();
-	cam->m_SceneNode->setPosition( 0.0f,2.0f, 20.0f );
-	cam->m_Camera->lookAt( 0,0.0f,0.0f );
 
     while( !engine->isShuttingDown() )
     {

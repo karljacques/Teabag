@@ -29,7 +29,7 @@ void PositionComponent::handle( Event* e )
 	{
 		MovementEvent* m = static_cast<MovementEvent*>(e);
 		mPosition = m->mPosition;
-		mOrientation = mOrientation;
+		mOrientation = m->mOrientation;
 
 		// Set events to be dispatched
 		mUpdated = true;

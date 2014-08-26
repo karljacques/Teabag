@@ -13,6 +13,7 @@
 #include "engine/core/component/physics/physicsComponent.h"
 #include "engine/core/component/render/renderComponent.h"
 #include "engine/core/component/base/positionComponent.h"
+#include "engine/core/component/render/cameraComponent.h"
 
 Engine::Engine()
 {
@@ -32,7 +33,7 @@ Engine::Engine()
 	// Create a cube, spin it
 	Entity* cube = createEntity();
 	RenderComponent* c =  new RenderComponent( mRenderSystem, cube );
-	c->setAsBox(1.0f,1.0f,1.0f);
+	c->setAsBox(1.0f,3.0f,1.0f);
 	cube->addComponent(c);
 
 	PositionComponent* n = new PositionComponent();
@@ -40,7 +41,7 @@ Engine::Engine()
 	n->registerListener( c );
 	
 	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager, cube );
-	btCollisionShape* shapex = new btBoxShape( float3(1.0f,1.0f, 1.0f ) );
+	btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f ) );
 	p->initialise( shapex, 5.0, float3(0,50,0), Quat( 1.0, 0.9,0,0.2 ) );	
 	p->registerListener( c );
 	p->registerListener( n );
@@ -49,7 +50,7 @@ Engine::Engine()
 	// floor
 	Entity* floor = createEntity();
 	RenderComponent* r = new RenderComponent( mRenderSystem, floor );
-	r->setAsBox( 100.0f, 0.01f, 100.0f );
+	r->setAsBox( 100.0f, 0.1f, 100.0f );
 	floor->addComponent( r );
 
 	PhysicsComponent* pc = new PhysicsComponent( mPhysicsManager, floor );
@@ -58,6 +59,21 @@ Engine::Engine()
 	floor->addComponent( pc );
 
 	pc->registerListener( r );
+
+	// Camera
+	Entity* camera = createEntity();
+
+	CameraComponent* cc = new CameraComponent( mRenderSystem );
+	PositionComponent* cpc = new PositionComponent();
+	
+	cpc->registerListener( cc );
+	cc->registerListener( cpc );
+
+	camera->addComponent(cc);
+	camera->addComponent(cpc);
+
+	cc->setPosition( float3(0,1.0f,20.0f) );
+	cc->lookAt( float3(0,0,0) );
 
 }
 

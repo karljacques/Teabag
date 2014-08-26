@@ -25,7 +25,6 @@ void Camera::init()
 
     // Set up viewport
     m_Viewport = m_RenderWindow->addViewport( m_Camera );
-
     m_Viewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));
 
     m_Camera->setAspectRatio(Ogre::Real(m_Viewport->getActualWidth()) / Ogre::Real(m_Viewport->getActualHeight()));

@@ -51,6 +51,9 @@
     <ClCompile Include="src\engine\core\component\base\positionComponent.cpp">
       <Filter>engine\core\component\base</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\component\render\cameraComponent.cpp">
+      <Filter>engine\core\component\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -105,6 +108,9 @@
     </ClInclude>
     <ClInclude Include="src\common.h">
       <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\render\cameraComponent.h">
+      <Filter>engine\core\component\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

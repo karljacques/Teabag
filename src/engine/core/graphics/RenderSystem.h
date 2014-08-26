@@ -30,7 +30,7 @@ public:
         
     // Functions
     void            renderOneFrame();
-	Ogre::String	generateName(const Ogre::String& prefix /*= "Unnamed"*/);
+	Ogre::String	generateName(const Ogre::String& prefix = "Unnamed" );
    
 private:
         

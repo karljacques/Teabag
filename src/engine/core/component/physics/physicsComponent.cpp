@@ -16,15 +16,7 @@ PhysicsComponent::~PhysicsComponent(void)
 void PhysicsComponent::setAsBox( float x, float y, float z )
 {
 	btCollisionShape* boxShape = new  btBoxShape( btVector3( x,y,z ));
-
-	btVector3 nullVector(0,0,0);
-	boxShape->calculateLocalInertia( 1, nullVector);
-
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( 1,
-		new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3(0,50,0)))
-		, boxShape, nullVector);
-	mBody = new btRigidBody(fallRigidBodyCI);
-	mPhysicsManager->getDiscreteDynamicsWorld()->addRigidBody(mBody);
+	initialise(boxShape, 1, float3(0,30,0) );
 }
 
 void PhysicsComponent::update(  double dt  )
@@ -36,4 +28,17 @@ void PhysicsComponent::update(  double dt  )
 	e->mPosition = mBody->getWorldTransform().getOrigin();
 
 	dispatch( e );
+}
+
+void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation )
+{
+	btVector3 nullVector(0,0,0);
+	shape->calculateLocalInertia( 1, nullVector);
+
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( 1,
+		new btDefaultMotionState( btTransform( orientation, position))
+		, shape, nullVector);
+
+	mBody = new btRigidBody(fallRigidBodyCI);
+	mPhysicsManager->getDiscreteDynamicsWorld()->addRigidBody(mBody);
 }

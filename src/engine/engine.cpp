@@ -9,8 +9,6 @@
 #include "pch.h"
 #include <SDL.h>
 
-
-
 #include "engine.h"
 #include "engine/core/component/physics/physicsComponent.h"
 #include "engine/core/component/render/renderComponent.h"

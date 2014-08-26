@@ -15,6 +15,8 @@ public:
 	void setAsBox( float x, float y, float z );
 	void update(  double dt );
 
+	void initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation = Quat(0,0,0,1) );
+
 private:
 	PhysicsManager* mPhysicsManager;
 	btRigidBody* mBody;

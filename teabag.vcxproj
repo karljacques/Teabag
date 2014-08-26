@@ -40,7 +40,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(ProjectDir)\dependencies\MathGeoLib\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\mathgeolib\lib\;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\bin\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
@@ -55,10 +55,11 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalOptions>/Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>MATH_OGRE_INTEROP;MATH_BULLET_INTEROP</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;SDL2.lib;ws2_32.lib;RakNetDLL.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;SDL2.lib;ws2_32.lib;RakNetDLL.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_debug.lib;MathGeoLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>
       </SubSystem>
     </Link>

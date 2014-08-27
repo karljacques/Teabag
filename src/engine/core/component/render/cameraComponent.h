@@ -17,6 +17,10 @@ public:
 	// Don't want to put these in position component
 	void setPosition( float3 pos );
 	void lookAt( float3 pos );
+	void update(  double dt  );
+
+	// Little hack function
+	void setOffset( float3 offset );
 
 private:
 

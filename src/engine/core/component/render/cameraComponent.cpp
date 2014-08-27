@@ -58,3 +58,14 @@ void CameraComponent::lookAt( float3 pos )
 
 	dispatch( me );
 }
+
+void CameraComponent::setOffset( float3 offset )
+{
+	mCamera->setPosition( offset );
+}
+
+void CameraComponent::update( double dt )
+{
+
+	mCamera->lookAt( mSceneNode->getPosition() );
+}

@@ -11,8 +11,9 @@
 
 #include "engine.h"
 #include "engine/core/component/render/cameraComponent.h"
+#include "engine/core/component/control/spectatorControlComponent.h"
 #include "engine/world/entityManager.h"
-#include "engine/world/staticGeometry.h"
+
 
 Engine::Engine()
 {
@@ -28,8 +29,8 @@ Engine::Engine()
 	// Register the engine to receive input events
     this->setEventType(EV_KeyPress||EV_KeyRelease );
     mEventSystem->registerListener( this );
-
-	// Create a cube, spin it
+	/*
+	// Create a cube
 	Entity* cube = createEntity();
 	RenderComponent* c =  new RenderComponent( mRenderSystem );
 	c->setAsBox(1.0f,3.0f,1.0f);
@@ -45,27 +46,37 @@ Engine::Engine()
 	p->registerListener( c );
 	p->registerListener( n );
 	cube->addComponent( p );
-
+	*/
+	
 	// Static Geometry
 	EntityManager* entityManager = new EntityManager();
-	StaticGeometry* staticGeometry = new StaticGeometry( entityManager, mRenderSystem, mPhysicsManager );
+	mStaticGeometry = new StaticGeometry( entityManager, mRenderSystem, mPhysicsManager );
 
-	staticGeometry->addGeometry( float3( 0,0,0), float3( 10.0f, 1.0f, 10.0f ), float3(0,0,0));
+	mStaticGeometry->addGeometry( float3( 0,0.0f,-50.0f), float3( 10.0f, 1.0f, 10.0f ), float3(0,0,0));
 
 	// Camera
 	Entity* camera = createEntity();
 
 	CameraComponent* cc = new CameraComponent( mRenderSystem );
 	PositionComponent* cpc = new PositionComponent();
-	
-	cpc->registerListener( cc );
-	cc->registerListener( cpc );
+	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager );
+	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
+	mEventSystem->registerListener( s );
+	//cpc->registerListener( cc );
+	//cc->registerListener( cpc );
 
 	camera->addComponent(cc);
 	camera->addComponent(cpc);
+	camera->addComponent(cphyc);
+	camera->addComponent(s);
 
-	cc->setPosition( float3(0,0.0f,40.0f) );
-	cc->lookAt( float3(0,0,0) );
+	cphyc->registerListener( cpc );
+	cphyc->registerListener( cc );
+
+
+	//cphyc->getBody()->setWorldTransform( btTransform( Quat(0,0,0,1),float3(0,0.0f,80.0f) ) );
+	//cphyc->getBody()->activate(true);
+	//cc->lookAt( float3(0,-10,0) );
 
 }
 

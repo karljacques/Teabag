@@ -43,4 +43,5 @@ void StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
 	mEntityManager->addEntity( ent );
 	mGeometryList.push_back(ent);
 
+	mEntityManager->update( 0 );
 }

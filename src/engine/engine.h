@@ -11,6 +11,7 @@
 #include "core/component/base/entity.h"
 #include "core/physics/physicsManager.h"
 #include "terrain/terrain.h"
+#include "engine/world/staticGeometry.h"
 
 class Engine : public EventListener
 {
@@ -46,6 +47,8 @@ private:
     EventSystem* mEventSystem;
     
 	PhysicsManager* mPhysicsManager;
+
+	StaticGeometry* mStaticGeometry;
 
     bool m_EngineShutdown;
 

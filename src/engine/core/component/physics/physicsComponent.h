@@ -17,6 +17,9 @@ public:
 
 	void initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation = Quat(0,0,0,1) );
 
+	// Getters
+	btRigidBody* getBody(){ return mBody; };
+
 private:
 	PhysicsManager* mPhysicsManager;
 	btRigidBody* mBody;

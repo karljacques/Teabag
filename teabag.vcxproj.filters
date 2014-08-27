@@ -58,6 +58,9 @@
       <Filter>engine\world</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\world\entityManager.cpp" />
+    <ClCompile Include="src\engine\core\component\control\spectatorControlComponent.cpp">
+      <Filter>engine\core\component\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -120,6 +123,9 @@
       <Filter>engine\world</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\world\entityManager.h" />
+    <ClInclude Include="src\engine\core\component\control\spectatorControlComponent.h">
+      <Filter>engine\core\component\control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -160,6 +166,9 @@
     </Filter>
     <Filter Include="engine\world">
       <UniqueIdentifier>{64733b7e-334a-4b67-8cb9-0ff750828747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\component\control">
+      <UniqueIdentifier>{227c3102-ceb0-44ed-971e-9125c6fcc1a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

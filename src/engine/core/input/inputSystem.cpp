@@ -25,6 +25,17 @@ void InputSystem::update()
 			// Key down, create and dispatch event
 			KeyboardEvent*	e = new KeyboardEvent(EV_KeyPress );
 			e->mPressed = true;
+			e->mReleased =false;
+			e->mKeycode = m_inputEvent.key.keysym.scancode;
+			m_EventSystem->dispatchEvent( e );
+		}
+
+		if( m_inputEvent.type == SDL_KEYUP )
+		{
+			// Key down, create and dispatch event
+			KeyboardEvent*	e = new KeyboardEvent(EV_KeyPress );
+			e->mPressed = false;
+			e->mReleased = true;
 			e->mKeycode = m_inputEvent.key.keysym.scancode;
 			m_EventSystem->dispatchEvent( e );
 		}

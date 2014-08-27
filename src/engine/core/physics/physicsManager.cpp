@@ -18,13 +18,7 @@ PhysicsManager::PhysicsManager()
 		mWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 		mWorld->setGravity(btVector3(0, -9.81f, 0));
 
-		// Ground - TEMP
-		btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
-		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
-		btRigidBody::btRigidBodyConstructionInfo
-			groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-		btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-		mWorld->addRigidBody(groundRigidBody);
+
 
 }
 

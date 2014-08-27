@@ -27,7 +27,7 @@ Engine::Engine()
 	mPhysicsManager = new PhysicsManager();
 
 	// Register the engine to receive input events
-    this->setEventType(EV_KeyPress||EV_KeyRelease );
+    this->setEventType(EV_KEY_PRESS||EV_KEY_RELEASE );
     mEventSystem->registerListener( this );
 	/*
 	// Create a cube
@@ -57,10 +57,11 @@ Engine::Engine()
 	// Camera
 	Entity* camera = createEntity();
 
-	CameraComponent* cc = new CameraComponent( mRenderSystem );
 	PositionComponent* cpc = new PositionComponent();
-	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager );
+	CameraComponent* cc = new CameraComponent( mRenderSystem, cpc );
+	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager, cpc );
 	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
+
 	mEventSystem->registerListener( s );
 	//cpc->registerListener( cc );
 	//cc->registerListener( cpc );
@@ -120,7 +121,7 @@ void Engine::handle( Event* e )
 {
     switch( e->getEventType() )
     {
-        case EV_KeyPress:
+        case EV_KEY_PRESS:
             KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
             switch (ke->mKeycode)
             {

@@ -23,7 +23,8 @@ void SpectatorControlComponent::handle( Event* e )
 {
 	switch( e->getEventType() )
 	{
-		case EV_KeyPress:
+		case EV_KEY_PRESS:
+			{
 
 			// Cast to keypress event
 			KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
@@ -32,7 +33,13 @@ void SpectatorControlComponent::handle( Event* e )
 					mForward = true;
 				else if(ke->mReleased == true)
 					mForward = false;
+			}
 		break;
+
+		case EV_MOUSEMOVE:
+			{
+
+			}
 
 	}
 }
@@ -40,6 +47,6 @@ void SpectatorControlComponent::handle( Event* e )
 void SpectatorControlComponent::update(double dt)
 {
 	if( mForward )
-		mPhysicsComponent->getBody()->applyCentralForce( mPhysicsComponent->getBody()->getWorldTransform().getBasis() * float3(0,0,-1));
+		mPhysicsComponent->getBody()->applyCentralForce(  float3(0,0,-10));
 }
 

@@ -2,9 +2,10 @@
 #include "cameraComponent.h"
 
 
-CameraComponent::CameraComponent(RenderSystem* renderSystem) 
+CameraComponent::CameraComponent(RenderSystem* renderSystem, PositionComponent* positionComponent ) 
 {
 	mRenderSystem = renderSystem;
+	mPositionComponent = positionComponent;
 
 	// Create camera and viewport
 	mCamera = renderSystem->getSceneMgr()->createCamera( renderSystem->generateName() );
@@ -29,7 +30,7 @@ CameraComponent::~CameraComponent(void)
 
 void CameraComponent::handle( Event* e )
 {
-	if( e->getEventType() == EV_Movement )
+	if( e->getEventType() == EV_MOVEMENT )
 	{
 		MovementEvent* me = static_cast<MovementEvent*>(e);
 		mSceneNode->setPosition( me->mPosition );
@@ -39,7 +40,7 @@ void CameraComponent::handle( Event* e )
 
 void CameraComponent::setPosition( float3 pos )
 {
-	MovementEvent* me = new MovementEvent( EV_Movement );
+	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
 	me->mPosition = pos;
 	me->mOrientation = mSceneNode->getOrientation();
 
@@ -52,7 +53,7 @@ void CameraComponent::lookAt( float3 pos )
 {
 	mCamera->lookAt( pos );
 
-	MovementEvent* me = new MovementEvent( EV_Movement );
+	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
 	me->mPosition = mSceneNode->getPosition();
 	me->mOrientation = mCamera->getDerivedOrientation();
 
@@ -66,6 +67,7 @@ void CameraComponent::setOffset( float3 offset )
 
 void CameraComponent::update( double dt )
 {
-
-	mCamera->lookAt( mSceneNode->getPosition() );
+	//mCamera->lookAt( mSceneNode->getPosition() );
+	mSceneNode->setPosition( mPositionComponent->getPosition() );
+	mCamera->setOrientation( mPositionComponent->getOrientation() );
 }

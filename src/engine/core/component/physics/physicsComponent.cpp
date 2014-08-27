@@ -2,9 +2,10 @@
 #include "physicsComponent.h"
 #include "engine/core/component/base/entity.h"
 
-PhysicsComponent::PhysicsComponent( PhysicsManager* physicsManager )
+PhysicsComponent::PhysicsComponent( PhysicsManager* physicsManager, PositionComponent* positionComponent )
 {
 	mPhysicsManager = physicsManager;
+	mPositionComponent = positionComponent;
 }
 
 
@@ -20,14 +21,8 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 
 void PhysicsComponent::update(  double dt  )
 {
-	//TODO Updates entity data here
-	//mParent->mPosition = Ogre::Vector3( mBody->getWorldTransform().getOrigin().getX(),mBody->getWorldTransform().getOrigin().getY(),mBody->getWorldTransform().getOrigin().getZ() );
-
-	MovementEvent* e = new MovementEvent(EV_Movement);
-	e->mPosition = mBody->getWorldTransform().getOrigin();
-	e->mOrientation = mBody->getWorldTransform().getRotation();
-
-	dispatch( e );
+	mPositionComponent->setPosition( mBody->getWorldTransform().getOrigin() );
+	mPositionComponent->setOrientation( mBody->getWorldTransform().getRotation() );
 }
 
 void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation )

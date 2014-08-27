@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine\core\component\base\component.h"
+#include "engine\core\component\base\positionComponent.h"
 #include "engine\core\graphics\RenderSystem.h"
 #include "engine\core\event\EventListener.h"
 
@@ -9,7 +10,7 @@ class CameraComponent :
 	public Component, public EventListener
 {
 public:
-	CameraComponent( RenderSystem* renderSystem );
+	CameraComponent( RenderSystem* renderSystem, PositionComponent* positionComponent );
 	~CameraComponent(void);
 
 	void handle(  Event* e );
@@ -28,5 +29,7 @@ private:
 	Ogre::Camera* mCamera;
 	Ogre::Viewport* mViewport;
 	Ogre::SceneNode* mSceneNode;
+
+	PositionComponent* mPositionComponent;
 };
 

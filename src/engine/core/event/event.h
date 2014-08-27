@@ -15,12 +15,13 @@
 
 enum EV_EventType
 {
-    EV_MouseMove,
-    EV_MousePress,
-    EV_MouseRelease,
-    EV_KeyPress,
-    EV_KeyRelease,
-	EV_Movement
+    EV_MOUSEMOVE,
+    EV_MOUSE_PRESS,
+    EV_MOUSE_RELEASE,
+    EV_KEY_PRESS,
+    EV_KEY_RELEASE,
+	EV_MOVEMENT,
+	EV_ROTATION
 };
 
 class Event

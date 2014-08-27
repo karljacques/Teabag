@@ -18,9 +18,10 @@ StaticGeometry::~StaticGeometry(void)
 void StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
 {
 	// Create the components needed
-	RenderComponent* rComp = new RenderComponent( mRenderSystem ); 
-	PhysicsComponent* phyComp = new PhysicsComponent( mPhysicsManager );
 	PositionComponent* posComp = new PositionComponent();
+	RenderComponent* rComp = new RenderComponent( mRenderSystem, posComp ); 
+	PhysicsComponent* phyComp = new PhysicsComponent( mPhysicsManager,posComp );
+
 
 	// Create entity and register components
 	Entity* ent = new Entity();
@@ -35,6 +36,7 @@ void StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
 	// Set up physics
 	btBoxShape* box = new btBoxShape( size/2 );
 	phyComp->initialise( box, 0, position );
+	posComp->setPosition(position);
 
 	// Set up graphics
 	rComp->setAsBox( size.x,size.y,size.z );

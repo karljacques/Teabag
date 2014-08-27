@@ -3,13 +3,14 @@
 
 #include "engine/core/component/base/component.h"
 #include "engine/core/physics/physicsManager.h"
+#include "engine/core/component/base/positionComponent.h"
 #include "common.h"
 
 class PhysicsComponent :
 	public Component
 {
 public:
-	PhysicsComponent( PhysicsManager* physicsManager );
+	PhysicsComponent( PhysicsManager* physicsManager, PositionComponent* positionComponent );
 	~PhysicsComponent(void);
 
 	void setAsBox( float x, float y, float z );
@@ -23,6 +24,8 @@ public:
 private:
 	PhysicsManager* mPhysicsManager;
 	btRigidBody* mBody;
+
+	PositionComponent* mPositionComponent;
 };
 
 #endif // physicsComponent_h__

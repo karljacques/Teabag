@@ -3,10 +3,11 @@
 #include "engine/core/component/base/entity.h"
 
 
-RenderComponent::RenderComponent( RenderSystem* renderSystem )
+RenderComponent::RenderComponent( RenderSystem* renderSystem, PositionComponent* positionComponent )
 {
 	mRenderSystem = renderSystem;
 	mSceneNode = renderSystem->getRootSceneNode()->createChildSceneNode();
+	mPositionComponent = positionComponent;
 }
 
 
@@ -14,9 +15,6 @@ RenderComponent::~RenderComponent(void)
 {
 }
 
-void RenderComponent::update( double dt )
-{
-}
 
 void RenderComponent::setAsBox( float x, float y, float z )
 {
@@ -60,10 +58,11 @@ void RenderComponent::setAsBox( float x, float y, float z )
 
 void RenderComponent::handle(  Event* e  )
 {
-	if( e->getEventType() == EV_Movement )
-	{
-		MovementEvent* me = static_cast<MovementEvent*>(e);
-		this->mSceneNode->setPosition( me->mPosition );
-		this->mSceneNode->setOrientation( me->mOrientation );
-	}
+
+}
+
+void RenderComponent::update( double dt )
+{
+	mSceneNode->setPosition( mPositionComponent->getPosition() );
+	mSceneNode->setOrientation( mPositionComponent->getOrientation() );
 }

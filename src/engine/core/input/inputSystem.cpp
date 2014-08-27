@@ -20,24 +20,39 @@ void InputSystem::update()
 {
 	if( SDL_PollEvent( &m_inputEvent ) )
 	{
-		if( m_inputEvent.type == SDL_KEYDOWN )
+		switch(m_inputEvent.type )
 		{
-			// Key down, create and dispatch event
-			KeyboardEvent*	e = new KeyboardEvent(EV_KeyPress );
-			e->mPressed = true;
-			e->mReleased =false;
-			e->mKeycode = m_inputEvent.key.keysym.scancode;
-			m_EventSystem->dispatchEvent( e );
-		}
+			case SDL_KEYDOWN:
+			{
+				// Key down, create and dispatch event
+				KeyboardEvent*	e = new KeyboardEvent(EV_KEY_PRESS );
+				e->mPressed = true;
+				e->mReleased =false;
+				e->mKeycode = m_inputEvent.key.keysym.scancode;
+				m_EventSystem->dispatchEvent( e );
+			}
+			break;
 
-		if( m_inputEvent.type == SDL_KEYUP )
-		{
-			// Key down, create and dispatch event
-			KeyboardEvent*	e = new KeyboardEvent(EV_KeyPress );
-			e->mPressed = false;
-			e->mReleased = true;
-			e->mKeycode = m_inputEvent.key.keysym.scancode;
-			m_EventSystem->dispatchEvent( e );
+			case SDL_KEYUP:
+			{
+				// Key down, create and dispatch event
+				KeyboardEvent*	e = new KeyboardEvent(EV_KEY_PRESS );
+				e->mPressed = false;
+				e->mReleased = true;
+				e->mKeycode = m_inputEvent.key.keysym.scancode;
+				m_EventSystem->dispatchEvent( e );
+			}
+			break;
+
+			case SDL_MOUSEMOTION:
+				{
+					MouseEvent* e = new MouseEvent( EV_MOUSEMOVE );
+					e->m_MouseMoveX = (int)&m_inputEvent.motion.xrel;
+					e->m_MouseMoveY = (int)&m_inputEvent.motion.yrel;
+					e->m_MouseX = (int)&m_inputEvent.motion.x;
+					e->m_MouseY = (int)&m_inputEvent.motion.y;
+				}
+
 		}
 	}
 }

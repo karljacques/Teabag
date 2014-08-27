@@ -4,6 +4,8 @@
 
 PositionComponent::PositionComponent(void)
 {
+	mPosition = float3(0,0,0);
+	mOrientation = Quat(0,0,0,1);
 }
 
 
@@ -15,7 +17,7 @@ void PositionComponent::update( double dt )
 {
 	if( mUpdated )
 	{
-		MovementEvent* m = new MovementEvent( EV_Movement );
+		MovementEvent* m = new MovementEvent( EV_MOVEMENT );
 		m->mPosition = mPosition;
 		m->mOrientation = mOrientation;
 
@@ -25,13 +27,33 @@ void PositionComponent::update( double dt )
 }
 void PositionComponent::handle( Event* e )
 {
-	if( e->getEventType() == EV_Movement )
-	{
-		MovementEvent* m = static_cast<MovementEvent*>(e);
-		mPosition = m->mPosition;
-		mOrientation = m->mOrientation;
 
-		// Set events to be dispatched
-		mUpdated = true;
-	}
+}
+
+void PositionComponent::setPosition( float3 pos )
+{
+	mPosition = pos;
+
+	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	me->mPosition = pos;
+	dispatch( me );
+}
+
+float3 PositionComponent::getPosition()
+{
+	return mPosition;
+}
+
+void PositionComponent::setOrientation( Quat orientation )
+{
+	mOrientation = orientation;
+
+	MovementEvent* me = new MovementEvent( EV_ROTATION );
+	me->mOrientation = orientation;
+	dispatch( me );
+}
+
+Quat PositionComponent::getOrientation()
+{
+	return mOrientation;
 }

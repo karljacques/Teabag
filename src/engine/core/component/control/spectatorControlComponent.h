@@ -13,10 +13,18 @@ public:
 
 	void handle( Event* e );
 	void update(  double dt );
+	void applyForceInDir( float3 dir );
 
 private:
 	PhysicsComponent* mPhysicsComponent;
 
+	// Movement states
 	bool mForward;
+	bool mReverse;
+	bool mLeft;
+	bool mRight;
+
+	// Speed
+	float mSpeed;
 };
 

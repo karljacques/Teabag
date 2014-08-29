@@ -26,7 +26,7 @@ RenderSystem::RenderSystem()
     unsigned int windowHeight = 600;
 
 	// Create SDL Window without OpenGL context
-	SDL_Window* mSDLWindow = SDL_CreateWindow( "Window",
+	mWindow = SDL_CreateWindow( "Window",
 												SDL_WINDOWPOS_CENTERED,
 												SDL_WINDOWPOS_CENTERED,
 												windowWidth,
@@ -44,7 +44,7 @@ RenderSystem::RenderSystem()
     // external window to use.
     SDL_SysWMinfo info;
 	SDL_VERSION(&info.version);
-	SDL_GetWindowWMInfo( mSDLWindow, &info );
+	SDL_GetWindowWMInfo( mWindow, &info );
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	size_t winHandle = reinterpret_cast<size_t>(info.info.win.window);
 	lParams["externalWindowHandle"] = Ogre::StringConverter::toString(winHandle);

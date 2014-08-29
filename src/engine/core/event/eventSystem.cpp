@@ -27,7 +27,7 @@ void EventSystem::handleEvents()
         // Dispatch events to listeners
         for (auto i = mEventListeners.begin(); i != mEventListeners.end(); i++ )
         {
-            if( (*i)->getEventType() && e->getEventType() )
+           // if( (*i)->getEventType() && e->getEventType() )
                 (*i)->handle(e);
         }
 

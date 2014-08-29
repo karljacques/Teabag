@@ -10,16 +10,15 @@
 #include "inputSystem.h"
 #include "../event/eventSystem.h"
 
-InputSystem::InputSystem( EventSystem* eventSys )
+InputSystem::InputSystem( EventSystem* eventSys, SDL_Window* window )
 {
 	m_EventSystem = eventSys;
-
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	mWindow = window;
 }
 
 void InputSystem::update()
 {
-	if( SDL_PollEvent( &m_inputEvent ) )
+	while( SDL_PollEvent( &m_inputEvent ) )
 	{
 		switch(m_inputEvent.type )
 		{
@@ -45,16 +44,20 @@ void InputSystem::update()
 			}
 			break;
 
-			case SDL_MOUSEMOTION:
-				{
-					MouseEvent* e = new MouseEvent( EV_MOUSE_MOVEMENT );
-					e->mMouseMoveX = m_inputEvent.motion.xrel;
-					e->mMouseMoveY = m_inputEvent.motion.yrel;
-					e->m_MouseX = (int)m_inputEvent.motion.x;
-					e->m_MouseY = (int)m_inputEvent.motion.y;
-					m_EventSystem->dispatchEvent( e );
-				}
+
 
 		}
 	}
+	// TODO make this take half window values
+
+	int MouseX,MouseY;
+	SDL_GetMouseState(&MouseX,&MouseY);
+	int DeltaX = MouseX - 400;
+	int DeltaY = MouseY - 300;
+	MouseEvent* e = new MouseEvent( EV_MOUSE_MOVEMENT );
+	e->mMouseMoveX = DeltaX;
+	e->mMouseMoveY = DeltaY;
+
+	m_EventSystem->dispatchEvent( e );
+	SDL_WarpMouseInWindow(  mWindow, 400, 300 );
 }

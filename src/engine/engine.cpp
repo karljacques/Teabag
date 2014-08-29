@@ -23,7 +23,7 @@ Engine::Engine()
 	// Create Systems
     mRenderSystem = new RenderSystem();
     mEventSystem = new EventSystem();
-    mInputSystem = new InputSystem( mEventSystem );
+    mInputSystem = new InputSystem( mEventSystem, mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
 
 	// Register the engine to receive input events
@@ -32,25 +32,21 @@ Engine::Engine()
 	
 	// Create a cube
 	{
+		Entity* cube = createEntity();
+		PositionComponent* n = new PositionComponent();
+		cube->addComponent( n );
 
-	
-	Entity* cube = createEntity();
-	PositionComponent* n = new PositionComponent();
-	cube->addComponent( n );
-
-	RenderComponent* c =  new RenderComponent( mRenderSystem, n );
+		RenderComponent* c =  new RenderComponent( mRenderSystem, n );
 		n->registerListener( c );
-	c->setAsBox(1.0f,3.0f,1.0f);
-	cube->addComponent(c);
+		c->setAsBox(1.0f,3.0f,1.0f);
+		cube->addComponent(c);
 
-
-	
-	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
-	btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
-	p->initialise( shapex, 5.0, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
-	p->registerListener( c );
-	p->registerListener( n );
-	cube->addComponent( p );
+		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
+		btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
+		p->initialise( shapex, 5.0, float3(0,51.0,-50), Quat( 1.0, 0.9,0,0.7 ) );	
+		p->registerListener( c );
+		p->registerListener( n );
+		cube->addComponent( p );
 	}
 	
 	// Static Geometry
@@ -68,8 +64,6 @@ Engine::Engine()
 	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
 
 	mEventSystem->registerListener( s );
-	//cpc->registerListener( cc );
-	//cc->registerListener( cpc );
 
 	camera->addComponent(cc);
 	camera->addComponent(cpc);
@@ -77,12 +71,7 @@ Engine::Engine()
 	camera->addComponent(s);
 
 	cphyc->registerListener( cpc );
-	cphyc->registerListener( cc );
-
-
-	//cphyc->getBody()->setWorldTransform( btTransform( Quat(0,0,0,1),float3(0,0.0f,80.0f) ) );
-	//cphyc->getBody()->activate(true);
-	//cc->lookAt( float3(0,-10,0) );
+	//cphyc->registerListener( cc );
 
 }
 

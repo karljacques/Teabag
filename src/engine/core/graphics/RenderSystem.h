@@ -10,7 +10,7 @@
 #define __YorkshireTea__gfxSystem__
 
 #include "camera.h"
-
+#include <SDL.h>
 class Camera;
     
 class RenderSystem
@@ -25,6 +25,7 @@ public:
     Ogre::SceneManager*   getSceneMgr();
     Ogre::RenderWindow*   getRenderWindow();
     Ogre::SceneNode*      getRootSceneNode();
+	SDL_Window*			  getSDLWindow(){ return mWindow; }
         
     std::vector<Camera*>*    getCameraList();
         
@@ -39,13 +40,13 @@ private:
     Ogre::SceneManager*   m_SceneMgr;
     Ogre::RenderWindow*   m_RenderWindow;
     Ogre::SceneNode*      m_RootSceneNode;
-        
+
     // Multiple Viewport and Camera support
     std::vector<Camera*>    m_CameraList;
         
-        
     // Window
     size_t          m_WindowHandle;
+	SDL_Window*			  mWindow;
 };
 
 #endif /* defined(__YorkshireTea__gfxSystem__) */

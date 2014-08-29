@@ -40,6 +40,7 @@ public:
 	// Entities
 	std::vector<Entity*> mEntities;
 	Entity* createEntity();
+	void spawnNewCube();
 
 private:
     RenderSystem* mRenderSystem;

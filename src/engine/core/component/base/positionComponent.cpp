@@ -36,6 +36,7 @@ void PositionComponent::setPosition( float3 pos )
 
 	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
 	me->mPosition = pos;
+	me->mOrientation = mOrientation; // For the sake of the physics engine
 	dispatch( me );
 }
 
@@ -48,12 +49,23 @@ void PositionComponent::setOrientation( Quat orientation )
 {
 	mOrientation = orientation;
 
-	MovementEvent* me = new MovementEvent( EV_ROTATION );
+	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
 	me->mOrientation = orientation;
+	me->mPosition = mPosition; // For the sake of the physics engine
 	dispatch( me );
 }
 
 Quat PositionComponent::getOrientation()
 {
 	return mOrientation;
+}
+
+void PositionComponent::_setPosition( float3 pos )
+{
+	mPosition = pos;
+}
+
+void PositionComponent::_setOrientation( Quat rot )
+{
+	mOrientation = rot;
 }

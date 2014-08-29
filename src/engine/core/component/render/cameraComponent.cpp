@@ -9,8 +9,8 @@ CameraComponent::CameraComponent(RenderSystem* renderSystem, PositionComponent* 
 
 	// Create camera and viewport
 	mCamera = renderSystem->getSceneMgr()->createCamera( renderSystem->generateName() );
-	mCamera->setNearClipDistance(0.1f);
-	mCamera->setFarClipDistance(100.0f);
+	mCamera->setNearClipDistance(1.0f);
+	mCamera->setFarClipDistance(200.0f);
 
 	mViewport = renderSystem->getRenderWindow()->addViewport( mCamera );
 	mViewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));

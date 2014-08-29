@@ -29,5 +29,6 @@ PhysicsManager::~PhysicsManager()
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( 1.0/60.0f ,10 );
+	mWorld->stepSimulation( 1.0/60.0f ,8 );
 }
+

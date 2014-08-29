@@ -26,6 +26,10 @@ public:
 	void update(  double dt  );
 	void handle(  Event* e );
 
+	// These functions prevent a nasty loop occuring with the physics engine
+	void _setPosition( float3 pos );
+	void _setOrientation( Quat rot );
+
 private:
 
 	// Want everything to go through position first, so instead of dispatching events every loop - just set this flag when events need to be sent out
@@ -33,6 +37,8 @@ private:
 
 	float3 mPosition;
 	Quat mOrientation;
+
+
 
 };
 #endif // positionComponent_h__

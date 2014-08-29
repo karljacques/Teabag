@@ -21,8 +21,14 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 
 void PhysicsComponent::update(  double dt  )
 {
-	mPositionComponent->setPosition( mBody->getWorldTransform().getOrigin() );
-	mPositionComponent->setOrientation( mBody->getWorldTransform().getRotation() );
+	mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
+	mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
+
+	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	me->mOrientation = mPositionComponent->getOrientation();
+	me->mPosition = mPositionComponent->getPosition();
+
+	dispatch(me);
 }
 
 void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation )
@@ -36,4 +42,18 @@ void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float
 
 	mBody = new btRigidBody(fallRigidBodyCI);
 	mPhysicsManager->getDiscreteDynamicsWorld()->addRigidBody(mBody);
+}
+
+void PhysicsComponent::handle( Event* e )
+{
+	switch( e->getEventType() )
+	{
+	case EV_MOVEMENT:
+		MovementEvent* me = static_cast<MovementEvent*>(e);
+		btTransform trans( me->mOrientation, me->mPosition );
+		mBody->setWorldTransform( trans );
+		mBody->activate(true);
+		break;
+
+	}
 }

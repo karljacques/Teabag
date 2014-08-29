@@ -53,7 +53,9 @@ Engine::Engine()
 	EntityManager* entityManager = new EntityManager();
 	mStaticGeometry = new StaticGeometry( entityManager, mRenderSystem, mPhysicsManager );
 
-	mStaticGeometry->addGeometry( float3( 0,0.0f,-50.0f), float3( 10.0f, 1.0f, 10.0f ), float3(0,0,0));
+	mStaticGeometry->addGeometry( float3( 0,0.0f,-50.0f), float3( 100.0f, 1.0f, 100.0f ), float3(0,0,0));
+	mStaticGeometry->addGeometry( float3( 0,20.0f, -50.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,45.0/57.0 ));
+	mStaticGeometry->addGeometry( float3( -10.0f,10.0f, -50.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,-45.0/57.0 ));
 
 	// Camera
 	Entity* camera = createEntity();
@@ -70,7 +72,9 @@ Engine::Engine()
 	camera->addComponent(cphyc);
 	camera->addComponent(s);
 
-	cphyc->registerListener( cpc );
+	cpc->registerListener( cphyc );
+
+	cpc->setPosition( float3(0,40,0 ));
 	//cphyc->registerListener( cc );
 
 }
@@ -122,7 +126,13 @@ void Engine::handle( Event* e )
 				case SDL_SCANCODE_ESCAPE: // Escape
                    m_EngineShutdown = true;
                 break;
+
+				case SDL_SCANCODE_C:
+					if( ke->mPressed )
+						spawnNewCube();
+					break;
             }
+		
         break;
     }
 }
@@ -148,3 +158,26 @@ Terrain* Engine::createTerrain()
     return new Terrain( mRenderSystem->getSceneMgr() );
 }
 
+void Engine::spawnNewCube()
+{
+	{
+		Entity* cube = createEntity();
+		PositionComponent* n = new PositionComponent();
+		cube->addComponent( n );
+		
+		float x = (rand() % 5 )+1;
+		float y = (rand() % 5 )+1;
+		float z = (rand() % 5 )+1;
+		RenderComponent* c =  new RenderComponent( mRenderSystem, n );
+		n->registerListener( c );
+		c->setAsBox(x,y,z);
+		cube->addComponent(c);
+
+		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
+		btCollisionShape* shapex = new btBoxShape( float3(x,y, z )/2 );
+		p->initialise( shapex, (rand() % 20 )+1, float3(0,51.0,-50), Quat( 1.0, 0.9,0,0.7 ) );	
+		p->registerListener( c );
+		p->registerListener( n );
+		cube->addComponent( p );
+	}
+}

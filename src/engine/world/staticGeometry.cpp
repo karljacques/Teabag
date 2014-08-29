@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "common.h"
 #include "staticGeometry.h"
 
 
@@ -35,8 +36,9 @@ void StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
 
 	// Set up physics
 	btBoxShape* box = new btBoxShape( size/2 );
-	phyComp->initialise( box, 0, position );
+	phyComp->initialise( box, 0, position, (Quat::RotateZ(angle.z)*Quat::RotateY(angle.y)*Quat::RotateX(angle.x)) );
 	posComp->setPosition(position);
+	posComp->setOrientation((Quat::RotateZ(angle.z)*Quat::RotateY(angle.y)*Quat::RotateX(angle.x)));
 
 	// Set up graphics
 	rComp->setAsBox( size.x,size.y,size.z );

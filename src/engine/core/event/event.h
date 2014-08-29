@@ -21,7 +21,8 @@ enum EV_EventType
     EV_KEY_PRESS,
     EV_KEY_RELEASE,
 	EV_MOVEMENT,
-	EV_ROTATION
+	EV_ROTATION,
+	EV_MOUSE_MOVEMENT
 };
 
 class Event
@@ -44,12 +45,12 @@ class MouseEvent : public Event
 public:
     MouseEvent( int eventType );
 
-    int m_MouseMoveX;
-    int m_MouseMoveY;
+    int32_t mMouseMoveX;
+    int32_t mMouseMoveY;
     int m_MouseMoveZ;
 
-    int m_MouseX;
-    int m_MouseY;
+    int32_t m_MouseX;
+    int32_t m_MouseY;
     int m_MouseZ;
 
     int m_MouseButton;

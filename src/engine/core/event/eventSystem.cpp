@@ -35,6 +35,7 @@ void EventSystem::handleEvents()
         mEventList.pop();
         delete e;
     }
+
 }
 
 void EventSystem::registerListener(EventListener* e)

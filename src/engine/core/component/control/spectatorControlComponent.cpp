@@ -36,9 +36,12 @@ void SpectatorControlComponent::handle( Event* e )
 			}
 		break;
 
-		case EV_MOUSEMOVE:
+		case EV_MOUSE_MOVEMENT:
 			{
-
+				MouseEvent* me = static_cast<MouseEvent*>(e);
+			
+				//mPhysicsComponent->getBody()->setAngularVelocity( float3(me->mMouseMoveY/10.0, me->mMouseMoveX/10.0,0));
+				//mPhysicsComponent->update( 0 );
 			}
 
 	}

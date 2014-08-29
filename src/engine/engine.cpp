@@ -29,24 +29,29 @@ Engine::Engine()
 	// Register the engine to receive input events
     this->setEventType(EV_KEY_PRESS||EV_KEY_RELEASE );
     mEventSystem->registerListener( this );
-	/*
+	
 	// Create a cube
+	{
+
+	
 	Entity* cube = createEntity();
-	RenderComponent* c =  new RenderComponent( mRenderSystem );
+	PositionComponent* n = new PositionComponent();
+	cube->addComponent( n );
+
+	RenderComponent* c =  new RenderComponent( mRenderSystem, n );
+		n->registerListener( c );
 	c->setAsBox(1.0f,3.0f,1.0f);
 	cube->addComponent(c);
 
-	PositionComponent* n = new PositionComponent();
-	cube->addComponent( n );
-	n->registerListener( c );
+
 	
-	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager );
+	PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
 	btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
 	p->initialise( shapex, 5.0, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
 	p->registerListener( c );
 	p->registerListener( n );
 	cube->addComponent( p );
-	*/
+	}
 	
 	// Static Geometry
 	EntityManager* entityManager = new EntityManager();

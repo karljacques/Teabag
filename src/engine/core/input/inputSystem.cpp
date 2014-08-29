@@ -14,6 +14,7 @@ InputSystem::InputSystem( EventSystem* eventSys )
 {
 	m_EventSystem = eventSys;
 
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 void InputSystem::update()
@@ -46,11 +47,12 @@ void InputSystem::update()
 
 			case SDL_MOUSEMOTION:
 				{
-					MouseEvent* e = new MouseEvent( EV_MOUSEMOVE );
-					e->m_MouseMoveX = (int)&m_inputEvent.motion.xrel;
-					e->m_MouseMoveY = (int)&m_inputEvent.motion.yrel;
-					e->m_MouseX = (int)&m_inputEvent.motion.x;
-					e->m_MouseY = (int)&m_inputEvent.motion.y;
+					MouseEvent* e = new MouseEvent( EV_MOUSE_MOVEMENT );
+					e->mMouseMoveX = m_inputEvent.motion.xrel;
+					e->mMouseMoveY = m_inputEvent.motion.yrel;
+					e->m_MouseX = (int)m_inputEvent.motion.x;
+					e->m_MouseY = (int)m_inputEvent.motion.y;
+					m_EventSystem->dispatchEvent( e );
 				}
 
 		}

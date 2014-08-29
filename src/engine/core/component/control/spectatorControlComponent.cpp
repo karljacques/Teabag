@@ -17,11 +17,16 @@ SpectatorControlComponent::SpectatorControlComponent( PhysicsComponent* physicsC
 
 	mSpeed = DEFAULT_SPECTATOR_SPEED;
 
+	xAng = Quat(0,0,0,1);
+	yAng = Quat(0,0,0,1);
+
 	// Create collision sphere here
 	btSphereShape* shape = new btSphereShape( 1.0f );
 	physicsComponent->initialise( shape, 1.0f, float3(0,0,0));
 	physicsComponent->getBody()->setGravity( float3(0,0,0));
 	mPhysicsComponent->getBody()->setDamping( 0.9, 1.0f );
+
+	mPhysicsComponent->getBody()->setAngularFactor(btVector3(1.0f,1.0f,0.0f));
 }
 
 
@@ -77,8 +82,12 @@ void SpectatorControlComponent::handle( Event* e )
 			{
 				MouseEvent* me = static_cast<MouseEvent*>(e);
 				
+				// Update internal angles
+				xAng = xAng*Quat::RotateX( -me->mMouseMoveY/1000.0  );
+				yAng = yAng*Quat::RotateY( -me->mMouseMoveX/1000.0);
+
 				btTransform initial = mPhysicsComponent->getBody()->getWorldTransform();
-				btTransform updated( Quat::RotateY( -me->mMouseMoveX/1000.0) * Quat(initial.getRotation()) *   Quat::RotateX( -me->mMouseMoveY/1000.0 ),initial.getOrigin() );
+				btTransform updated( yAng * xAng,initial.getOrigin() );
 				mPhysicsComponent->getBody()->setWorldTransform( updated );
 				mPhysicsComponent->getBody()->activate(true);
 				//mPhysicsComponent->update( 0 );

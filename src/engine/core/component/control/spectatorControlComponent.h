@@ -26,5 +26,9 @@ private:
 
 	// Speed
 	float mSpeed;
+
+	// Track angles
+	Quat xAng;
+	Quat yAng;
 };
 

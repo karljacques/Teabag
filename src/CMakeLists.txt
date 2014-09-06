@@ -24,6 +24,7 @@ add_executable (teabag ${teabag_HEADERS} ${teabag_SOURCES})
 
 ###############################################################################
 # SDL2
+
 find_package (SDL2 REQUIRED)
 include_directories (${SDL2_INCLUDE_DIR})
 target_link_libraries (teabag ${SDL2_LIBRARY})
@@ -95,10 +96,26 @@ target_link_libraries (teabag MathGeoLib)
 
 ###############################################################################
 # Ogre3D
-find_package (OGRE REQUIRED)
-include_directories (${OGRE_INCLUDE_DIRS})
-target_link_libraries (teabag ${OGRE_LIBRARIES})
+find_package (OGRE)
+if (OGRE_FOUND)
+	include_directories (${OGRE_INCLUDE_DIRS})
+	target_link_libraries (teabag ${OGRE_LIBRARIES})
 
-# copy required plugins to local plugins folder
-file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
-file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
+	# copy required plugins to local plugins folder
+	file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
+	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
+else (OGRE_FOUND)
+	externalproject_add(Ogre_PROJECT
+		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
+		HG_TAG "v1-9-0"
+		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
+		-DOGRE_BUILD_SAMPLES=0
+	)
+	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/OGRE")
+	target_link_libraries (teabag OgreMain)
+
+	# copy required plugins to local plugins folder
+	file (GLOB OGRE_PLUGINS "${CMAKE_SOURCE_DIR}/cmake-dep/lib/OGRE/RenderSystem_GL*")
+	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
+endif (OGRE_FOUND)

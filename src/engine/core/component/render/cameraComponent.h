@@ -1,9 +1,9 @@
 #pragma once
 
-#include "engine\core\component\base\component.h"
-#include "engine\core\component\base\positionComponent.h"
-#include "engine\core\graphics\RenderSystem.h"
-#include "engine\core\event\EventListener.h"
+#include "engine/core/component/base/component.h"
+#include "engine/core/component/base/positionComponent.h"
+#include "engine/core/graphics/RenderSystem.h"
+#include "engine/core/event/EventListener.h"
 
 // dependent on Ogre
 class CameraComponent :

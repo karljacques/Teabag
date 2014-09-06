@@ -52,6 +52,3 @@ Icon
 .Spotlight-V100
 .Trashes
 
-# exclude cmake for now
-CMakeLists.txt
-*cmake

@@ -36,6 +36,7 @@ if (RakNet_FOUND)
 	include_directories (${RAKNET_INCLUDES})
 	target_link_libraries (teabag ${RAKNET_LIBRARY})
 else (RakNet_FOUND)
+	message (STATUS "RakNet will be downloaded automatically")
 	externalproject_add (RakNet_PROJECT
 		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
 		GIT_REPOSITORY "git://github.com/TheComet93/RakNet"
@@ -62,6 +63,7 @@ if (BULLET_FOUND)
 		${BULLET_LinearMath_LIBRARY}
 	)
 else (BULLET_FOUND)
+	message (STATUS "Bullet will be downloaded automatically")
 	externalproject_add (Bullet_PROJECT
 		PREFIX ${CMAKE_SOURCE_DIR}/cmake-dep
 		GIT_REPOSITORY "git://github.com/bulletphysics/bullet3"
@@ -81,6 +83,7 @@ endif (BULLET_FOUND)
 
 ###############################################################################
 # MathGeoLib
+message (STATUS "MathGeoLib will be downloaded automatically")
 externalproject_add (MathGeoLib_PROJECT
 	PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
 	GIT_REPOSITORY "git://github.com/juj/MathGeoLib"
@@ -105,10 +108,20 @@ if (OGRE_FOUND)
 	file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
 	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
 else (OGRE_FOUND)
+	# install ogre's dependencies
+	externalproject_add(OGREDEPS_PROJECT
+		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+		HG_REPOSITORY "https://bitbucket.org/cabalistic/ogredeps/"
+		HG_TAG "default"
+		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
+	)
+
+	message (STATUS "Ogre will be downloaded automatically")
 	externalproject_add(Ogre_PROJECT
 		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
+		DEPENDS OGREDEPS_PROJECT
 		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
 		-DOGRE_BUILD_SAMPLES=0
 	)
@@ -118,4 +131,5 @@ else (OGRE_FOUND)
 	# copy required plugins to local plugins folder
 	file (GLOB OGRE_PLUGINS "${CMAKE_SOURCE_DIR}/cmake-dep/lib/OGRE/RenderSystem_GL*")
 	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
+
 endif (OGRE_FOUND)

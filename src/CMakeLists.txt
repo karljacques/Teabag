@@ -55,26 +55,29 @@ else (SDL2_FOUND)
 	# windows specific settings
 	if (WIN32)
 		set (SDL_CONFIGURE_COMMAND "")
+		set (SDL_INSTALL_COMMAND "")
 	endif ()
 
 	# MSVC compiler is going to use msbuild to build the solution files
 	if (MSVC80)
-		set (SDL_BUILD_COMMAND "MSBuild VisualC/SDL_VS2008.sln")
+		message (STATUS "Using MSBuild vs2008") 
+		set (SDL_BUILD_COMMAND "MSBuild" "SDL_VS2008.sln")
 	elseif (MSVC10)
-		set (SDL_BUILD_COMMAND "MSBuild VisualC/SDL_VS2010.sln")
+		message (STATUS "Using MSBuild vs2010")
+		set (SDL_BUILD_COMMAND "MSBuild" "SDL_VS2010.sln")
 	else ()
 	endif ()
 
 	# debug or release
-	if (MSVC)
-		if (CMAKE_BUILD_TYPE MATCHES "Release")
-			set (SDL_BUILD_COMMAND ${SDL_CONFIGURE_COMMAND}
-				" /property:Configuration=Release")
-		else ()
-			set (SDL_BUILD_COMMAND ${SDL_CONFIGURE_COMMAND}
-				" /property:Configuration=Debug")
-		endif ()
-	endif ()
+	#if (MSVC)
+	#	if (CMAKE_BUILD_TYPE MATCHES "Release")
+	#		set (SDL_BUILD_COMMAND ${SDL_CONFIGURE_COMMAND}
+	#			" /property:Configuration=Release")
+	#	else ()
+	#		set (SDL_BUILD_COMMAND ${SDL_CONFIGURE_COMMAND}
+	#			" /property:Configuration=Debug")
+	#	endif ()
+	#endif ()
 
 	externalproject_add (SDL2_PROJECT
 		DEPENDS OGREDEPS_PROJECT
@@ -82,7 +85,8 @@ else (SDL2_FOUND)
 		URL "https://www.libsdl.org/release/SDL2-2.0.3.tar.gz"
 		CONFIGURE_COMMAND ${SDL_CONFIGURE_COMMAND}
 		BUILD_COMMAND ${SDL_BUILD_COMMAND}
-		INSTALL_COMMAND ${SDL_INSTALL_COMMAND}
+		BINARY_DIR ${EXTERNAL_DEP_DIR}/src/SDL2_PROJECT/VisualC
+		INSTALL_COMMAND ""
 	)
 endif (SDL2_FOUND)
 

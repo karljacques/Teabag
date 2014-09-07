@@ -25,6 +25,7 @@ add_executable (teabag ${teabag_HEADERS} ${teabag_SOURCES})
 # SDL2
 find_package (SDL2)
 if (SDL2_FOUND)
+	add_custom_target (SDL2_PROJECT)
 	include_directories (${SDL2_INCLUDE_DIR})
 	target_link_libraries (teabag ${SDL2_LIBRARY})
 else (SDL2_FOUND)
@@ -68,16 +69,18 @@ endif (SDL2_FOUND)
 
 ###############################################################################
 # boost (Ogre requires at least 1.46.0 I think)
-find_package (Boost REQUIRED)
+find_package (Boost REQUIRED system)
+add_custom_target (BOOST_PROJECT)
 include_directories (${BOOST_INCLUDE_DIRS})
 target_link_libraries (teabag
-	${BOOST_LIBRARIES}
+	boost_system
 )
 
 ###############################################################################
 # RakNet
 find_package (RakNet)
 if (RakNet_FOUND)
+	add_custom_target (RakNet_PROJECT)
 	include_directories (${RAKNET_INCLUDES})
 	target_link_libraries (teabag ${RAKNET_LIBRARY})
 else (RakNet_FOUND)
@@ -101,6 +104,7 @@ find_package (BULLET COMPONENTS
 	LinearMath
 )
 if (BULLET_FOUND)
+	add_custom_target (Bullet_PROJECT)
 	include_directories (${BULLET_INCLUDE_DIR})
 	target_link_libraries (teabag
 		${BULLET_BulletDynamics_LIBRARY}
@@ -166,7 +170,7 @@ else (OGRE_FOUND)
 		PREFIX ${EXTERNAL_DEP_DIR}
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
-		DEPENDS OGREDEPS_PROJECT
+		DEPENDS OGREDEPS_PROJECT SDL2_PROJECT BOOST_PROJECT
 		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_DEP_DIR}
 		-DOGRE_BUILD_SAMPLES=0
 		-DCMAKE_LIBRARY_PATH=${EXTERNAL_DEP_DIR}/lib

@@ -9,6 +9,11 @@ include (ExternalProject)
 file (GLOB_RECURSE teabag_HEADERS "*.h" "*.hpp" "*.hxx")
 file (GLOB_RECURSE teabag_SOURCES "*.c" "*.cpp")
 
+if (APPLE)
+	file (GLOB_RECURSE teabag_SOURCES_OSX "*.mm")
+	set (teabag_SOURCES ${teabag_SOURCES} ${teabag_SOURCES_OSX})
+endif()
+
 include_directories (
 	"."
 	"engine"
@@ -16,7 +21,7 @@ include_directories (
 
 # create executable
 link_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/lib")
-add_executable (teabag ${teabag_HEADERS} ${teabag_SOURCES})
+add_executable (teabag WIN32 MACOSX_BUNDLE ${teabag_HEADERS} ${teabag_SOURCES})
 
 ###############################################################################
 # dependencies
@@ -24,12 +29,16 @@ add_executable (teabag ${teabag_HEADERS} ${teabag_SOURCES})
 
 # Common CMake Flags
 set(COMMON_CMAKE_FLAGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep)
+
+# Mac OS X requires dependencies to use the libc++ standard library instead of
+# the default stdlibc++ when using C++11 in the main project. Additionally,
+# disable the -Wdeprecated-register warning.
 if (APPLE)
 	set(COMMON_CMAKE_FLAGS
 		${COMMON_CMAKE_FLAGS}
 		-DCMAKE_OSX_ARCHITECTURES="x86_64"
 		-DCMAKE_C_FLAGS="-stdlib=libc++"
-		"-DCMAKE_CXX_FLAGS='-std=c++11 -stdlib=libc++'")
+		"-DCMAKE_CXX_FLAGS='-std=c++11 -stdlib=libc++ -Wno-deprecated-register'")
 endif()
 
 ###############################################################################
@@ -91,15 +100,8 @@ target_link_libraries (teabag MathGeoLib)
 ###############################################################################
 # Ogre3D
 find_package (OGRE)
-if (OGRE_FOUND)
-	include_directories (${OGRE_INCLUDE_DIRS})
-	target_link_libraries (teabag ${OGRE_LIBRARIES})
-
-	# copy required plugins to local plugins folder
-	file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
-	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
-else (OGRE_FOUND)
-	# install ogre's dependencies
+if (NOT OGRE_FOUND)
+	# Install Ogre's dependencies
 	externalproject_add(OGREDEPS_PROJECT
 		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
 		HG_REPOSITORY "https://bitbucket.org/davedissian/ogredeps/"
@@ -107,6 +109,7 @@ else (OGRE_FOUND)
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 	)
 
+	# Build Ogre
 	message (STATUS "Ogre will be downloaded automatically")
 	externalproject_add(Ogre_PROJECT
 		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
@@ -114,17 +117,44 @@ else (OGRE_FOUND)
 		HG_TAG "v1-9-0"
 		DEPENDS OGREDEPS_PROJECT
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
+		-DOGRE_BUILD_COMPONENT_OVERLAY=0
+		-DOGRE_BUILD_COMPONENT_PAGING=0
+		-DOGRE_BUILD_COMPONENT_PROPERTY=0
+		-DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=0
+		-DOGRE_BUILD_COMPONENT_TERRAIN=0
+		-DOGRE_BUILD_COMPONENT_VOLUME=0
+		-DOGRE_BUILD_PLUGIN_BSP=0
+		-DOGRE_BUILD_PLUGIN_CG=0
+		-DOGRE_BUILD_PLUGIN_PCZ=0
+		-DOGRE_BUILD_PLUGIN_PFX=0
+		-DOGRE_BUILD_RENDERSYSTEM_GL=1
 		-DOGRE_BUILD_SAMPLES=0
+		-DOGRE_BUILD_TOOLS=0
+		-DOGRE_INSTALL_DOCS=0
+		-DOGRE_INSTALL_PDB=0
+		-DOGRE_INSTALL_SAMPLES=0
 	)
 	add_dependencies(teabag Ogre_PROJECT)
-	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/OGRE")
-	target_link_libraries (teabag OgreMain)
 
-	# copy required plugins to local plugins folder
-	file (GLOB OGRE_PLUGINS "${CMAKE_SOURCE_DIR}/cmake-dep/lib/OGRE/RenderSystem_GL*")
-	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
+	# Set up Ogre variables
+	set(OGRE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/cmake-dep/include/OGRE;${CMAKE_SOURCE_DIR}/cmake-dep/include/OIS")
+	if (APPLE)
+		set(OGRE_LIBRARIES "${CMAKE_SOURCE_DIR}/cmake-dep/lib/RelWithDebInfo/Ogre.framework")
+		set(OGRE_PLUGIN_DIR_REL "${CMAKE_SOURCE_DIR}/cmake-dep/lib/RelWithDebInfo")
+	elseif (UNIX)
+		set(OGRE_LIBRARIES "OgreMain")
+		set(OGRE_PLUGIN_DIR_REL "${CMAKE_SOURCE_DIR}/cmake-dep/lib/OGRE")
+	endif()
 
-endif (OGRE_FOUND)
+endif ()
+
+# Link to Ogre
+include_directories (${OGRE_INCLUDE_DIRS})
+target_link_libraries (teabag ${OGRE_LIBRARIES})
+
+# Copy required plugins to local plugins folder
+file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
+file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 ###############################################################################
 # RakNet
@@ -144,3 +174,13 @@ else (RakNet_FOUND)
 	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/RakNet")
 	target_link_libraries (teabag RakNetDLL)
 endif (RakNet_FOUND)
+
+# On OS X. We need to write the correct path of each dependency relative to the
+# executable in the app bundle. Use install_name_tool to modify the search paths
+# in the executable
+if (APPLE)
+	message(STATUS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app/)
+	add_custom_command(TARGET teabag
+		POST_BUILD
+		COMMAND install_name_tool -change libRakNetDLL.dylib @executable_path/../Frameworks/libRakNetDLL.dylib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app/Contents/MacOS/teabag)
+endif ()

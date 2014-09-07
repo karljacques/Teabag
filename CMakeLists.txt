@@ -40,6 +40,7 @@ elseif (MINGW)
 elseif (APPLE)
 	add_definitions(
 		-std=c++11
+		-Wno-deprecated-register
 	)
 elseif (UNIX)
 	add_definitions(
@@ -68,4 +69,4 @@ add_definitions (
 file (MAKE_DIRECTORY "cmake-dep")
 file (WRITE "cmake-dep/.gitignore" "*")
 
-add_subdirectory ("src")
+add_subdirectory (src)

@@ -62,16 +62,19 @@ if (BULLET_FOUND)
 		${BULLET_BulletCollision_LIBRARY}
 		${BULLET_LinearMath_LIBRARY}
 	)
-else (BULLET_FOUND)
+else ()
 	message (STATUS "Bullet will be downloaded automatically")
 	externalproject_add (Bullet_PROJECT
 		PREFIX ${CMAKE_SOURCE_DIR}/cmake-dep
 		GIT_REPOSITORY "git://github.com/bulletphysics/bullet3"
 		GIT_TAG "Bullet-2.83-alpha"
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
-		-DBUILD_EXTRAS:BOOL=OFF -DBUILD_UNIT_TESTS=OFF
-		-DBUILD_CPU_DEMOS=OFF -DBUILD_BULLET2_DEMOS=OFF
-		-DBUILD_BULLET3=OFF -DBUILD_BULLET3_DEMOS=OFF
+		-DBUILD_EXTRAS=0
+		-DBUILD_UNIT_TESTS=0
+		-DBUILD_CPU_DEMOS=0
+		-DBUILD_BULLET2_DEMOS=0
+		-DBUILD_BULLET3=0
+		-DBUILD_BULLET3_DEMOS=0
 	)
 	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/bullet")
 	target_link_libraries (teabag
@@ -79,7 +82,7 @@ else (BULLET_FOUND)
 		BulletCollision
 		LinearMath
 	)
-endif (BULLET_FOUND)
+endif ()
 
 ###############################################################################
 # MathGeoLib
@@ -159,10 +162,8 @@ file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 ###############################################################################
 # RakNet
 find_package (RakNet)
-if (RakNet_FOUND)
-	include_directories (${RAKNET_INCLUDES})
-	target_link_libraries (teabag ${RAKNET_LIBRARY})
-else (RakNet_FOUND)
+if (NOT RakNet_FOUND)
+	# Build RakNet
 	message (STATUS "RakNet will be downloaded automatically")
 	externalproject_add (RakNet_PROJECT
 		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
@@ -171,16 +172,33 @@ else (RakNet_FOUND)
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 		-DRAKNET_ENABLE_STATIC=FALSE
 	)
-	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/RakNet")
-	target_link_libraries (teabag RakNetDLL)
-endif (RakNet_FOUND)
 
-# On OS X. We need to write the correct path of each dependency relative to the
-# executable in the app bundle. Use install_name_tool to modify the search paths
-# in the executable
+	# Set up RakNet variables
+	set (RAKNET_INCLUDES "${CMAKE_SOURCE_DIR}/cmake-dep/include/RakNet")
+	set (RAKNET_LIBRARY RakNetDLL)
+endif ()
+
+include_directories (${RAKNET_INCLUDES})
+target_link_libraries (teabag ${RAKNET_LIBRARY})
+
+# OS X specific post build
 if (APPLE)
-	message(STATUS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app/)
-	add_custom_command(TARGET teabag
-		POST_BUILD
-		COMMAND install_name_tool -change libRakNetDLL.dylib @executable_path/../Frameworks/libRakNetDLL.dylib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app/Contents/MacOS/teabag)
+	set(BUNDLE_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app)
+	set(FRAMEWORKS_DIR ${BUNDLE_DIR}/Contents/Frameworks)
+
+	# Copy dependencies into the app bundle
+	add_custom_command(TARGET teabag POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${FRAMEWORKS_DIR})
+	add_custom_command(TARGET teabag POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/Ogre.framework ${FRAMEWORKS_DIR}/Ogre.framework)
+	add_custom_command(TARGET teabag POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.framework ${FRAMEWORKS_DIR}/RenderSystem_GL.framework)
+	add_custom_command(TARGET teabag POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake-dep/lib/libRakNetDLL.dylib ${FRAMEWORKS_DIR})
+
+	# We need to write the correct path of each dependency relative to the
+	# executable in the app bundle. Use install_name_tool to modify the search
+	# paths in the executable
+	add_custom_command(TARGET teabag POST_BUILD
+		COMMAND install_name_tool -change libRakNetDLL.dylib @executable_path/../Frameworks/libRakNetDLL.dylib ${BUNDLE_DIR}/Contents/MacOS/teabag)
 endif ()

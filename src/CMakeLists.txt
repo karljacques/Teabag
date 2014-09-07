@@ -93,13 +93,14 @@ endif (SDL2_FOUND)
 ###############################################################################
 # boost
 find_package (Boost COMPONENTS system)
-if (BOOST_FOUND)
+if (Boost_FOUND)
 	add_custom_target (BOOST_PROJECT)
 	include_directories (${BOOST_INCLUDE_DIRS})
 	target_link_libraries (teabag
-		boost_system
+		${Boost_SYSTEM_LIBRARY}
 	)
-else (BOOST_FOUND)
+else (Boost_FOUND)
+	message (STATUS "Boost will be downloaded automatically")
 
 	# windows specific settings
 	if (WIN32)
@@ -123,7 +124,7 @@ else (BOOST_FOUND)
 	target_link_libraries (teabag
 		boost_system
 	)
-endif (BOOST_FOUND)
+endif (Boost_FOUND)
 
 ###############################################################################
 # RakNet

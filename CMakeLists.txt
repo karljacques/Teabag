@@ -65,4 +65,8 @@ add_definitions (
 file (MAKE_DIRECTORY "cmake-dep")
 file (WRITE "cmake-dep/.gitignore" "*")
 
+set (EXTERNAL_DEP_DIR "${CMAKE_SOURCE_DIR}/cmake-dep")
+message (STATUS "External dependencies prefix: ${EXTERNAL_DEP_DIR}")
+link_directories ("${EXTERNAL_DEP_DIR}/lib")
+
 add_subdirectory ("src")

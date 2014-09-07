@@ -120,6 +120,9 @@ else (BOOST_FOUND)
 		BUILD_IN_SOURCE 1
 		INSTALL_COMMAND ""
 	)
+	target_link_libraries (teabag
+		boost_system
+	)
 endif (BOOST_FOUND)
 
 ###############################################################################

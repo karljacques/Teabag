@@ -10,6 +10,10 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 
+#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+#include "OSXUtils.h"
+#endif
+
 RenderSystem::RenderSystem()
 {
     // The idea here is to open an SDL window *without* creating a GL context
@@ -27,18 +31,17 @@ RenderSystem::RenderSystem()
 
 	// Create SDL Window without OpenGL context
 	mWindow = SDL_CreateWindow( "Window",
-												SDL_WINDOWPOS_CENTERED,
-												SDL_WINDOWPOS_CENTERED,
-												windowWidth,
-												windowHeight,
-												SDL_WINDOWPOS_CENTERED|SDL_WINDOW_RESIZABLE // TODO Add window resize support
-											);
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		windowWidth,
+		windowHeight,
+		SDL_WINDOWPOS_CENTERED|SDL_WINDOW_RESIZABLE // TODO Add window resize support
+	);
 
     // Prepare Ogre render window parameters
     Ogre::NameValuePairList lParams;
     lParams["FSAA"] = "0";
     lParams["vsync"] = "true";
-    lParams["macAPI"] = "carbon";
 
     // Get SDL window handle and insert into parameter list so ogre knows which
     // external window to use.
@@ -51,10 +54,14 @@ RenderSystem::RenderSystem()
 #elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
 	size_t winHandle = reinterpret_cast<size_t>(info.info.x11.window);
 	lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);
+#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+	lParams["macAPI"] = "cocoa";
+	lParams["macAPICocoaUseNSView"] = "true";
+	lParams["externalWindowHandle"] = Ogre::StringConverter::toString(
+		getNSViewFromNSWindow(reinterpret_cast<size_t>(info.info.cocoa.window)));
 #else
 #   error Defined OGRE_PLATFORM not supported
 #endif
-    
 
     // Load the GL Rendersystem and set up
 	Ogre::String renderer = "./RenderSystem_GL";

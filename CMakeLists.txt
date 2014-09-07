@@ -38,6 +38,10 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/utils")
 if (MSVC)
 elseif (MINGW)
 elseif (APPLE)
+	add_definitions(
+		-std=c++11
+		-Wno-deprecated-register
+	)
 elseif (UNIX)
 	add_definitions(
 		-std=c++11
@@ -65,4 +69,4 @@ add_definitions (
 file (MAKE_DIRECTORY "cmake-dep")
 file (WRITE "cmake-dep/.gitignore" "*")
 
-add_subdirectory ("src")
+add_subdirectory (src)

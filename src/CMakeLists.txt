@@ -30,9 +30,10 @@ find_package (Freetype)
 find_package (FreeImage)
 if ((NOT ZLIB_FOUND) OR
 	(NOT ZZip_FOUND) OR
-	(NOT Freetype_FOUND) OR
+	(NOT FREETYPE_FOUND) OR
 	(NOT FreeImage_FOUND)
 )
+	message (STATUS "OGREDEPS will be downloaded automatically")
 	externalproject_add(OGREDEPS_PROJECT
 		PREFIX ${EXTERNAL_DEP_DIR}
 		HG_REPOSITORY "https://bitbucket.org/cabalistic/ogredeps/"
@@ -51,6 +52,8 @@ if (SDL2_FOUND)
 	include_directories (${SDL2_INCLUDE_DIR})
 	target_link_libraries (teabag ${SDL2_LIBRARY})
 else (SDL2_FOUND)
+
+	message (STATUS "SDL2 will be downloaded automatically")
 
 	# windows specific settings
 	if (WIN32)
@@ -91,7 +94,10 @@ else (SDL2_FOUND)
 endif (SDL2_FOUND)
 
 ###############################################################################
-# boost
+# boost - being future-proof since tomorrow!
+# TheComet: For some stupid reason teabag really wants to link with
+# boost_system. This is happening on Gentoo with boost-1.52.0-r7 installed
+# system-wide and ogre picking up on it.
 find_package (Boost COMPONENTS system)
 if (Boost_FOUND)
 	add_custom_target (BOOST_PROJECT)
@@ -99,32 +105,33 @@ if (Boost_FOUND)
 	target_link_libraries (teabag
 		${Boost_SYSTEM_LIBRARY}
 	)
-else (Boost_FOUND)
-	message (STATUS "Boost will be downloaded automatically")
-
-	# windows specific settings
-	if (WIN32)
-		set (BOOST_CONFIGURE_COMMAND "bootstrap.bat")
-		set (BOOST_BUILD_COMMAND "b2" "install" "--prefix=${EXTERNAL_DEP_DIR}")
-	else ()
-		set (BOOST_CONFIGURE_COMMAND "./bootstrap.sh")
-		set (BOOST_BUILD_COMMAND "./b2" "install"
-			"--ignore-site-config" "--prefix=${EXTERNAL_DEP_DIR}" )
-	endif ()
-
-	externalproject_add (BOOST_PROJECT
-		DEPENDS OGREDEPS_PROJECT
-		PREFIX ${EXTERNAL_DEP_DIR}
-		URL "http://sourceforge.net/projects/boost/files/boost/1.56.0/boost_1_56_0.tar.bz2"
-		CONFIGURE_COMMAND ${BOOST_CONFIGURE_COMMAND}
-		BUILD_COMMAND ${BOOST_BUILD_COMMAND}
-		BUILD_IN_SOURCE 1
-		INSTALL_COMMAND ""
-	)
-	target_link_libraries (teabag
-		boost_system
-	)
-endif (Boost_FOUND)
+endif ()
+#else (Boost_FOUND)
+#	message (STATUS "Boost will be downloaded automatically")
+#
+#	# windows specific settings
+#	if (WIN32)
+#		set (BOOST_CONFIGURE_COMMAND "bootstrap.bat")
+#		set (BOOST_BUILD_COMMAND "b2" "install" "--prefix=${EXTERNAL_DEP_DIR}")
+#	else ()
+#		set (BOOST_CONFIGURE_COMMAND "./bootstrap.sh")
+#		set (BOOST_BUILD_COMMAND "./b2" "install"
+#			"--ignore-site-config" "--prefix=${EXTERNAL_DEP_DIR}" )
+#	endif ()
+#
+#	externalproject_add (BOOST_PROJECT
+#		DEPENDS OGREDEPS_PROJECT
+#		PREFIX ${EXTERNAL_DEP_DIR}
+#		URL "http://sourceforge.net/projects/boost/files/boost/1.56.0/boost_1_56_0.tar.bz2"
+#		CONFIGURE_COMMAND ${BOOST_CONFIGURE_COMMAND}
+#		BUILD_COMMAND ${BOOST_BUILD_COMMAND}
+#		BUILD_IN_SOURCE 1
+#		INSTALL_COMMAND ""
+#	)
+#	target_link_libraries (teabag
+#		boost_system
+#	)
+#endif (Boost_FOUND)
 
 ###############################################################################
 # RakNet
@@ -201,6 +208,7 @@ target_link_libraries (teabag MathGeoLib)
 # Ogre3D
 find_package (OGRE)
 if (OGRE_FOUND)
+	add_custom_target (Ogre_PROJECT)
 	include_directories (${OGRE_INCLUDE_DIRS})
 	target_link_libraries (teabag ${OGRE_LIBRARIES})
 
@@ -210,14 +218,13 @@ if (OGRE_FOUND)
 else (OGRE_FOUND)
 	message (STATUS "Ogre will be downloaded automatically")
 	externalproject_add(Ogre_PROJECT
-		DEPENDS OGREDEPS_PROJECT SDL2_PROJECT BOOST_PROJECT
+		DEPENDS OGREDEPS_PROJECT SDL2_PROJECT
 		PREFIX ${EXTERNAL_DEP_DIR}
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
 		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_DEP_DIR}
 		-DOGRE_BUILD_SAMPLES=0
-		-DCMAKE_LIBRARY_PATH=${EXTERNAL_DEP_DIR}/lib
-		-DCMAKE_INCLUDE_PATH=${EXTERNAL_DEP_DIR}/include
+		-DOGRE_DEPENDENCIES_DIR=${EXTERNAL_DEP_DIR}
 	)
 	include_directories ("${EXTERNAL_DEP_DIR}/include/OGRE")
 	target_link_libraries (teabag OgreMain)
@@ -227,3 +234,9 @@ else (OGRE_FOUND)
 	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
 
 endif (OGRE_FOUND)
+
+###############################################################################
+# define teabag dependencies so multithreaded compilation works
+add_dependencies (teabag
+	Ogre_PROJECT
+)

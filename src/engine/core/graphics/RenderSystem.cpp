@@ -27,18 +27,17 @@ RenderSystem::RenderSystem()
 
 	// Create SDL Window without OpenGL context
 	mWindow = SDL_CreateWindow( "Window",
-												SDL_WINDOWPOS_CENTERED,
-												SDL_WINDOWPOS_CENTERED,
-												windowWidth,
-												windowHeight,
-												SDL_WINDOWPOS_CENTERED|SDL_WINDOW_RESIZABLE // TODO Add window resize support
-											);
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		windowWidth,
+		windowHeight,
+		SDL_WINDOWPOS_CENTERED|SDL_WINDOW_RESIZABLE // TODO Add window resize support
+	);
 
     // Prepare Ogre render window parameters
     Ogre::NameValuePairList lParams;
     lParams["FSAA"] = "0";
     lParams["vsync"] = "true";
-    lParams["macAPI"] = "carbon";
 
     // Get SDL window handle and insert into parameter list so ogre knows which
     // external window to use.
@@ -51,10 +50,14 @@ RenderSystem::RenderSystem()
 #elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
 	size_t winHandle = reinterpret_cast<size_t>(info.info.x11.window);
 	lParams["parentWindowHandle"] = Ogre::StringConverter::toString(winHandle);
+#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+    lParams["macAPI"] = "cocoa";
+    lParams["macAPICocoaUseNSView"] = "true";
+    //lParam["externalWindowHandle"] = std::to_string((size_t)wmInfo.info.cocoa.window);
+    lParams["currentGLContext"] = Ogre::String("True");
 #else
 #   error Defined OGRE_PLATFORM not supported
 #endif
-    
 
     // Load the GL Rendersystem and set up
 	Ogre::String renderer = "./RenderSystem_GL";

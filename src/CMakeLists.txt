@@ -22,31 +22,22 @@ add_executable (teabag ${teabag_HEADERS} ${teabag_SOURCES})
 # dependencies
 ###############################################################################
 
+# Common CMake Flags
+set(COMMON_CMAKE_FLAGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep)
+if (APPLE)
+	set(COMMON_CMAKE_FLAGS
+		${COMMON_CMAKE_FLAGS}
+		-DCMAKE_OSX_ARCHITECTURES="x86_64"
+		-DCMAKE_C_FLAGS="-stdlib=libc++"
+		"-DCMAKE_CXX_FLAGS='-std=c++11 -stdlib=libc++'")
+endif()
+
 ###############################################################################
 # SDL2
 
 find_package (SDL2 REQUIRED)
 include_directories (${SDL2_INCLUDE_DIR})
 target_link_libraries (teabag ${SDL2_LIBRARY})
-
-###############################################################################
-# RakNet
-find_package (RakNet)
-if (RakNet_FOUND)
-	include_directories (${RAKNET_INCLUDES})
-	target_link_libraries (teabag ${RAKNET_LIBRARY})
-else (RakNet_FOUND)
-	message (STATUS "RakNet will be downloaded automatically")
-	externalproject_add (RakNet_PROJECT
-		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
-		GIT_REPOSITORY "git://github.com/TheComet93/RakNet"
-		GIT_TAG "master"
-		CMAKE_ARGS -DRAKNET_ENABLE_STATIC=FALSE
-		-DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
-	)
-	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/RakNet")
-	target_link_libraries (teabag RakNetDLL)
-endif (RakNet_FOUND)
 
 ###############################################################################
 # Bullet
@@ -68,10 +59,10 @@ else (BULLET_FOUND)
 		PREFIX ${CMAKE_SOURCE_DIR}/cmake-dep
 		GIT_REPOSITORY "git://github.com/bulletphysics/bullet3"
 		GIT_TAG "Bullet-2.83-alpha"
-		CMAKE_ARGS -DBUILD_EXTRAS:BOOL=OFF -DBUILD_UNIT_TESTS=OFF
+		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
+		-DBUILD_EXTRAS:BOOL=OFF -DBUILD_UNIT_TESTS=OFF
 		-DBUILD_CPU_DEMOS=OFF -DBUILD_BULLET2_DEMOS=OFF
 		-DBUILD_BULLET3=OFF -DBUILD_BULLET3_DEMOS=OFF
-		-DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
 	)
 	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/bullet")
 	target_link_libraries (teabag
@@ -88,7 +79,7 @@ externalproject_add (MathGeoLib_PROJECT
 	PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
 	GIT_REPOSITORY "git://github.com/juj/MathGeoLib"
 	GIT_TAG "master"
-	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
+	CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 )
 add_definitions (
 	-DMATH_BULLET_INTEROP
@@ -111,9 +102,9 @@ else (OGRE_FOUND)
 	# install ogre's dependencies
 	externalproject_add(OGREDEPS_PROJECT
 		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
-		HG_REPOSITORY "https://bitbucket.org/cabalistic/ogredeps/"
+		HG_REPOSITORY "https://bitbucket.org/davedissian/ogredeps/"
 		HG_TAG "default"
-		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
+		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 	)
 
 	message (STATUS "Ogre will be downloaded automatically")
@@ -122,9 +113,10 @@ else (OGRE_FOUND)
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
 		DEPENDS OGREDEPS_PROJECT
-		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep
+		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 		-DOGRE_BUILD_SAMPLES=0
 	)
+	add_dependencies(teabag Ogre_PROJECT)
 	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/OGRE")
 	target_link_libraries (teabag OgreMain)
 
@@ -133,3 +125,22 @@ else (OGRE_FOUND)
 	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
 
 endif (OGRE_FOUND)
+
+###############################################################################
+# RakNet
+find_package (RakNet)
+if (RakNet_FOUND)
+	include_directories (${RAKNET_INCLUDES})
+	target_link_libraries (teabag ${RAKNET_LIBRARY})
+else (RakNet_FOUND)
+	message (STATUS "RakNet will be downloaded automatically")
+	externalproject_add (RakNet_PROJECT
+		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+		GIT_REPOSITORY "git://github.com/TheComet93/RakNet"
+		GIT_TAG "master"
+		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
+		-DRAKNET_ENABLE_STATIC=FALSE
+	)
+	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/RakNet")
+	target_link_libraries (teabag RakNetDLL)
+endif (RakNet_FOUND)

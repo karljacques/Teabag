@@ -38,6 +38,9 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/utils")
 if (MSVC)
 elseif (MINGW)
 elseif (APPLE)
+	add_definitions(
+		-std=c++11
+	)
 elseif (UNIX)
 	add_definitions(
 		-std=c++11

@@ -22,6 +22,28 @@ add_executable (teabag ${teabag_HEADERS} ${teabag_SOURCES})
 ###############################################################################
 
 ###############################################################################
+# install ogre's dependencies
+# zlib, zziplib, freetype, freeimage
+find_package (ZLIB)
+find_package (ZZip)
+find_package (Freetype)
+find_package (FreeImage)
+if ((NOT ZLIB_FOUND) OR
+	(NOT ZZip_FOUND) OR
+	(NOT Freetype_FOUND) OR
+	(NOT FreeImage_FOUND)
+)
+	externalproject_add(OGREDEPS_PROJECT
+		PREFIX ${EXTERNAL_DEP_DIR}
+		HG_REPOSITORY "https://bitbucket.org/cabalistic/ogredeps/"
+		HG_TAG "default"
+		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_DEP_DIR}
+	)
+else ()
+	add_custom_target (OGREDEPS_PROJECT)
+endif ()
+
+###############################################################################
 # SDL2
 find_package (SDL2)
 if (SDL2_FOUND)
@@ -31,11 +53,7 @@ else (SDL2_FOUND)
 
 	# windows specific settings
 	if (WIN32)
-		set (SDL_URL "https://www.libsdl.org/release/SDL2-2.0.3.zip")
 		set (SDL_CONFIGURE_COMMAND "")
-	else ()
-		set (SDL_URL "https://www.libsdl.org/release/SDL2-2.0.3.tar.gz")
-		set (SDL_INSTALL_COMMAND "make install")
 	endif ()
 
 	# MSVC compiler is going to use msbuild to build the solution files
@@ -58,8 +76,9 @@ else (SDL2_FOUND)
 	endif ()
 
 	externalproject_add (SDL2_PROJECT
+		DEPENDS OGREDEPS_PROJECT
 		PREFIX ${EXTERNAL_DEP_DIR}
-		URL ${SDL_URL}
+		URL "https://www.libsdl.org/release/SDL2-2.0.3.tar.gz"
 		CONFIGURE_COMMAND ${SDL_CONFIGURE_COMMAND}
 		BUILD_COMMAND ${SDL_BUILD_COMMAND}
 		INSTALL_COMMAND ${SDL_INSTALL_COMMAND}
@@ -67,12 +86,33 @@ else (SDL2_FOUND)
 endif (SDL2_FOUND)
 
 ###############################################################################
-# boost (Ogre requires at least 1.46.0 I think)
-find_package (Boost REQUIRED)
-include_directories (${BOOST_INCLUDE_DIRS})
-target_link_libraries (teabag
-	${BOOST_LIBRARIES}
-)
+# boost
+find_package (Boost)
+if (BOOST_FOUND)
+	include_directories (${BOOST_INCLUDE_DIRS})
+	target_link_libraries (teabag
+		${BOOST_LIBRARIES}
+	)
+else (BOOST_FOUND)
+
+	# windows specific settings
+	if (WIN32)
+		set (BOOST_CONFIGURE_COMMAND "bootstrap.bat")
+		set (BOOST_BUILD_COMMAND "b2" "install" "--prefix=${EXTERNAL_DEP_DIR}")
+		set (BOOST_INSTALL_COMMAND "")
+	else ()
+	endif ()
+
+	externalproject_add (BOOST_PROJECT
+		DEPENDS OGREDEPS_PROJECT
+		PREFIX ${EXTERNAL_DEP_DIR}
+		URL "http://sourceforge.net/projects/boost/files/boost/1.56.0/boost_1_56_0.tar.bz2"
+		CONFIGURE_COMMAND ${BOOST_CONFIGURE_COMMAND}
+		BUILD_COMMAND ${BOOST_BUILD_COMMAND}
+		BUILD_IN_SOURCE 1
+		INSTALL_COMMAND ${BOOST_INSTALL_COMMAND}
+	)
+endif (BOOST_FOUND)
 
 ###############################################################################
 # RakNet
@@ -110,6 +150,7 @@ if (BULLET_FOUND)
 else (BULLET_FOUND)
 	message (STATUS "Bullet will be downloaded automatically")
 	externalproject_add (Bullet_PROJECT
+		DEPENDS OGREDEPS_PROJECT
 		PREFIX ${EXTERNAL_DEP_DIR}
 		GIT_REPOSITORY "git://github.com/bulletphysics/bullet3"
 		GIT_TAG "Bullet-2.83-alpha"
@@ -153,20 +194,12 @@ if (OGRE_FOUND)
 	file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
 	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_BINARY_DIR}")
 else (OGRE_FOUND)
-	# install ogre's dependencies
-	externalproject_add(OGREDEPS_PROJECT
-		PREFIX ${EXTERNAL_DEP_DIR}
-		HG_REPOSITORY "https://bitbucket.org/cabalistic/ogredeps/"
-		HG_TAG "default"
-		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_DEP_DIR}
-	)
-
 	message (STATUS "Ogre will be downloaded automatically")
 	externalproject_add(Ogre_PROJECT
+		DEPENDS OGREDEPS_PROJECT
 		PREFIX ${EXTERNAL_DEP_DIR}
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
-		DEPENDS OGREDEPS_PROJECT
 		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_DEP_DIR}
 		-DOGRE_BUILD_SAMPLES=0
 		-DCMAKE_LIBRARY_PATH=${EXTERNAL_DEP_DIR}/lib

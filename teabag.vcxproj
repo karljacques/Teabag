@@ -40,13 +40,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(ProjectDir)\dependencies\MathGeoLib\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\mathgeolib\lib\;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\mathgeolib\lib\debug;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\bin\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\include;$(ProjectDir)\dependencies\raknet\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\bullet\lib\release;$(ProjectDir)\dependencies\ogre\lib\release;$(ProjectDir)\dependencies\raknet\lib\release;$(ProjectDir)\dependencies\sdl\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(ProjectDir)\dependencies\MathGeoLib\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\bullet\lib\release;$(ProjectDir)\dependencies\ogre\lib\release;$(ProjectDir)\dependencies\raknet\lib\release;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\MathGeoLib\lib\release;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin\Release</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -73,11 +74,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>MATH_OGRE_INTEROP;MATH_BULLET_INTEROP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>MathGeoLib.lib;OgreMain.lib;SDL2.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;raknetdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -95,6 +98,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\engine\core\event\eventSystem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\events\keyboardEvent.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\events\mouseEvent.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\events\transformEvent.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\engine\core\graphics\camera.cpp" />
@@ -126,6 +138,9 @@
     <ClInclude Include="src\engine\core\event\event.h" />
     <ClInclude Include="src\engine\core\event\EventListener.h" />
     <ClInclude Include="src\engine\core\event\eventSystem.h" />
+    <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
     <ClInclude Include="src\engine\core\graphics\camera.h" />
     <ClInclude Include="src\engine\core\graphics\RenderSystem.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />

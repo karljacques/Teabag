@@ -24,7 +24,7 @@ void PhysicsComponent::update(  double dt  )
 	mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
 	mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
 
-	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
 	me->mOrientation = mPositionComponent->getOrientation();
 	me->mPosition = mPositionComponent->getPosition();
 
@@ -48,12 +48,20 @@ void PhysicsComponent::handle( Event* e )
 {
 	switch( e->getEventType() )
 	{
-	case EV_MOVEMENT:
-		MovementEvent* me = static_cast<MovementEvent*>(e);
-		btTransform trans( me->mOrientation, me->mPosition );
-		mBody->setWorldTransform( trans );
-		mBody->activate(true);
-		break;
+	case EV_CORE_TRANSFORM_UPDATE:
+		{
+			TransformEvent* me = static_cast<TransformEvent*>(e);
+			btTransform trans( me->mOrientation, me->mPosition );
+			mBody->setWorldTransform( trans );
+			mBody->activate(true);
+			break;
+		}
 
+	case EV_CORE_APPLY_FORCE:
+		{
+			TransformEvent* te = static_cast<TransformEvent*>(e);
+			getBody()->applyCentralForce(  Quat(getBody()->getWorldTransform().getRotation()).Transform( te->mPosition ) );
+			break;
+		}
 	}
 }

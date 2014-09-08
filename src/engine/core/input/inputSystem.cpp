@@ -25,7 +25,7 @@ void InputSystem::update()
 			case SDL_KEYDOWN:
 			{
 				// Key down, create and dispatch event
-				KeyboardEvent*	e = new KeyboardEvent(EV_KEY_PRESS );
+				KeyboardEvent*	e = new KeyboardEvent(EV_CORE_KEY_PRESS );
 				e->mPressed = true;
 				e->mReleased =false;
 				e->mKeycode = m_inputEvent.key.keysym.scancode;
@@ -36,7 +36,7 @@ void InputSystem::update()
 			case SDL_KEYUP:
 			{
 				// Key down, create and dispatch event
-				KeyboardEvent*	e = new KeyboardEvent(EV_KEY_PRESS );
+				KeyboardEvent*	e = new KeyboardEvent(EV_CORE_KEY_PRESS );
 				e->mPressed = false;
 				e->mReleased = true;
 				e->mKeycode = m_inputEvent.key.keysym.scancode;
@@ -54,7 +54,7 @@ void InputSystem::update()
 	SDL_GetMouseState(&MouseX,&MouseY);
 	int DeltaX = MouseX - 400;
 	int DeltaY = MouseY - 300;
-	MouseEvent* e = new MouseEvent( EV_MOUSE_MOVEMENT );
+	MouseEvent* e = new MouseEvent( EV_CORE_MOUSE_MOVEMENT );
 	e->mMouseMoveX = DeltaX;
 	e->mMouseMoveY = DeltaY;
 

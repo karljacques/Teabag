@@ -16,6 +16,9 @@ ehthumbs.db
 # pointless sharing
 *.log
 *.suo
+*.v11.suo
+*.vcxproj.filters
+*.vcxproj.user
 
 # Folder config file
 Desktop.ini

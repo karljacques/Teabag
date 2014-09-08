@@ -13,7 +13,7 @@ public:
 
 	// This method will create a new box that acts as static geometry.
 	// It needs to be provided a position, a size, and an angle.
-	void addGeometry( float3 position, float3 size, float3 angle );
+	void addGeometry( float3 position, float3 size, float3 angle = float3(0,0,0) );
 
 private:
 	// Dependencies

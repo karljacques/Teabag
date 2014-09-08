@@ -15,14 +15,17 @@
 
 enum EV_EventType
 {
-    EV_MOUSEMOVE,
-    EV_MOUSE_PRESS,
-    EV_MOUSE_RELEASE,
-    EV_KEY_PRESS,
-    EV_KEY_RELEASE,
-	EV_MOVEMENT,
-	EV_ROTATION,
-	EV_MOUSE_MOVEMENT
+	// Input
+    EV_CORE_MOUSE_MOVE,
+    EV_CORE_MOUSE_PRESS,
+    EV_CORE_MOUSE_RELEASE,
+    EV_CORE_KEY_PRESS,
+    EV_CORE_KEY_RELEASE,
+	EV_CORE_MOUSE_MOVEMENT,
+
+	// Physics
+	EV_CORE_TRANSFORM_UPDATE,
+	EV_CORE_APPLY_FORCE
 };
 
 class Event
@@ -40,42 +43,12 @@ private:
 
 };
 
-class MouseEvent : public Event
-{
-public:
-    MouseEvent( int eventType );
+#include "events/keyboardEvent.h"
+#include "events/mouseEvent.h"
+#include "events/transformEvent.h"
 
-    int32_t mMouseMoveX;
-    int32_t mMouseMoveY;
-    int m_MouseMoveZ;
 
-    int32_t m_MouseX;
-    int32_t m_MouseY;
-    int m_MouseZ;
 
-    int m_MouseButton;
-    bool m_Released;
-    bool m_Pressed;
-};
 
-class KeyboardEvent : public Event
-{
-public:
-    KeyboardEvent( int eventType );
-
-    bool mPressed;
-    bool mReleased;
-
-    int mKeycode;
-};
-
-class MovementEvent : public Event
-{
-public:
-	MovementEvent( int EV_EventType );
-
-	float3 mPosition;
-	Quat mOrientation;
-};
 
 #endif /* defined(__YorkshireTea__event__) */

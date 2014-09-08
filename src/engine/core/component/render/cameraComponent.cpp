@@ -10,7 +10,7 @@ CameraComponent::CameraComponent(RenderSystem* renderSystem, PositionComponent* 
 	// Create camera and viewport
 	mCamera = renderSystem->getSceneMgr()->createCamera( renderSystem->generateName() );
 	mCamera->setNearClipDistance(1.0f);
-	mCamera->setFarClipDistance(200.0f);
+	mCamera->setFarClipDistance(2000.0f);
 
 	mViewport = renderSystem->getRenderWindow()->addViewport( mCamera );
 	mViewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));
@@ -30,9 +30,9 @@ CameraComponent::~CameraComponent(void)
 
 void CameraComponent::handle( Event* e )
 {
-	if( e->getEventType() == EV_MOVEMENT )
+	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		MovementEvent* me = static_cast<MovementEvent*>(e);
+		TransformEvent* me = static_cast<TransformEvent*>(e);
 		mSceneNode->setPosition( me->mPosition );
 		mCamera->setOrientation( me->mOrientation );
 	}
@@ -40,7 +40,7 @@ void CameraComponent::handle( Event* e )
 
 void CameraComponent::setPosition( float3 pos )
 {
-	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
 	me->mPosition = pos;
 	me->mOrientation = mSceneNode->getOrientation();
 
@@ -53,7 +53,7 @@ void CameraComponent::lookAt( float3 pos )
 {
 	mCamera->lookAt( pos );
 
-	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
 	me->mPosition = mSceneNode->getPosition();
 	me->mOrientation = mCamera->getDerivedOrientation();
 

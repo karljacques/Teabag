@@ -17,7 +17,7 @@ void PositionComponent::update( double dt )
 {
 	if( mUpdated )
 	{
-		MovementEvent* m = new MovementEvent( EV_MOVEMENT );
+		TransformEvent* m = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
 		m->mPosition = mPosition;
 		m->mOrientation = mOrientation;
 
@@ -34,7 +34,7 @@ void PositionComponent::setPosition( float3 pos )
 {
 	mPosition = pos;
 
-	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
 	me->mPosition = pos;
 	me->mOrientation = mOrientation; // For the sake of the physics engine
 	dispatch( me );
@@ -49,7 +49,7 @@ void PositionComponent::setOrientation( Quat orientation )
 {
 	mOrientation = orientation;
 
-	MovementEvent* me = new MovementEvent( EV_MOVEMENT );
+	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
 	me->mOrientation = orientation;
 	me->mPosition = mPosition; // For the sake of the physics engine
 	dispatch( me );

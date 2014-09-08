@@ -3,8 +3,9 @@
 #include <SDL.h>
 
 static const float DEFAULT_SPECTATOR_SPEED = 10.0f;
-static const float FAST_SPECTATOR_SPEED = 20.0f;
+static const float FAST_SPECTATOR_SPEED = 40.0f;
 
+// Physics component could later be abstracted away - but it won't really work without it
 SpectatorControlComponent::SpectatorControlComponent( PhysicsComponent* physicsComponent )
 {
 	// Initial Variables
@@ -22,7 +23,7 @@ SpectatorControlComponent::SpectatorControlComponent( PhysicsComponent* physicsC
 
 	// Create collision sphere here
 	btSphereShape* shape = new btSphereShape( 1.0f );
-	physicsComponent->initialise( shape, 1.0f, float3(0,0,0));
+	physicsComponent->initialise( shape, 0.1f, float3(0,0,0));
 	physicsComponent->getBody()->setGravity( float3(0,0,0));
 	mPhysicsComponent->getBody()->setDamping( 0.9, 1.0f );
 
@@ -38,7 +39,7 @@ void SpectatorControlComponent::handle( Event* e )
 {
 	switch( e->getEventType() )
 	{
-		case EV_KEY_PRESS:
+		case EV_CORE_KEY_PRESS:
 			{			
 				// Cast to keypress event
 				KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
@@ -78,7 +79,7 @@ void SpectatorControlComponent::handle( Event* e )
 			}
 		break;
 
-		case EV_MOUSE_MOVEMENT:
+		case EV_CORE_MOUSE_MOVEMENT:
 			{
 				MouseEvent* me = static_cast<MouseEvent*>(e);
 				
@@ -90,7 +91,6 @@ void SpectatorControlComponent::handle( Event* e )
 				btTransform updated( yAng * xAng,initial.getOrigin() );
 				mPhysicsComponent->getBody()->setWorldTransform( updated );
 				mPhysicsComponent->getBody()->activate(true);
-				//mPhysicsComponent->update( 0 );
 			}
 
 	}
@@ -98,14 +98,20 @@ void SpectatorControlComponent::handle( Event* e )
 
 void SpectatorControlComponent::update(double dt)
 {
+	float3 dir(0,0,0);
 	if( mForward )
-		applyForceInDir( float3( 0,0,-mSpeed ) );
+		dir+=float3( 0,0,-mSpeed );
 	if( mReverse )
-		applyForceInDir( float3( 0,0,mSpeed ) );
+		dir+=float3( 0,0,mSpeed );
 	if( mLeft )
-		applyForceInDir( float3( -mSpeed,0,0 ) );
+		dir+=float3( -mSpeed,0,0 );
 	if( mRight )
-		applyForceInDir( float3(mSpeed,0,0));
+		dir+=float3(mSpeed,0,0);
+
+	TransformEvent* te = new TransformEvent( EV_CORE_APPLY_FORCE );
+	te->mPosition = dir;
+
+	dispatch(te);
 }
 
 void SpectatorControlComponent::applyForceInDir( float3 dir )

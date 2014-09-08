@@ -27,7 +27,7 @@ Engine::Engine()
 	mPhysicsManager = new PhysicsManager();
 
 	// Register the engine to receive input events
-    this->setEventType(EV_KEY_PRESS||EV_KEY_RELEASE );
+    this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
 	
 	// Create a cube
@@ -43,7 +43,7 @@ Engine::Engine()
 
 		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
 		btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
-		p->initialise( shapex, 5.0, float3(0,51.0,-50), Quat( 1.0, 0.9,0,0.7 ) );	
+		p->initialise( shapex, 5.0, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
 		p->registerListener( c );
 		p->registerListener( n );
 		cube->addComponent( p );
@@ -53,10 +53,16 @@ Engine::Engine()
 	EntityManager* entityManager = new EntityManager();
 	mStaticGeometry = new StaticGeometry( entityManager, mRenderSystem, mPhysicsManager );
 
-	mStaticGeometry->addGeometry( float3( 0,0.0f,-50.0f), float3( 100.0f, 1.0f, 100.0f ), float3(0,0,0));
-	mStaticGeometry->addGeometry( float3( 0,20.0f, -50.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,45.0/57.0 ));
-	mStaticGeometry->addGeometry( float3( -10.0f,10.0f, -50.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,-45.0/57.0 ));
+	mStaticGeometry->addGeometry( float3( 0,0.0f,0.0f), float3( 100.0f, 1.0f, 100.0f ), float3(0,0,0));
+	mStaticGeometry->addGeometry( float3( 0,20.0f, 0.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,45.0/57.0 ));
+	mStaticGeometry->addGeometry( float3( -10.0f,10.0f, 0.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,-45.0/57.0 ));
 
+	// sides
+	mStaticGeometry->addGeometry( float3( 50,0.0f,0.0f), float3( 1.0f, 10.0f, 100.0f ));
+	mStaticGeometry->addGeometry( float3( -50,0.0f,0.0f), float3( 1.0f, 10.0f, 100.0f ));
+
+	mStaticGeometry->addGeometry( float3( 0,0.0f,50.0f), float3( 100.0f, 10.0f, 1.0f ));
+	mStaticGeometry->addGeometry( float3( 0,0.0f,-50.0f), float3( 100.0f, 10.0f, 1.0f ));
 	// Camera
 	Entity* camera = createEntity();
 
@@ -73,8 +79,9 @@ Engine::Engine()
 	camera->addComponent(s);
 
 	cpc->registerListener( cphyc );
+	s->registerListener(cphyc);
 
-	cpc->setPosition( float3(0,40,0 ));
+	cpc->setPosition( float3(0,40,20 ));
 	//cphyc->registerListener( cc );
 
 }
@@ -119,7 +126,7 @@ void Engine::handle( Event* e )
 {
     switch( e->getEventType() )
     {
-        case EV_KEY_PRESS:
+        case EV_CORE_KEY_PRESS:
             KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
             switch (ke->mKeycode)
             {
@@ -174,8 +181,8 @@ void Engine::spawnNewCube()
 		cube->addComponent(c);
 
 		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
-		btCollisionShape* shapex = new btBoxShape( float3(x,y, z )/2 );
-		p->initialise( shapex, (rand() % 20 )+1, float3(0,51.0,-50), Quat( 1.0, 0.9,0,0.7 ) );	
+		btCollisionShape* shapex = new btBoxShape( float3(x/2,y/2,z/2) );
+		p->initialise( shapex, (rand() % 20 )+1, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
 		p->registerListener( c );
 		p->registerListener( n );
 		cube->addComponent( p );

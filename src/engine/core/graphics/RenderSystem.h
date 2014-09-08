@@ -11,6 +11,7 @@
 
 #include "camera.h"
 #include <SDL.h>
+
 class Camera;
     
 class RenderSystem

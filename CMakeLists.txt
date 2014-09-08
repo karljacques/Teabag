@@ -38,6 +38,10 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/utils")
 if (MSVC)
 elseif (MINGW)
 elseif (APPLE)
+	add_definitions(
+		-std=c++11
+		-Wno-deprecated-register
+	)
 elseif (UNIX)
 	add_definitions(
 		-std=c++11
@@ -70,4 +74,4 @@ message (STATUS "External dependencies prefix: ${EXTERNAL_DEP_DIR}")
 include_directories ("${EXTERNAL_DEP_DIR}/include")
 link_directories ("${EXTERNAL_DEP_DIR}/lib")
 
-add_subdirectory ("src")
+add_subdirectory (src)

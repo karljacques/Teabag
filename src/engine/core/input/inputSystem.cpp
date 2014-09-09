@@ -14,6 +14,7 @@ InputSystem::InputSystem( EventSystem* eventSys, SDL_Window* window )
 {
 	m_EventSystem = eventSys;
 	mWindow = window;
+	mWindowActive = true;
 
 	SDL_ShowCursor( false );
 }
@@ -32,6 +33,7 @@ void InputSystem::update()
 				e->mReleased =false;
 				e->mKeycode = m_inputEvent.key.keysym.scancode;
 				m_EventSystem->dispatchEvent( e );
+
 			}
 			break;
 
@@ -43,23 +45,29 @@ void InputSystem::update()
 				e->mReleased = true;
 				e->mKeycode = m_inputEvent.key.keysym.scancode;
 				m_EventSystem->dispatchEvent( e );
+
+				//TODO Hack, so what.
+				if( e->mKeycode == SDL_SCANCODE_COMMA )
+					mWindowActive=!mWindowActive;
+
 			}
 			break;
-
 
 
 		}
 	}
 	// TODO make this take half window values
+	if( mWindowActive)
+	{
+		int MouseX,MouseY;
+		SDL_GetMouseState(&MouseX,&MouseY);
+		int DeltaX = MouseX - 400;
+		int DeltaY = MouseY - 300;
+		MouseEvent* e = new MouseEvent( EV_CORE_MOUSE_MOVEMENT );
+		e->mMouseMoveX = DeltaX;
+		e->mMouseMoveY = DeltaY;
 
-	int MouseX,MouseY;
-	SDL_GetMouseState(&MouseX,&MouseY);
-	int DeltaX = MouseX - 400;
-	int DeltaY = MouseY - 300;
-	MouseEvent* e = new MouseEvent( EV_CORE_MOUSE_MOVEMENT );
-	e->mMouseMoveX = DeltaX;
-	e->mMouseMoveY = DeltaY;
-
-	m_EventSystem->dispatchEvent( e );
-	SDL_WarpMouseInWindow(  mWindow, 400, 300 );
+		m_EventSystem->dispatchEvent( e );
+		SDL_WarpMouseInWindow(  mWindow, 400, 300 );
+	}
 }

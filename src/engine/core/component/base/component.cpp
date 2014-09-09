@@ -32,6 +32,7 @@ void Component::deregisterListener( EventListener* comp )
 
 void Component::dispatch( Event* e )
 {
+
 	for( auto i=mListeners.begin(); i!=mListeners.end(); i++ )
 		(*i)->handle( e );
 

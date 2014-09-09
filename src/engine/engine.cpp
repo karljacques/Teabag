@@ -36,9 +36,12 @@ void createBlock( Engine* eng, float3 size, float3 pos, float yaw )
 	cube->addComponent( p );
 }
 
+
+
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
+
     m_EngineShutdown = false;
 
 	// Create Systems
@@ -46,7 +49,8 @@ Engine::Engine()
     mEventSystem = new EventSystem();
     mInputSystem = new InputSystem( mEventSystem, mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
-
+	NetworkSystem* mNetworkSystem = new ServerNetworkSystem();
+	
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
@@ -108,7 +112,7 @@ Engine::Engine()
 	// Create tower
 	for( float x = 20; x<26; x+=2.0f )
 	{
-		for( float y = 0.75f; y<26.0f; y+=2.0f )
+		for( float y = 0.75f; y<16.0f; y+=2.0f )
 		{
 			createBlock( this, float3( 2,1,6), float3(x,y,20), 0);
 		}
@@ -116,7 +120,7 @@ Engine::Engine()
 	}
 
 	for( float z = 18.0f; z < 23.5f; z+=2.0f )
-		for( float y = 1.5f;y<26.0f; y+=2.0f )
+		for( float y = 1.5f;y<16.0f; y+=2.0f )
 		{
 			createBlock( this, float3( 2,1,6), float3(22.0f,y,z), 90);
 		}
@@ -175,6 +179,7 @@ void Engine::handle( Event* e )
 					if( ke->mPressed )
 						spawnNewCube();
 					break;
+
             }
 		
         break;

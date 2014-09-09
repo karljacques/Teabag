@@ -115,7 +115,9 @@
     <ClCompile Include="src\engine\core\input\inputSystem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\engine\core\networking\clientNetworkSystem.cpp" />
     <ClCompile Include="src\engine\core\networking\networkSystem.cpp" />
+    <ClCompile Include="src\engine\core\networking\serverNetworkSystem.cpp" />
     <ClCompile Include="src\engine\core\physics\physicsManager.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\engine\terrain\sector.cpp" />
@@ -145,7 +147,9 @@
     <ClInclude Include="src\engine\core\graphics\camera.h" />
     <ClInclude Include="src\engine\core\graphics\RenderSystem.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
+    <ClInclude Include="src\engine\core\networking\clientNetworkSystem.h" />
     <ClInclude Include="src\engine\core\networking\networkSystem.h" />
+    <ClInclude Include="src\engine\core\networking\serverNetworkSystem.h" />
     <ClInclude Include="src\engine\core\physics\physicsManager.h" />
     <ClInclude Include="src\engine\engine.h" />
     <ClInclude Include="src\engine\terrain\sector.h" />

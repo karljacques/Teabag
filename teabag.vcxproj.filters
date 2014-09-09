@@ -27,9 +27,6 @@
       <Filter>engine\core\input</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\engine\core\networking\networkSystem.cpp">
-      <Filter>engine\core\networking</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\graphics\RenderSystem.cpp">
       <Filter>engine\core\graphics</Filter>
     </ClCompile>
@@ -70,6 +67,15 @@
     <ClCompile Include="src\engine\core\event\events\transformEvent.cpp">
       <Filter>engine\core\event\events</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\networking\serverNetworkSystem.cpp">
+      <Filter>engine\core\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\networking\clientNetworkSystem.cpp">
+      <Filter>engine\core\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\networking\networkSystem.cpp">
+      <Filter>engine\core\networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -98,9 +104,6 @@
       <Filter>engine\core\input</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\engine\core\networking\networkSystem.h">
-      <Filter>engine\core\networking</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\graphics\RenderSystem.h">
       <Filter>engine\core\graphics</Filter>
     </ClInclude>
@@ -143,6 +146,15 @@
     </ClInclude>
     <ClInclude Include="src\engine\core\event\events\transformEvent.h">
       <Filter>engine\core\event\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\networking\serverNetworkSystem.h">
+      <Filter>engine\core\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\networking\clientNetworkSystem.h">
+      <Filter>engine\core\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\networking\networkSystem.h">
+      <Filter>engine\core\networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

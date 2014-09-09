@@ -12,6 +12,8 @@
 #include "core/physics/physicsManager.h"
 #include "terrain/terrain.h"
 #include "engine/world/staticGeometry.h"
+#include "core/networking/clientNetworkSystem.h"
+#include "core/networking/serverNetworkSystem.h"
 
 class Engine : public EventListener
 {
@@ -53,6 +55,7 @@ private:
 	StaticGeometry* mStaticGeometry;
 
     bool m_EngineShutdown;
+
 
 };
 

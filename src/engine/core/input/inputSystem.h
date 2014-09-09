@@ -27,6 +27,7 @@ private:
 
 	// Window 
 	SDL_Window* mWindow;
+	bool mWindowActive;
 };
 
 

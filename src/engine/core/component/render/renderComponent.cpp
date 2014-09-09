@@ -25,23 +25,26 @@ void RenderComponent::setAsBox( float x, float y, float z )
 	y/=2;
 	z/=2;
 
+	float c1 = rand() %255;
+	float c2 = rand() %255;
+	float c3 = rand() %255;
 	// Random-ish colours
 	cube->position( x,y,-z ); // v0
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position(-x,y,-z ); // v1 
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position(-x,-y,-z); // v2
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position( x,-y,-z); // v3 
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position( x,-y,z ); // v4
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position( x,y,z  ); // v5
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position( -x,y,z ); // v6
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 	cube->position( -x,-y,z); // v7
-	cube->colour( x*2.3,y*1.2,z*3.2 );
+	cube->colour( x*c1,y*c2,z*c3 );
 
 	cube->quad( 0,1,2,3 );
 	cube->quad( 5,6,1,0 );

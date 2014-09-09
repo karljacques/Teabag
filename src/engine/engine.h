@@ -32,7 +32,8 @@ public:
     Terrain*        createTerrain();
 
 	// Systems getters
-	RenderSystem*		getGfxSystem(){ return this->mRenderSystem; };
+	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
+	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
        
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;

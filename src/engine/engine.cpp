@@ -14,6 +14,27 @@
 #include "engine/core/component/control/spectatorControlComponent.h"
 #include "engine/world/entityManager.h"
 
+void createBlock( Engine* eng, float3 size, float3 pos, float yaw )
+{
+	Entity* cube = eng->createEntity();
+	PositionComponent* n = new PositionComponent();
+	cube->addComponent( n );
+
+	RenderComponent* c =  new RenderComponent( eng->getRenderSystem(), n );
+	c->setAsBox( size.x,size.y,size.z);
+	n->registerListener( c );
+	cube->addComponent(c);
+
+	PhysicsComponent* p = new PhysicsComponent( eng->getPhysicsManager(),n );
+	btCollisionShape* shapex = new btBoxShape( size/2 );
+	p->initialise( shapex, 0.2f, pos );	
+	p->registerListener( c );
+	p->registerListener( n );
+	n->registerListener( p );
+	n->setOrientation(Quat::RotateY(yaw/57.6f));
+	n->setPosition(pos);
+	cube->addComponent( p );
+}
 
 Engine::Engine()
 {
@@ -43,7 +64,7 @@ Engine::Engine()
 
 		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
 		btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
-		p->initialise( shapex, 5.0, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
+		p->initialise( shapex, 0.1, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
 		p->registerListener( c );
 		p->registerListener( n );
 		cube->addComponent( p );
@@ -84,7 +105,23 @@ Engine::Engine()
 	cpc->setPosition( float3(0,40,20 ));
 	//cphyc->registerListener( cc );
 
+	// Create tower
+	for( float x = 20; x<26; x+=2.0f )
+	{
+		for( float y = 0.75f; y<26.0f; y+=2.0f )
+		{
+			createBlock( this, float3( 2,1,6), float3(x,y,20), 0);
+		}
+		
+	}
+
+	for( float z = 18.0f; z < 23.5f; z+=2.0f )
+		for( float y = 1.5f;y<26.0f; y+=2.0f )
+		{
+			createBlock( this, float3( 2,1,6), float3(22.0f,y,z), 90);
+		}
 }
+
 
 Engine::~Engine()
 {
@@ -188,3 +225,4 @@ void Engine::spawnNewCube()
 		cube->addComponent( p );
 	}
 }
+

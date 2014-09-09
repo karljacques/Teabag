@@ -14,6 +14,8 @@ InputSystem::InputSystem( EventSystem* eventSys, SDL_Window* window )
 {
 	m_EventSystem = eventSys;
 	mWindow = window;
+
+	SDL_ShowCursor( false );
 }
 
 void InputSystem::update()

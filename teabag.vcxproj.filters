@@ -61,6 +61,15 @@
     <ClCompile Include="src\engine\core\component\control\spectatorControlComponent.cpp">
       <Filter>engine\core\component\control</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\event\events\keyboardEvent.cpp">
+      <Filter>engine\core\event\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\events\mouseEvent.cpp">
+      <Filter>engine\core\event\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\events\transformEvent.cpp">
+      <Filter>engine\core\event\events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -126,6 +135,15 @@
     <ClInclude Include="src\engine\core\component\control\spectatorControlComponent.h">
       <Filter>engine\core\component\control</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\keyboardEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\mouseEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\transformEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -169,6 +187,9 @@
     </Filter>
     <Filter Include="engine\core\component\control">
       <UniqueIdentifier>{227c3102-ceb0-44ed-971e-9125c6fcc1a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\event\events">
+      <UniqueIdentifier>{2d14d0dc-cf98-44a3-b9a9-fa3cc23eded8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

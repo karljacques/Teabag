@@ -26,8 +26,8 @@ RenderSystem::RenderSystem()
     m_Root = new Ogre::Root("","","Ogre.log");
 
     // TODO get window width and height from somewhere (config file?)
-    unsigned int windowWidth = 800;
-    unsigned int windowHeight = 600;
+    unsigned int windowWidth = 1440;
+    unsigned int windowHeight = 900;
 
 	// Create SDL Window without OpenGL context
 	mWindow = SDL_CreateWindow( "Window",

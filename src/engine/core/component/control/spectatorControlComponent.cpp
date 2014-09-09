@@ -2,8 +2,8 @@
 #include "spectatorControlComponent.h"
 #include <SDL.h>
 
-static const float DEFAULT_SPECTATOR_SPEED = 10.0f;
-static const float FAST_SPECTATOR_SPEED = 40.0f;
+static const float DEFAULT_SPECTATOR_SPEED = 5.0f;
+static const float FAST_SPECTATOR_SPEED = 25.0f;
 
 // Physics component could later be abstracted away - but it won't really work without it
 SpectatorControlComponent::SpectatorControlComponent( PhysicsComponent* physicsComponent )
@@ -22,8 +22,8 @@ SpectatorControlComponent::SpectatorControlComponent( PhysicsComponent* physicsC
 	yAng = Quat(0,0,0,1);
 
 	// Create collision sphere here
-	btSphereShape* shape = new btSphereShape( 1.0f );
-	physicsComponent->initialise( shape, 0.1f, float3(0,0,0));
+	btSphereShape* shape = new btSphereShape( 0.1f );
+	physicsComponent->initialise( shape, 0.4f, float3(0,0,0));
 	physicsComponent->getBody()->setGravity( float3(0,0,0));
 	mPhysicsComponent->getBody()->setDamping( 0.9, 1.0f );
 

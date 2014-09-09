@@ -10,3 +10,5 @@ Bullet Physics 2.83 - https://github.com/bulletphysics/bullet3
 SDL 2.0.3 - https://www.libsdl.org/download-2.0.php  
 Raknet 4.081 - https://github.com/OculusVR/RakNet  
 MathGeoLib - https://github.com/juj/MathGeoLib  
+
+All credit for the CMake build system goes to TheComet and David Avedissian. Linux specific code written by TheComet and OSX specific code written by  David Avedissian.

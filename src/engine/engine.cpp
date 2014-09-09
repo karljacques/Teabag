@@ -49,7 +49,7 @@ Engine::Engine()
     mEventSystem = new EventSystem();
     mInputSystem = new InputSystem( mEventSystem, mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
-	NetworkSystem* mNetworkSystem = new ServerNetworkSystem();
+	mNetworkSystem = new ServerNetworkSystem();
 	
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
@@ -149,6 +149,7 @@ void Engine::update()
     mInputSystem->update();
     mEventSystem->handleEvents();
 	mPhysicsManager->update( dt );
+	mNetworkSystem->receive();
 
 	// Update game entities
 	for( auto i = mEntities.begin(); i != mEntities.end(); i++ )
@@ -200,11 +201,6 @@ Camera* Engine::createCamera()
 
     cam->init();
     return cam;
-}
-
-Terrain* Engine::createTerrain()
-{
-    return new Terrain( mRenderSystem->getSceneMgr() );
 }
 
 void Engine::spawnNewCube()

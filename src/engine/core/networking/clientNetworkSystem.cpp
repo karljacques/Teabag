@@ -11,7 +11,7 @@ ClientNetworkSystem::ClientNetworkSystem()
 	peer->Connect( hostip, SERVER_PORT, 0,0 );
 }
 
-int ClientNetworkSystem::recieve()
+int ClientNetworkSystem::receive()
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())

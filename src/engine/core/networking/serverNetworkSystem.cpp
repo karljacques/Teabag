@@ -7,7 +7,7 @@ ServerNetworkSystem::ServerNetworkSystem() : NetworkSystem()
 	peer->Startup( MAX_CONNECTIONS, &RakNet::SocketDescriptor( SERVER_PORT, 0 ), 1 );
 }
 
-int ServerNetworkSystem::recieve()
+int ServerNetworkSystem::receive()
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())

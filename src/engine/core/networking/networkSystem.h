@@ -1,3 +1,6 @@
+#ifndef networkSystem_h__
+#define networkSystem_h__
+
 #include <RakPeerInterface.h>
 #include <MessageIdentifiers.h>
 
@@ -10,9 +13,10 @@ class NetworkSystem
 public:
 	NetworkSystem();
 
-	virtual int recieve() = 0;
+	virtual int receive() = 0;
 
 	unsigned char getPacketIdentifier( RakNet::Packet* p );
 protected:
 	RakNet::RakPeerInterface * peer;
 };
+#endif // networkSystem_h__

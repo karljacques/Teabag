@@ -5,7 +5,7 @@ class ClientNetworkSystem : public NetworkSystem
 public:
 	ClientNetworkSystem();
 
-	int recieve();
+	int receive();
 private:
 
 };

@@ -5,7 +5,7 @@ class ServerNetworkSystem : public NetworkSystem
 public:
 	ServerNetworkSystem();
 
-	int recieve();
+	int receive();
 private:
 
 

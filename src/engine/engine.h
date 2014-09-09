@@ -8,12 +8,14 @@
 #include "core/graphics/RenderSystem.h"
 #include "core/input/inputSystem.h"
 #include "core/event/eventSystem.h"
-#include "core/component/base/entity.h"
-#include "core/physics/physicsManager.h"
-#include "terrain/terrain.h"
-#include "engine/world/staticGeometry.h"
 #include "core/networking/clientNetworkSystem.h"
 #include "core/networking/serverNetworkSystem.h"
+#include "core/physics/physicsManager.h"
+
+#include "core/component/base/entity.h"
+
+#include "engine/world/staticGeometry.h"
+
 
 class Engine : public EventListener
 {
@@ -31,7 +33,6 @@ public:
     Camera*         createCamera( );
         
     // Terrain commands
-    Terrain*        createTerrain();
 
 	// Systems getters
 	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
@@ -49,6 +50,7 @@ private:
     RenderSystem* mRenderSystem;
     InputSystem* mInputSystem;
     EventSystem* mEventSystem;
+	NetworkSystem* mNetworkSystem;
     
 	PhysicsManager* mPhysicsManager;
 

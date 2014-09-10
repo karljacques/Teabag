@@ -40,7 +40,7 @@ void InputSystem::update()
 			case SDL_KEYUP:
 			{
 				// Key down, create and dispatch event
-				KeyboardEvent*	e = new KeyboardEvent(EV_CORE_KEY_PRESS );
+				KeyboardEvent*	e = new KeyboardEvent(EV_CORE_KEY_RELEASE );
 				e->mPressed = false;
 				e->mReleased = true;
 				e->mKeycode = m_inputEvent.key.keysym.scancode;

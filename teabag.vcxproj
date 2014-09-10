@@ -112,6 +112,8 @@
     </ClCompile>
     <ClCompile Include="src\engine\core\graphics\camera.cpp" />
     <ClCompile Include="src\engine\core\graphics\RenderSystem.cpp" />
+    <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp" />
+    <ClCompile Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.cpp" />
     <ClCompile Include="src\engine\core\input\inputSystem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -146,6 +148,8 @@
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
     <ClInclude Include="src\engine\core\graphics\camera.h" />
     <ClInclude Include="src\engine\core\graphics\RenderSystem.h" />
+    <ClInclude Include="src\engine\core\graphics\UI\Gorilla.h" />
+    <ClInclude Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
     <ClInclude Include="src\engine\core\networking\clientNetworkSystem.h" />
     <ClInclude Include="src\engine\core\networking\networkSystem.h" />

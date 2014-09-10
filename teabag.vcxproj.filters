@@ -76,6 +76,12 @@
     <ClCompile Include="src\engine\core\networking\networkSystem.cpp">
       <Filter>engine\core\networking</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp">
+      <Filter>engine\core\graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.cpp">
+      <Filter>engine\core\graphics\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -156,6 +162,12 @@
     <ClInclude Include="src\engine\core\networking\networkSystem.h">
       <Filter>engine\core\networking</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\graphics\UI\Gorilla.h">
+      <Filter>engine\core\graphics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.h">
+      <Filter>engine\core\graphics\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -202,6 +214,9 @@
     </Filter>
     <Filter Include="engine\core\event\events">
       <UniqueIdentifier>{2d14d0dc-cf98-44a3-b9a9-fa3cc23eded8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\graphics\UI">
+      <UniqueIdentifier>{7621234d-42fc-470b-91c0-4f00187337de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

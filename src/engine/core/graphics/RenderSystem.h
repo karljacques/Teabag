@@ -27,13 +27,17 @@ public:
     Ogre::RenderWindow*   getRenderWindow();
     Ogre::SceneNode*      getRootSceneNode();
 	SDL_Window*			  getSDLWindow(){ return mWindow; }
-        
-    std::vector<Camera*>*    getCameraList();
+    Ogre::Viewport* getViewport( );
+
+    
         
     // Functions
     void            renderOneFrame();
 	Ogre::String	generateName(const Ogre::String& prefix = "Unnamed" );
-   
+	
+	// Camera methods
+	void addCameraPair( Ogre::Camera* c, Ogre::Viewport* v);
+
 private:
         
     // Core
@@ -43,7 +47,7 @@ private:
     Ogre::SceneNode*      m_RootSceneNode;
 
     // Multiple Viewport and Camera support
-    std::vector<Camera*>    m_CameraList;
+    std::map<Ogre::Camera*,Ogre::Viewport*>    m_CameraMap;
         
     // Window
     size_t          m_WindowHandle;

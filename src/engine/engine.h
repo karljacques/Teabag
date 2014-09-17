@@ -29,9 +29,6 @@ public:
         
     bool isShuttingDown();
         
-    // Camera commands
-    Camera*         createCamera( );
-        
     // Terrain commands
 
 	// Systems getters

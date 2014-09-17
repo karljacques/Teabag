@@ -54,7 +54,6 @@
     <ClCompile Include="src\engine\world\staticGeometry.cpp">
       <Filter>engine\world</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\world\entityManager.cpp" />
     <ClCompile Include="src\engine\core\component\control\spectatorControlComponent.cpp">
       <Filter>engine\core\component\control</Filter>
     </ClCompile>
@@ -81,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.cpp">
       <Filter>engine\core\graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\world\entityManager.cpp">
+      <Filter>engine\world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,7 +142,6 @@
     <ClInclude Include="src\engine\world\staticGeometry.h">
       <Filter>engine\world</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\world\entityManager.h" />
     <ClInclude Include="src\engine\core\component\control\spectatorControlComponent.h">
       <Filter>engine\core\component\control</Filter>
     </ClInclude>
@@ -167,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.h">
       <Filter>engine\core\graphics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\world\entityManager.h">
+      <Filter>engine\world</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

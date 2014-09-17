@@ -12,6 +12,6 @@ public:
 	bool mReleased;
 
 	int mKeycode;
-	int mKey;
+	char mKey;
 };
 #endif // keyboardEvent_h__

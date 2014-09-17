@@ -17,6 +17,7 @@ InputSystem::InputSystem( EventSystem* eventSys, SDL_Window* window )
 	mWindowActive = true;
 
 	SDL_ShowCursor( false );
+
 }
 
 void InputSystem::update()
@@ -53,6 +54,14 @@ void InputSystem::update()
 			}
 			break;
 
+			case SDL_TEXTINPUT:
+				{
+					KeyboardEvent*	e = new KeyboardEvent(EV_CORE_TEXT_INPUT);
+					e->mKey = *m_inputEvent.text.text;
+					m_EventSystem->dispatchEvent(e);
+					break;
+				}
+				
 
 		}
 	}

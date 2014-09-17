@@ -14,6 +14,8 @@
 #include "engine/core/component/control/spectatorControlComponent.h"
 #include "engine/world/entityManager.h"
 
+#include "engine/core/graphics/UI/OgreConsoleForGorilla.h"
+
 void createBlock( Engine* eng, float3 size, float3 pos, float yaw )
 {
 	Entity* cube = eng->createEntity();
@@ -54,6 +56,12 @@ Engine::Engine()
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
+
+	
+
+	////////////////////////////
+	// SANDBOX BEYOND THIS POINT
+	////////////////////////////
 	
 	// Create a cube
 	{
@@ -124,6 +132,19 @@ Engine::Engine()
 		{
 			createBlock( this, float3( 2,1,6), float3(22.0f,y,z), 90);
 		}
+
+
+		// Create console
+		Gorilla::Silverback* silverback = new Gorilla::Silverback();
+		silverback->loadAtlas("dejavu");
+		Gorilla::Screen* UIScreen = silverback->createScreen( mRenderSystem->getViewport(),"dejavu" );
+
+		OgreConsole* console = new OgreConsole();
+
+		console->init(UIScreen );
+
+		mEventSystem->registerListener(console);
+		
 }
 
 
@@ -192,15 +213,6 @@ Entity* Engine::createEntity()
 	Entity* ent = new Entity();
 	mEntities.push_back(ent);
 	return ent;
-}
-
-Camera* Engine::createCamera()
-{
-    Camera* cam = new Camera( mRenderSystem->getRenderWindow(), mRenderSystem->getSceneMgr(), mRenderSystem->getRootSceneNode() );
-    mRenderSystem->getCameraList()->push_back( cam );
-
-    cam->init();
-    return cam;
 }
 
 void Engine::spawnNewCube()

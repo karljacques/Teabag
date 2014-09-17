@@ -82,8 +82,12 @@ RenderSystem::RenderSystem()
     // Cache root scene node
     m_RootSceneNode = m_SceneMgr->getRootSceneNode();
 	
-	// TODO initialize resource group
-    Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Media");
+	// Load resources
+   // Ogre::ResourceGroupManager::getSingleton().createResourceGroup("General");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media","FileSystem");
+	Ogre::ResourceGroupManager::getSingleton().declareResource("dejavu.gorilla", "Material");
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	
 }
 
 
@@ -118,14 +122,14 @@ Ogre::SceneNode* RenderSystem::getRootSceneNode()
     return m_RootSceneNode;
 }
 
-std::vector<Camera*>* RenderSystem::getCameraList()
-{
-    return &m_CameraList;
-}
-
 void RenderSystem::renderOneFrame()
 {
     m_Root->renderOneFrame();
+}
+
+void RenderSystem::addCameraPair( Ogre::Camera* c, Ogre::Viewport* v)
+{
+	m_CameraMap[c] = v;
 }
 
 
@@ -135,4 +139,9 @@ Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"
 	if (countMap.find(prefix) == countMap.end())
 		countMap[prefix] = 0;
 	return prefix + std::to_string(++countMap[prefix]);
+}
+
+Ogre::Viewport* RenderSystem::getViewport()
+{
+	return m_CameraMap.begin()->second;
 }

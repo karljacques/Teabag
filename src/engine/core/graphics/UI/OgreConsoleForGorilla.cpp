@@ -22,7 +22,7 @@ template<> OgreConsole* Ogre::Singleton<OgreConsole>::msSingleton=0;
 
 #define CONSOLE_LINE_LENGTH 85
 #define CONSOLE_LINE_COUNT 15
-static const unsigned char legalchars[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890+!\"'#%&/()=?[]\\*-_.:,; ";
+static const unsigned char legalchars[]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890+!\"'#%&/()=?[]\\*-_.:,; ";
 
 OgreConsole::OgreConsole()
 : mIsVisible(true), mIsInitialised(false), mScreen(0), mUpdateConsole(false), mUpdatePrompt(false), mStartline(0)
@@ -81,6 +81,12 @@ void OgreConsole::handle( Event* arg)
  if( arg->getEventType() == EV_CORE_KEY_PRESS )
  {
 	 KeyboardEvent* e = static_cast<KeyboardEvent*>(arg);
+
+	 if( e->mKeycode == SDL_SCANCODE_F1 )
+	 {
+		 setVisible( !mIsVisible );
+	 }
+
 	 if(!mIsVisible)
 	  return;
 
@@ -130,18 +136,21 @@ void OgreConsole::handle( Event* arg)
 	  mUpdateConsole = true;
 	 }
  
-	 else
+	 mUpdatePrompt = true;
+ }
+ if(!mIsVisible)
+	 return;
+ if( arg->getEventType() == EV_CORE_TEXT_INPUT )
+ {
+	 KeyboardEvent* e = static_cast<KeyboardEvent*>(arg);
+	 for(unsigned int c=0;c<sizeof(legalchars);c++)
 	 {
-		for(unsigned int c=0;c<sizeof(legalchars);c++){
-			const char* ch = (SDL_GetKeyName( SDL_GetKeyFromScancode( static_cast<SDL_Scancode>(e->mKeycode))));
-		   if((const char*)legalchars[c] == ch){
-			  prompt+=ch;
-			  break;
-		   }
-		}
-	   mUpdatePrompt = true;
+		 prompt+=e->mKey;
+		 mUpdatePrompt = true;
+		 break;
 	 }
-	}
+ }
+
 }
 
 bool OgreConsole::frameStarted(const Ogre::FrameEvent &evt)

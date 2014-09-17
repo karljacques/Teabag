@@ -28,7 +28,7 @@
 
 typedef void (*OgreConsoleFunctionPtr)(Ogre::StringVector&);
 
-class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Ogre::LogListener, EventListener
+class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Ogre::LogListener, public EventListener
 {
     
  public:
@@ -76,7 +76,7 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     
     bool                 mUpdateConsole;
     bool                 mUpdatePrompt;
-
+			
     unsigned int         mStartline;
     std::list<Ogre::String>      lines;
     Ogre::String            prompt;

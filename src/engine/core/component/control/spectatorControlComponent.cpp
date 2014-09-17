@@ -46,35 +46,46 @@ void SpectatorControlComponent::handle( Event* e )
 				switch( ke->mKeycode )
 				{
 				case SDL_SCANCODE_W:
-					if( ke->mPressed == true )
 						mForward = true;
-					else if(ke->mReleased == true)
-						mForward = false;
 					break;
 				case SDL_SCANCODE_A:
-					if( ke->mPressed)
 						mLeft = true;
-					else if( ke->mReleased )
-						mLeft = false;
 					break;
 				case SDL_SCANCODE_D:
-					if( ke->mPressed )
 						mRight = true;
-					else if( ke->mReleased )
-						mRight = false;
 					break;
 				case SDL_SCANCODE_S:
-					if( ke->mPressed )
 						mReverse = true;
-					else if(ke->mReleased)
-						mReverse = false;
+
 					break;
 				// Speed modifier
 				case SDL_SCANCODE_LSHIFT:
-					if( ke->mPressed )
 						mSpeed = FAST_SPECTATOR_SPEED;
-					else if(ke->mReleased)
-						mSpeed = DEFAULT_SPECTATOR_SPEED;
+				}
+			}
+		break;
+
+		case EV_CORE_KEY_RELEASE:
+			{
+				KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
+				switch( ke->mKeycode )
+				{
+				case SDL_SCANCODE_W:
+					mForward = false;
+					break;
+				case SDL_SCANCODE_A:
+					mLeft = false;
+					break;
+				case SDL_SCANCODE_D:
+					mRight = false;
+					break;
+				case SDL_SCANCODE_S:
+					mReverse = false;
+
+					break;
+					// Speed modifier
+				case SDL_SCANCODE_LSHIFT:
+					mSpeed = DEFAULT_SPECTATOR_SPEED;
 				}
 			}
 		break;

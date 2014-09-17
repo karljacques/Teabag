@@ -21,6 +21,8 @@ CameraComponent::CameraComponent(RenderSystem* renderSystem, PositionComponent* 
 	mSceneNode = renderSystem->getRootSceneNode()->createChildSceneNode();
 	mSceneNode->attachObject( mCamera );
 
+	// Register camera pair with rendersystem
+	renderSystem->addCameraPair( mCamera, mViewport );
 }
 
 

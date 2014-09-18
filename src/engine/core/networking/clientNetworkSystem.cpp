@@ -5,10 +5,7 @@ using namespace RakNet;
 
 ClientNetworkSystem::ClientNetworkSystem()
 {
-	const char* hostip = "192.168.0.1";
-
 	peer->Startup( 2, &RakNet::SocketDescriptor(), 1 );
-	peer->Connect( hostip, SERVER_PORT, 0,0 );
 }
 
 int ClientNetworkSystem::receive()
@@ -17,8 +14,13 @@ int ClientNetworkSystem::receive()
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
 		if( getPacketIdentifier(packet) == ID_CONNECTION_REQUEST_ACCEPTED )
-			std::cout << "Connected to server" << std::endl;
+			return ID_CONNECTION_REQUEST_ACCEPTED;
 	} 
 
 	return true;
+}
+
+void ClientNetworkSystem::connect( const char* ip )
+{
+	peer->Connect(ip, SERVER_PORT, 0,0 );
 }

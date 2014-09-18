@@ -6,6 +6,8 @@ public:
 	ClientNetworkSystem();
 
 	int receive();
+	void connect( const char* ip );
+
 private:
 
 };

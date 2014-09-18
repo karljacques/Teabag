@@ -16,6 +16,7 @@
 
 #include "engine/world/staticGeometry.h"
 
+#include "engine/core/graphics/UI/OgreConsoleForGorilla.h"
 
 class Engine : public EventListener
 {
@@ -43,7 +44,9 @@ public:
 	Entity* createEntity();
 	void spawnNewCube();
 
-private:
+	// Public Systems
+	OgreConsole* mConsole;
+
     RenderSystem* mRenderSystem;
     InputSystem* mInputSystem;
     EventSystem* mEventSystem;

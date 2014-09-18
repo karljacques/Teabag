@@ -14,7 +14,10 @@
 #include "engine/core/component/control/spectatorControlComponent.h"
 #include "engine/world/entityManager.h"
 
-#include "engine/core/graphics/UI/OgreConsoleForGorilla.h"
+#include <chrono>
+#include <thread>
+// Get rid of this ASAP! TODO remove global.
+Engine* gEngine;
 
 void createBlock( Engine* eng, float3 size, float3 pos, float yaw )
 {
@@ -38,7 +41,22 @@ void createBlock( Engine* eng, float3 size, float3 pos, float yaw )
 	cube->addComponent( p );
 }
 
+void EngineCommand_NetClient( Ogre::StringVector& s )
+{
+	if( s.size() > 1 )
+	{
+		delete gEngine->mNetworkSystem;
+		gEngine->mNetworkSystem = new ClientNetworkSystem();
+		gEngine->mConsole->print( "Relinquished server control. Engine now in client mode." );
+		
+		ClientNetworkSystem* network = static_cast<ClientNetworkSystem*>(gEngine->mNetworkSystem);
+		network->connect( s[1].c_str() );
+		
+	}else{
+		gEngine->mConsole->print( "No IP specified");
+	}
 
+}
 
 Engine::Engine()
 {
@@ -57,6 +75,7 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
 
+	gEngine = this;
 	
 
 	////////////////////////////
@@ -139,14 +158,15 @@ Engine::Engine()
 		silverback->loadAtlas("dejavu");
 		Gorilla::Screen* UIScreen = silverback->createScreen( mRenderSystem->getViewport(),"dejavu" );
 
-		OgreConsole* console = new OgreConsole();
+		mConsole = new OgreConsole();
 
-		console->init(UIScreen );
+		mConsole->init(UIScreen );
 
-		mEventSystem->registerListener(console);
+		mEventSystem->registerListener(mConsole);
+
+		mConsole->addCommand( "net.connect", &EngineCommand_NetClient );
 		
 }
-
 
 Engine::~Engine()
 {
@@ -170,6 +190,7 @@ void Engine::update()
     mInputSystem->update();
     mEventSystem->handleEvents();
 	mPhysicsManager->update( dt );
+
 	mNetworkSystem->receive();
 
 	// Update game entities

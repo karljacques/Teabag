@@ -8,7 +8,7 @@
 //
 //
 
-#include "core/graphics/RenderSystem.h"
+#include "core/graphics/renderSystem.h"
 #include "core/input/inputSystem.h"
 #include "core/event/eventSystem.h"
 #include "core/networking/clientNetworkSystem.h"

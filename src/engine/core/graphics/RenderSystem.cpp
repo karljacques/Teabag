@@ -6,7 +6,7 @@
 //
 
 #include "pch.h"
-#include "RenderSystem.h"
+#include "renderSystem.h"
 #include <SDL.h>
 #include <SDL_syswm.h>
 

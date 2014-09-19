@@ -5,20 +5,8 @@
     <ClCompile Include="src\engine\engine.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\terrain\sector.cpp">
-      <Filter>engine\terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\terrain\terrain.cpp">
-      <Filter>engine\terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\event\EventListener.cpp">
-      <Filter>engine\core\event</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\event\eventSystem.cpp">
       <Filter>engine\core\event</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\graphics\camera.cpp">
-      <Filter>engine\core\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\core\event\event.cpp">
       <Filter>engine\core\event</Filter>
@@ -27,9 +15,6 @@
       <Filter>engine\core\input</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\engine\core\graphics\RenderSystem.cpp">
-      <Filter>engine\core\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\physics\physicsManager.cpp">
       <Filter>engine\core\physics</Filter>
     </ClCompile>
@@ -78,11 +63,17 @@
     <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp">
       <Filter>engine\core\graphics\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.cpp">
-      <Filter>engine\core\graphics\UI</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\world\entityManager.cpp">
       <Filter>engine\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\event\eventListener.cpp">
+      <Filter>engine\core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\UI\ogreConsole.cpp">
+      <Filter>engine\core\graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\renderSystem.cpp">
+      <Filter>engine\core\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,20 +81,8 @@
     <ClInclude Include="src\engine\engine.h">
       <Filter>engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\terrain\sector.h">
-      <Filter>engine\terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\terrain\terrain.h">
-      <Filter>engine\terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\event\EventListener.h">
-      <Filter>engine\core\event</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\event\eventSystem.h">
       <Filter>engine\core\event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\graphics\camera.h">
-      <Filter>engine\core\graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\core\event\event.h">
       <Filter>engine\core\event</Filter>
@@ -112,9 +91,6 @@
       <Filter>engine\core\input</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\engine\core\graphics\RenderSystem.h">
-      <Filter>engine\core\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\physics\physicsManager.h">
       <Filter>engine\core\physics</Filter>
     </ClInclude>
@@ -166,11 +142,17 @@
     <ClInclude Include="src\engine\core\graphics\UI\Gorilla.h">
       <Filter>engine\core\graphics\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.h">
-      <Filter>engine\core\graphics\UI</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\world\entityManager.h">
       <Filter>engine\world</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\eventListener.h">
+      <Filter>engine\core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\graphics\UI\ogreConsole.h">
+      <Filter>engine\core\graphics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\graphics\renderSystem.h">
+      <Filter>engine\core\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +161,6 @@
     </Filter>
     <Filter Include="engine\core">
       <UniqueIdentifier>{8092c0d1-bcd6-4bc7-9f06-fac6c29040c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\terrain">
-      <UniqueIdentifier>{7c16ef9b-7f14-4c1e-862b-03ed64caee24}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\core\event">
       <UniqueIdentifier>{640f8cbe-6163-4988-83a4-4d7129f79803}</UniqueIdentifier>

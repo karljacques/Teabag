@@ -10,7 +10,7 @@
    
 */
 #include "pch.h"
-#include "OgreConsoleForGorilla.h"
+#include "OgreConsole.h"
 
 #if OGRE_VERSION < 67584 // 1.8.0
 template<> OgreConsole* Ogre::Singleton<OgreConsole>::ms_Singleton=0;
@@ -24,9 +24,16 @@ template<> OgreConsole* Ogre::Singleton<OgreConsole>::msSingleton=0;
 #define CONSOLE_LINE_COUNT 15
 static const unsigned char legalchars[]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890+!\"'#%&/()=?[]\\*-_.:,; ";
 
-OgreConsole::OgreConsole()
-: mIsVisible(true), mIsInitialised(false), mScreen(0), mUpdateConsole(false), mUpdatePrompt(false), mStartline(0)
+OgreConsole::OgreConsole( Engine* eng )
+: mIsVisible(true), mIsInitialised(false), mScreen(0), mUpdateConsole(false), mUpdatePrompt(false), mStartline(0), mEngine( eng )
 {
+	Gorilla::Silverback* silverback = new Gorilla::Silverback();
+	silverback->loadAtlas("dejavu");
+	Gorilla::Screen* UIScreen = silverback->createScreen( eng->getRenderSystem()->getViewport(),"dejavu" );
+
+	this->init( UIScreen );
+
+	eng->getEventSystem()->registerListener(this);
 }
  
 OgreConsole::~OgreConsole()
@@ -100,7 +107,7 @@ void OgreConsole::handle( Event* arg)
 
 	  if (params.size())
 	  {
-	   std::map<Ogre::String, OgreConsoleFunctionPtr>::iterator i;
+	   std::map<Ogre::String, EngineMethodPtr>::iterator i;
 	   for(i=commands.begin();i!=commands.end();i++){
 		if((*i).first==params[0]){
 		 if((*i).second)
@@ -248,7 +255,7 @@ void OgreConsole::setVisible(bool isVisible)
  mLayer->setVisible(mIsVisible);
 }
 
-void OgreConsole::addCommand(const Ogre::String &command, OgreConsoleFunctionPtr func)
+void OgreConsole::addCommand(const Ogre::String &command, EngineMethodPtr func)
 {
  commands[command]=func;
 }
@@ -266,4 +273,10 @@ void OgreConsole::messageLogged( const Ogre::String& message, Ogre::LogMessageLe
 #endif
 {
  print(message);
+}
+
+// All Console commands here.
+void Console_Net_Connect( Ogre::StringVector& str )
+{
+	OgreConsole::getSingleton().print("Success");
 }

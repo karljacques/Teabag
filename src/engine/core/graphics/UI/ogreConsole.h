@@ -1,3 +1,6 @@
+#ifndef OgreConsoleForGorilla_h__
+#define OgreConsoleForGorilla_h__
+
 /*
   Description:
    
@@ -25,15 +28,17 @@
 #include "engine/core/event/eventListener.h"
 #include <SDL.h>
 #include "Gorilla.h"
+#include "engine/engine.h"
 
-typedef void (*OgreConsoleFunctionPtr)(Ogre::StringVector&);
+typedef void ( *EngineMethodPtr ) (Ogre::StringVector& );
+class Engine;
 
 class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Ogre::LogListener, public EventListener
 {
     
  public:
     
-    OgreConsole();
+    OgreConsole( Engine* eng );
     
    ~OgreConsole();
     
@@ -50,8 +55,10 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     
     void handle( Event* arg);
     
-    void addCommand(const Ogre::String &command, OgreConsoleFunctionPtr);
+    void addCommand(const Ogre::String &command, EngineMethodPtr func);
     void removeCommand(const Ogre::String &command);
+
+	Engine* getEnginePtr( ){ return mEngine; };
  
     //log
 #if OGRE_VERSION_MINOR < 8 && OGRE_VERSION_MAJOR < 2
@@ -80,10 +87,12 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     unsigned int         mStartline;
     std::list<Ogre::String>      lines;
     Ogre::String            prompt;
-    std::map<Ogre::String, OgreConsoleFunctionPtr>  commands;
- 
+    std::map<Ogre::String, EngineMethodPtr>  commands;
+
+	Engine* mEngine;
  
 };
 
+void Console_Net_Connect(Ogre::StringVector& str );
 
-
+#endif // OgreConsoleForGorilla_h__

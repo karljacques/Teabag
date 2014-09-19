@@ -98,7 +98,7 @@
     <ClCompile Include="src\engine\core\event\event.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\engine\core\event\EventListener.cpp">
+    <ClCompile Include="src\engine\core\event\eventListener.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\engine\core\event\eventSystem.cpp">
@@ -113,10 +113,9 @@
     <ClCompile Include="src\engine\core\event\events\transformEvent.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\engine\core\graphics\camera.cpp" />
-    <ClCompile Include="src\engine\core\graphics\RenderSystem.cpp" />
+    <ClCompile Include="src\engine\core\graphics\renderSystem.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp" />
-    <ClCompile Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.cpp" />
+    <ClCompile Include="src\engine\core\graphics\UI\ogreConsole.cpp" />
     <ClCompile Include="src\engine\core\input\inputSystem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -125,8 +124,6 @@
     <ClCompile Include="src\engine\core\networking\serverNetworkSystem.cpp" />
     <ClCompile Include="src\engine\core\physics\physicsManager.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
-    <ClCompile Include="src\engine\terrain\sector.cpp" />
-    <ClCompile Include="src\engine\terrain\terrain.cpp" />
     <ClCompile Include="src\engine\world\entityManager.cpp" />
     <ClCompile Include="src\engine\world\staticGeometry.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -144,23 +141,20 @@
     <ClInclude Include="src\engine\core\component\render\cameraComponent.h" />
     <ClInclude Include="src\engine\core\component\render\renderComponent.h" />
     <ClInclude Include="src\engine\core\event\event.h" />
-    <ClInclude Include="src\engine\core\event\EventListener.h" />
+    <ClInclude Include="src\engine\core\event\eventListener.h" />
     <ClInclude Include="src\engine\core\event\eventSystem.h" />
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
-    <ClInclude Include="src\engine\core\graphics\camera.h" />
-    <ClInclude Include="src\engine\core\graphics\RenderSystem.h" />
+    <ClInclude Include="src\engine\core\graphics\renderSystem.h" />
     <ClInclude Include="src\engine\core\graphics\UI\Gorilla.h" />
-    <ClInclude Include="src\engine\core\graphics\UI\OgreConsoleForGorilla.h" />
+    <ClInclude Include="src\engine\core\graphics\UI\ogreConsole.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
     <ClInclude Include="src\engine\core\networking\clientNetworkSystem.h" />
     <ClInclude Include="src\engine\core\networking\networkSystem.h" />
     <ClInclude Include="src\engine\core\networking\serverNetworkSystem.h" />
     <ClInclude Include="src\engine\core\physics\physicsManager.h" />
     <ClInclude Include="src\engine\engine.h" />
-    <ClInclude Include="src\engine\terrain\sector.h" />
-    <ClInclude Include="src\engine\terrain\terrain.h" />
     <ClInclude Include="src\engine\world\entityManager.h" />
     <ClInclude Include="src\engine\world\staticGeometry.h" />
     <ClInclude Include="src\main.h" />

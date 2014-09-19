@@ -6,14 +6,12 @@
 //
 //
 
-#ifndef __YorkshireTea__gfxSystem__
-#define __YorkshireTea__gfxSystem__
+#ifndef  __Teabag__Rendersystem__
+#define __Teabag__Rendersystem__
 
-#include "camera.h"
+#include "pch.h"
 #include <SDL.h>
 
-class Camera;
-    
 class RenderSystem
 {
 public:
@@ -27,10 +25,8 @@ public:
     Ogre::RenderWindow*   getRenderWindow();
     Ogre::SceneNode*      getRootSceneNode();
 	SDL_Window*			  getSDLWindow(){ return mWindow; }
-    Ogre::Viewport* getViewport( );
+    Ogre::Viewport*	      getViewport( );
 
-    
-        
     // Functions
     void            renderOneFrame();
 	Ogre::String	generateName(const Ogre::String& prefix = "Unnamed" );
@@ -54,4 +50,4 @@ private:
 	SDL_Window*			  mWindow;
 };
 
-#endif /* defined(__YorkshireTea__gfxSystem__) */
+#endif /* defined( __Teabag__Rendersystem__) */

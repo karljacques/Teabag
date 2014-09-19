@@ -1,5 +1,8 @@
 #include "networkSystem.h"
 
+#ifndef serverNetworkSystem_h__
+#define serverNetworkSystem_h__
+
 class ServerNetworkSystem : public NetworkSystem
 {
 public:
@@ -10,3 +13,4 @@ private:
 
 
 };
+#endif // serverNetworkSystem_h__

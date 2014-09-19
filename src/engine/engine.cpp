@@ -14,50 +14,6 @@
 #include "engine/core/component/control/spectatorControlComponent.h"
 #include "engine/world/entityManager.h"
 
-#include <chrono>
-#include <thread>
-// Get rid of this ASAP! TODO remove global.
-Engine* gEngine;
-
-void createBlock( Engine* eng, float3 size, float3 pos, float yaw )
-{
-	Entity* cube = eng->createEntity();
-	PositionComponent* n = new PositionComponent();
-	cube->addComponent( n );
-
-	RenderComponent* c =  new RenderComponent( eng->getRenderSystem(), n );
-	c->setAsBox( size.x,size.y,size.z);
-	n->registerListener( c );
-	cube->addComponent(c);
-
-	PhysicsComponent* p = new PhysicsComponent( eng->getPhysicsManager(),n );
-	btCollisionShape* shapex = new btBoxShape( size/2 );
-	p->initialise( shapex, 0.2f, pos );	
-	p->registerListener( c );
-	p->registerListener( n );
-	n->registerListener( p );
-	n->setOrientation(Quat::RotateY(yaw/57.6f));
-	n->setPosition(pos);
-	cube->addComponent( p );
-}
-
-void EngineCommand_NetClient( Ogre::StringVector& s )
-{
-	if( s.size() > 1 )
-	{
-		delete gEngine->mNetworkSystem;
-		gEngine->mNetworkSystem = new ClientNetworkSystem();
-		gEngine->mConsole->print( "Relinquished server control. Engine now in client mode." );
-		
-		ClientNetworkSystem* network = static_cast<ClientNetworkSystem*>(gEngine->mNetworkSystem);
-		network->connect( s[1].c_str() );
-		
-	}else{
-		gEngine->mConsole->print( "No IP specified");
-	}
-
-}
-
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -75,97 +31,14 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
 
-	gEngine = this;
-	
+	// Create the default camera
+	PositionComponent* defaultCameraPos = new PositionComponent();
+	CameraComponent* defaultCamera = new CameraComponent( mRenderSystem,defaultCameraPos );
 
-	////////////////////////////
-	// SANDBOX BEYOND THIS POINT
-	////////////////////////////
-	
-	// Create a cube
-	{
-		Entity* cube = createEntity();
-		PositionComponent* n = new PositionComponent();
-		cube->addComponent( n );
+	// Create console - Singleton
+	new OgreConsole(this);
+	OgreConsole::getSingleton().addCommand( "net.connect", &Console_Net_Connect );
 
-		RenderComponent* c =  new RenderComponent( mRenderSystem, n );
-		n->registerListener( c );
-		c->setAsBox(1.0f,3.0f,1.0f);
-		cube->addComponent(c);
-
-		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
-		btCollisionShape* shapex = new btBoxShape( float3(1.0f,3.0f, 1.0f )/2 );
-		p->initialise( shapex, 0.1, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
-		p->registerListener( c );
-		p->registerListener( n );
-		cube->addComponent( p );
-	}
-	
-	// Static Geometry
-	EntityManager* entityManager = new EntityManager();
-	mStaticGeometry = new StaticGeometry( entityManager, mRenderSystem, mPhysicsManager );
-
-	mStaticGeometry->addGeometry( float3( 0,0.0f,0.0f), float3( 100.0f, 1.0f, 100.0f ), float3(0,0,0));
-	mStaticGeometry->addGeometry( float3( 0,20.0f, 0.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,45.0/57.0 ));
-	mStaticGeometry->addGeometry( float3( -10.0f,10.0f, 0.0f), float3( 10.0f,1.0f, 10.0f), float3( 0,0,-45.0/57.0 ));
-
-	// sides
-	mStaticGeometry->addGeometry( float3( 50,0.0f,0.0f), float3( 1.0f, 10.0f, 100.0f ));
-	mStaticGeometry->addGeometry( float3( -50,0.0f,0.0f), float3( 1.0f, 10.0f, 100.0f ));
-
-	mStaticGeometry->addGeometry( float3( 0,0.0f,50.0f), float3( 100.0f, 10.0f, 1.0f ));
-	mStaticGeometry->addGeometry( float3( 0,0.0f,-50.0f), float3( 100.0f, 10.0f, 1.0f ));
-	// Camera
-	Entity* camera = createEntity();
-
-	PositionComponent* cpc = new PositionComponent();
-	CameraComponent* cc = new CameraComponent( mRenderSystem, cpc );
-	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager, cpc );
-	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
-
-	mEventSystem->registerListener( s );
-
-	camera->addComponent(cc);
-	camera->addComponent(cpc);
-	camera->addComponent(cphyc);
-	camera->addComponent(s);
-
-	cpc->registerListener( cphyc );
-	s->registerListener(cphyc);
-
-	cpc->setPosition( float3(0,40,20 ));
-	//cphyc->registerListener( cc );
-
-	// Create tower
-	for( float x = 20; x<26; x+=2.0f )
-	{
-		for( float y = 0.75f; y<16.0f; y+=2.0f )
-		{
-			createBlock( this, float3( 2,1,6), float3(x,y,20), 0);
-		}
-		
-	}
-
-	for( float z = 18.0f; z < 23.5f; z+=2.0f )
-		for( float y = 1.5f;y<16.0f; y+=2.0f )
-		{
-			createBlock( this, float3( 2,1,6), float3(22.0f,y,z), 90);
-		}
-
-
-		// Create console
-		Gorilla::Silverback* silverback = new Gorilla::Silverback();
-		silverback->loadAtlas("dejavu");
-		Gorilla::Screen* UIScreen = silverback->createScreen( mRenderSystem->getViewport(),"dejavu" );
-
-		mConsole = new OgreConsole();
-
-		mConsole->init(UIScreen );
-
-		mEventSystem->registerListener(mConsole);
-
-		mConsole->addCommand( "net.connect", &EngineCommand_NetClient );
-		
 }
 
 Engine::~Engine()
@@ -217,12 +90,6 @@ void Engine::handle( Event* e )
 				case SDL_SCANCODE_ESCAPE: // Escape
                    m_EngineShutdown = true;
                 break;
-
-				case SDL_SCANCODE_C:
-					if( ke->mPressed )
-						spawnNewCube();
-					break;
-
             }
 		
         break;
@@ -234,29 +101,5 @@ Entity* Engine::createEntity()
 	Entity* ent = new Entity();
 	mEntities.push_back(ent);
 	return ent;
-}
-
-void Engine::spawnNewCube()
-{
-	{
-		Entity* cube = createEntity();
-		PositionComponent* n = new PositionComponent();
-		cube->addComponent( n );
-		
-		float x = (rand() % 5 )+1;
-		float y = (rand() % 5 )+1;
-		float z = (rand() % 5 )+1;
-		RenderComponent* c =  new RenderComponent( mRenderSystem, n );
-		n->registerListener( c );
-		c->setAsBox(x,y,z);
-		cube->addComponent(c);
-
-		PhysicsComponent* p = new PhysicsComponent( mPhysicsManager,n );
-		btCollisionShape* shapex = new btBoxShape( float3(x/2,y/2,z/2) );
-		p->initialise( shapex, (rand() % 20 )+1, float3(0,51.0,0), Quat( 1.0, 0.9,0,0.7 ) );	
-		p->registerListener( c );
-		p->registerListener( n );
-		cube->addComponent( p );
-	}
 }
 

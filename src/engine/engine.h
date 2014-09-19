@@ -1,3 +1,6 @@
+#ifndef engine_h__
+#define engine_h__
+
 //
 //  YorkshireTea
 //
@@ -16,7 +19,7 @@
 
 #include "engine/world/staticGeometry.h"
 
-#include "engine/core/graphics/UI/OgreConsoleForGorilla.h"
+#include "engine/core/graphics/UI/OgreConsole.h"
 
 class Engine : public EventListener
 {
@@ -35,6 +38,7 @@ public:
 	// Systems getters
 	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
+	EventSystem*		getEventSystem(){return mEventSystem; };
        
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
@@ -42,10 +46,8 @@ public:
 	// Entities
 	std::vector<Entity*> mEntities;
 	Entity* createEntity();
-	void spawnNewCube();
 
-	// Public Systems
-	OgreConsole* mConsole;
+private:
 
     RenderSystem* mRenderSystem;
     InputSystem* mInputSystem;
@@ -61,3 +63,4 @@ public:
 
 };
 
+#endif // engine_h__

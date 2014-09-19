@@ -26,6 +26,14 @@ void InputSystem::update()
 	{
 		switch(m_inputEvent.type )
 		{
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+				mWindowActive = true;
+				break;
+
+			case SDL_WINDOWEVENT_HIDDEN:
+				mWindowActive = false;
+				break;
+
 			case SDL_KEYDOWN:
 			{
 				// Key down, create and dispatch event
@@ -39,19 +47,15 @@ void InputSystem::update()
 			break;
 
 			case SDL_KEYUP:
-			{
-				// Key down, create and dispatch event
-				KeyboardEvent*	e = new KeyboardEvent(EV_CORE_KEY_RELEASE );
-				e->mPressed = false;
-				e->mReleased = true;
-				e->mKeycode = m_inputEvent.key.keysym.scancode;
-				m_EventSystem->dispatchEvent( e );
+				{
+					// Key down, create and dispatch event
+					KeyboardEvent*	e = new KeyboardEvent(EV_CORE_KEY_RELEASE );
+					e->mPressed = false;
+					e->mReleased = true;
+					e->mKeycode = m_inputEvent.key.keysym.scancode;
+					m_EventSystem->dispatchEvent( e );
 
-				//TODO Hack, so what.
-				if( e->mKeycode == SDL_SCANCODE_COMMA )
-					mWindowActive=!mWindowActive;
-
-			}
+				}
 			break;
 
 			case SDL_TEXTINPUT:
@@ -61,6 +65,19 @@ void InputSystem::update()
 					m_EventSystem->dispatchEvent(e);
 					break;
 				}
+
+			case SDL_WINDOWEVENT:
+				switch( m_inputEvent.window.event )
+				{
+				case SDL_WINDOWEVENT_FOCUS_GAINED:
+					mWindowActive = true;
+					break;
+
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+					mWindowActive = false;
+					break;
+				}
+				break;
 				
 
 		}

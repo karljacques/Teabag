@@ -1,7 +1,7 @@
 #ifndef component_h__
 #define component_h__
 
-#include "engine/core/event/EventListener.h"
+#include "engine/core/event/eventListener.h"
 
 class Entity;
 

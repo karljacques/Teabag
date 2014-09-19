@@ -19,7 +19,7 @@
 
 #include "engine/world/staticGeometry.h"
 
-#include "engine/core/graphics/UI/OgreConsole.h"
+#include "engine/core/graphics/UI/ogreConsole.h"
 
 class Engine : public EventListener
 {

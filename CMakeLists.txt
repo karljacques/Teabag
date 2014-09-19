@@ -68,5 +68,6 @@ add_definitions (
 
 file (MAKE_DIRECTORY "cmake-dep")
 file (WRITE "cmake-dep/.gitignore" "*")
+file (MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 add_subdirectory (src)

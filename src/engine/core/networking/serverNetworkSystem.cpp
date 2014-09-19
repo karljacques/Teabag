@@ -4,7 +4,11 @@
 ServerNetworkSystem::ServerNetworkSystem() : NetworkSystem()
 {
 	// Initialise server
-	peer->Startup( MAX_CONNECTIONS, &RakNet::SocketDescriptor( SERVER_PORT, 0 ), 1 );
+	RakNet::SocketDescriptor socketDescriptors[1] = {
+		RakNet::SocketDescriptor( SERVER_PORT, 0 )
+	};
+	peer->Startup( MAX_CONNECTIONS, socketDescriptors, 1 );
+
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 }
 

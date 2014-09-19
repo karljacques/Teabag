@@ -6,7 +6,10 @@ using namespace RakNet;
 
 ClientNetworkSystem::ClientNetworkSystem()
 {
-	peer->Startup( 2, &RakNet::SocketDescriptor(), 1 );
+	RakNet::SocketDescriptor socketDescriptors[1] = {
+		RakNet::SocketDescriptor()
+	};
+	peer->Startup( 2, socketDescriptors, 1 );
 }
 
 int ClientNetworkSystem::receive()

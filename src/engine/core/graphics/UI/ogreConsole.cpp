@@ -10,7 +10,7 @@
    
 */
 #include "pch.h"
-#include "OgreConsole.h"
+#include "ogreConsole.h"
 
 #if OGRE_VERSION < 67584 // 1.8.0
 template<> OgreConsole* Ogre::Singleton<OgreConsole>::ms_Singleton=0;

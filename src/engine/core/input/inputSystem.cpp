@@ -82,18 +82,27 @@ void InputSystem::update()
 
 		}
 	}
-	// TODO make this take half window values
+
+	// Get half window height and width
+	int x;
+	int y;
+	SDL_GetWindowSize (mWindow,&x,&y);
+
+	x/=2;
+	y/=2;
+
+	// If Window is focused, center the mouse
 	if( mWindowActive)
 	{
 		int MouseX,MouseY;
 		SDL_GetMouseState(&MouseX,&MouseY);
-		int DeltaX = MouseX - 400;
-		int DeltaY = MouseY - 300;
+		int DeltaX = MouseX - x;
+		int DeltaY = MouseY - y;
 		MouseEvent* e = new MouseEvent( EV_CORE_MOUSE_MOVEMENT );
 		e->mMouseMoveX = DeltaX;
 		e->mMouseMoveY = DeltaY;
 
 		m_EventSystem->dispatchEvent( e );
-		SDL_WarpMouseInWindow(  mWindow, 400, 300 );
+		SDL_WarpMouseInWindow(  mWindow, x, y );
 	}
 }

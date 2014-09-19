@@ -103,3 +103,11 @@ Entity* Engine::createEntity()
 	return ent;
 }
 
+void Engine::SetAsClient(const char* ip)
+{
+	delete this->mNetworkSystem;
+
+	mNetworkSystem = new ClientNetworkSystem();
+	static_cast<ClientNetworkSystem*>(mNetworkSystem)->connect( ip );
+}
+

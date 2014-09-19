@@ -278,5 +278,8 @@ void OgreConsole::messageLogged( const Ogre::String& message, Ogre::LogMessageLe
 // All Console commands here.
 void Console_Net_Connect( Ogre::StringVector& str )
 {
-	OgreConsole::getSingleton().print("Success");
+	const char* ip = str[1].c_str();
+	OgreConsole::getSingleton().print("Connecting to host @ " + Ogre::String(ip) );
+
+	OgreConsole::getSingleton().getEnginePtr()->SetAsClient( ip );
 }

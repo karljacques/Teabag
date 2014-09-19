@@ -47,6 +47,9 @@ public:
 	std::vector<Entity*> mEntities;
 	Entity* createEntity();
 
+	// Console functions/Engine manipulation
+	void SetAsClient( const char* ip );
+
 private:
 
     RenderSystem* mRenderSystem;

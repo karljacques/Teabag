@@ -16,7 +16,6 @@
 enum EV_EventType
 {
 	// Input
-    EV_CORE_MOUSE_MOVE,
     EV_CORE_MOUSE_PRESS,
     EV_CORE_MOUSE_RELEASE,
     EV_CORE_KEY_PRESS,

@@ -9,6 +9,8 @@ public:
 	ServerNetworkSystem();
 
 	int receive();
+	void handle( Event* e );
+
 private:
 
 

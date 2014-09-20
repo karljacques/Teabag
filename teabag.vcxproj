@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)\src;$(ProjectDir)\dependencies\boost;$(ProjectDir)\dependencies\sdl\include;$(ProjectDir)\dependencies\ogre\include;$(ProjectDir)\dependencies\bullet\src;$(ProjectDir)\dependencies\raknet\src;$(ProjectDir)\dependencies\MathGeoLib\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\dependencies\boost\lib;$(ProjectDir)\dependencies\sdl\lib;$(ProjectDir)\dependencies\ogre\lib\debug;$(ProjectDir)\dependencies\bullet\lib\debug;$(ProjectDir)\dependencies\mathgeolib\lib\debug;$(ProjectDir)\dependencies\raknet\lib\debug;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)\bin\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,6 +71,9 @@
     <PreBuildEvent>
       <Command>cd $(SolutionDir)bin/debug</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(SolutionDir)media $(SolutionDir)bin\$(Configuration)\media\ /s /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -86,6 +89,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>OgreMain.lib;SDL2.lib;MathGeoLib.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;raknetdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy media bin/$(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\core\component\base\component.cpp" />

@@ -22,6 +22,11 @@ int ClientNetworkSystem::receive()
 			OgreConsole::getSingleton().print("Connection Success");
 			return ID_CONNECTION_REQUEST_ACCEPTED;
 		}
+
+		if( getPacketIdentifier(packet) == EV_CORE_MOUSE_MOVEMENT )
+		{
+			OgreConsole::getSingleton().print("Received a mouse move");
+		}
 	} 
 
 	return true;
@@ -30,4 +35,9 @@ int ClientNetworkSystem::receive()
 void ClientNetworkSystem::connect( const char* ip )
 {
 	peer->Connect(ip, SERVER_PORT, 0,0 );
+}
+
+void ClientNetworkSystem::handle( Event* e )
+{
+
 }

@@ -31,6 +31,9 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
 
+	// Register the network system to recieve all events
+	mEventSystem->registerListener( mNetworkSystem );
+
 	// Create the default camera
 	PositionComponent* defaultCameraPos = new PositionComponent();
 	CameraComponent* defaultCamera = new CameraComponent( mRenderSystem,defaultCameraPos );
@@ -105,9 +108,13 @@ Entity* Engine::createEntity()
 
 void Engine::SetAsClient(const char* ip)
 {
-	delete this->mNetworkSystem;
+	mEventSystem->deregisterListener(mNetworkSystem);
+	delete mNetworkSystem;
 
-	mNetworkSystem = new ClientNetworkSystem();
+	this->mNetworkSystem = new ClientNetworkSystem();
+	mEventSystem->registerListener(this->mNetworkSystem);
 	static_cast<ClientNetworkSystem*>(mNetworkSystem)->connect( ip );
+
+	
 }
 

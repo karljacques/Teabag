@@ -31,7 +31,7 @@ void ServerNetworkSystem::handle( Event* e )
 {
 	switch( e->getEventType() )
 	{
-	case EV_CORE_MOUSE_MOVEMENT||EV_CORE_MOUSE_PRESS||EV_CORE_MOUSE_RELEASE:
+	case EV_CORE_MOUSE_PRESS:
 		{
 			MouseEvent me = *static_cast<MouseEvent*>(e);
 			RakNet::BitStream* bs = new RakNet::BitStream();
@@ -41,4 +41,9 @@ void ServerNetworkSystem::handle( Event* e )
 		}
 		
 	}
+}
+
+ServerNetworkSystem::~ServerNetworkSystem()
+{
+	RakNet::RakPeerInterface::DestroyInstance( peer );
 }

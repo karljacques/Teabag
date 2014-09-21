@@ -31,7 +31,12 @@ public:
 private:
 
     std::queue<Event*> mEventList;
-    std::deque<EventListener*> mEventListeners;
+    std::vector<EventListener*> mEventListeners;
+
+	// Makes system safer when adding and removing listeners
+	std::queue<EventListener*> mNewEventListeners;
+	std::queue<EventListener*> mRemovedListeners;
+
 
 };
 #endif /* defined(__YorkshireTea__eventSystem__) */

@@ -7,7 +7,7 @@ using namespace RakNet;
 ClientNetworkSystem::ClientNetworkSystem()
 {
 	RakNet::SocketDescriptor socketDescriptors[1] = {
-		RakNet::SocketDescriptor()
+		RakNet::SocketDescriptor( )
 	};
 	peer->Startup( 2, socketDescriptors, 1 );
 }
@@ -18,15 +18,14 @@ int ClientNetworkSystem::receive()
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
 		if( getPacketIdentifier(packet) == ID_CONNECTION_REQUEST_ACCEPTED )
-		{
 			OgreConsole::getSingleton().print("Connection Success");
-			return ID_CONNECTION_REQUEST_ACCEPTED;
-		}
 
-		if( getPacketIdentifier(packet) == EV_CORE_MOUSE_MOVEMENT )
-		{
-			OgreConsole::getSingleton().print("Received a mouse move");
-		}
+		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
+			OgreConsole::getSingleton().print("Connection Failed");
+
+		if( getPacketIdentifier(packet) == EV_CORE_MOUSE_PRESS )
+			OgreConsole::getSingleton().print("Received a mouse press");
+
 	} 
 
 	return true;
@@ -38,6 +37,11 @@ void ClientNetworkSystem::connect( const char* ip )
 }
 
 void ClientNetworkSystem::handle( Event* e )
+{
+
+}
+
+ClientNetworkSystem::~ClientNetworkSystem()
 {
 
 }

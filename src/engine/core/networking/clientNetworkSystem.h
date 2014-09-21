@@ -7,11 +7,12 @@ class ClientNetworkSystem : public NetworkSystem
 {
 public:
 	ClientNetworkSystem();
+	~ClientNetworkSystem();
 
 	int receive();
 	void connect( const char* ip );
 	void handle( Event* e );
-
+	
 private:
 
 };

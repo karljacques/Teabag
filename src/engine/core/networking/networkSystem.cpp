@@ -15,3 +15,5 @@ unsigned char NetworkSystem::getPacketIdentifier(Packet *p)
 	else
 		return (unsigned char) p->data[0];
 }
+
+NetworkSystem::~NetworkSystem(){};

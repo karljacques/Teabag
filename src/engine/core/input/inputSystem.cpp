@@ -78,6 +78,14 @@ void InputSystem::update()
 					break;
 				}
 				break;
+
+			case SDL_MOUSEBUTTONDOWN:
+				{
+					MouseEvent* m = new MouseEvent(EV_CORE_MOUSE_PRESS);
+					m->m_MouseButton = m_inputEvent.button.button;
+					m_EventSystem->dispatchEvent(m);
+				}
+				
 				
 
 		}

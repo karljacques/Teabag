@@ -20,7 +20,7 @@ include_directories (
 )
 
 # create executable
-link_directories ("${DEPENDENCIES_DIR}/lib")
+link_directories (${DEPENDENCIES_DIR}/lib)
 add_executable (teabag WIN32 MACOSX_BUNDLE ${teabag_HEADERS} ${teabag_SOURCES})
 
 ###############################################################################
@@ -79,6 +79,7 @@ else ()
 		-DBUILD_BULLET2_DEMOS=0
 		-DBUILD_BULLET3=0
 	)
+	add_dependencies(teabag Bullet_PROJECT)
 	include_directories ("${DEPENDENCIES_DIR}/include/bullet")
 	target_link_libraries (teabag
 		BulletDynamics
@@ -96,6 +97,7 @@ externalproject_add (MathGeoLib_PROJECT
 	GIT_TAG "master"
 	CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 )
+add_dependencies(teabag MathGeoLib_PROJECT)
 add_definitions (
 	-DMATH_BULLET_INTEROP
 	-DMATH_OGRE_INTEROP
@@ -108,7 +110,7 @@ target_link_libraries (teabag MathGeoLib)
 find_package (OGRE)
 if (NOT OGRE_FOUND)
 	# Install Ogre's dependencies
-	externalproject_add(OGREDEPS_PROJECT
+	externalproject_add(OgreDeps_PROJECT
 		PREFIX ${DEPENDENCIES_DIR}
 		HG_REPOSITORY "https://bitbucket.org/davedissian/ogredeps/"
 		HG_TAG "default"
@@ -121,7 +123,7 @@ if (NOT OGRE_FOUND)
 		PREFIX ${DEPENDENCIES_DIR}
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
-		DEPENDS OGREDEPS_PROJECT
+		DEPENDS OgreDeps_PROJECT
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 		-DOGRE_BUILD_COMPONENT_OVERLAY=0
 		-DOGRE_BUILD_COMPONENT_PAGING=0
@@ -177,6 +179,7 @@ if (NOT RakNet_FOUND)
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
 		-DRAKNET_ENABLE_STATIC=FALSE
 	)
+	add_dependencies(teabag RakNet_PROJECT)
 
 	# Set up RakNet variables
 	set (RAKNET_INCLUDES "${DEPENDENCIES_DIR}/include/RakNet")

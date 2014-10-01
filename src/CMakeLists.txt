@@ -15,12 +15,12 @@ if (APPLE)
 endif()
 
 include_directories (
-	"."
-	"engine"
+	.
+	engine
 )
 
 # create executable
-link_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/lib")
+link_directories ("${DEPENDENCIES_DIR}/lib")
 add_executable (teabag WIN32 MACOSX_BUNDLE ${teabag_HEADERS} ${teabag_SOURCES})
 
 ###############################################################################
@@ -28,7 +28,11 @@ add_executable (teabag WIN32 MACOSX_BUNDLE ${teabag_HEADERS} ${teabag_SOURCES})
 ###############################################################################
 
 # Common CMake Flags
-set(COMMON_CMAKE_FLAGS -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/cmake-dep)
+set(COMMON_CMAKE_FLAGS
+	-DCMAKE_INSTALL_PREFIX=${DEPENDENCIES_DIR}
+	-DCMAKE_PREFIX_PATH=${DEPENDENCIES_DIR}
+	-DCMAKE_INCLUDE_PATH=${DEPENDENCIES_DIR}/include
+	-DCMAKE_LIBRARY_PATH=${DEPENDENCIES_DIR}/lib)
 
 # Mac OS X requires dependencies to use the libc++ standard library instead of
 # the default stdlibc++ when using C++11 in the main project. Additionally,
@@ -65,7 +69,7 @@ if (BULLET_FOUND)
 else ()
 	message (STATUS "Bullet will be downloaded automatically")
 	externalproject_add (Bullet_PROJECT
-		PREFIX ${CMAKE_SOURCE_DIR}/cmake-dep
+		PREFIX ${DEPENDENCIES_DIR}
 		GIT_REPOSITORY "git://github.com/bulletphysics/bullet3"
 		GIT_TAG "Bullet-2.83-alpha"
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
@@ -74,9 +78,8 @@ else ()
 		-DBUILD_CPU_DEMOS=0
 		-DBUILD_BULLET2_DEMOS=0
 		-DBUILD_BULLET3=0
-		-DBUILD_BULLET3_DEMOS=0
 	)
-	include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/bullet")
+	include_directories ("${DEPENDENCIES_DIR}/include/bullet")
 	target_link_libraries (teabag
 		BulletDynamics
 		BulletCollision
@@ -88,7 +91,7 @@ endif ()
 # MathGeoLib
 message (STATUS "MathGeoLib will be downloaded automatically")
 externalproject_add (MathGeoLib_PROJECT
-	PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+	PREFIX ${DEPENDENCIES_DIR}
 	GIT_REPOSITORY "git://github.com/juj/MathGeoLib"
 	GIT_TAG "master"
 	CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
@@ -97,7 +100,7 @@ add_definitions (
 	-DMATH_BULLET_INTEROP
 	-DMATH_OGRE_INTEROP
 )
-include_directories ("${CMAKE_SOURCE_DIR}/cmake-dep/include/MathGeoLib")
+include_directories ("${DEPENDENCIES_DIR}/include/MathGeoLib")
 target_link_libraries (teabag MathGeoLib)
 
 ###############################################################################
@@ -106,7 +109,7 @@ find_package (OGRE)
 if (NOT OGRE_FOUND)
 	# Install Ogre's dependencies
 	externalproject_add(OGREDEPS_PROJECT
-		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+		PREFIX ${DEPENDENCIES_DIR}
 		HG_REPOSITORY "https://bitbucket.org/davedissian/ogredeps/"
 		HG_TAG "default"
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
@@ -115,7 +118,7 @@ if (NOT OGRE_FOUND)
 	# Build Ogre
 	message (STATUS "Ogre will be downloaded automatically")
 	externalproject_add(Ogre_PROJECT
-		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+		PREFIX ${DEPENDENCIES_DIR}
 		HG_REPOSITORY "https://bitbucket.org/sinbad/ogre"
 		HG_TAG "v1-9-0"
 		DEPENDS OGREDEPS_PROJECT
@@ -142,13 +145,13 @@ if (NOT OGRE_FOUND)
 	add_dependencies(teabag Ogre_PROJECT)
 
 	# Set up Ogre variables
-	set(OGRE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/cmake-dep/include/OGRE;${CMAKE_SOURCE_DIR}/cmake-dep/include/OIS")
+	set(OGRE_INCLUDE_DIRS "${DEPENDENCIES_DIR}/include/OGRE;${DEPENDENCIES_DIR}/include/OIS")
 	if (APPLE)
-		set(OGRE_LIBRARIES "${CMAKE_SOURCE_DIR}/cmake-dep/lib/RelWithDebInfo/Ogre.framework")
-		set(OGRE_PLUGIN_DIR_REL "${CMAKE_SOURCE_DIR}/cmake-dep/lib/RelWithDebInfo")
+		set(OGRE_LIBRARIES "${DEPENDENCIES_DIR}/lib/RelWithDebInfo/Ogre.framework")
+		set(OGRE_PLUGIN_DIR_REL "${DEPENDENCIES_DIR}/lib/RelWithDebInfo")
 	elseif (UNIX)
 		set(OGRE_LIBRARIES "OgreMain")
-		set(OGRE_PLUGIN_DIR_REL "${CMAKE_SOURCE_DIR}/cmake-dep/lib/OGRE")
+		set(OGRE_PLUGIN_DIR_REL "${DEPENDENCIES_DIR}/lib/OGRE")
 	endif()
 
 endif ()
@@ -168,7 +171,7 @@ if (NOT RakNet_FOUND)
 	# Build RakNet
 	message (STATUS "RakNet will be downloaded automatically")
 	externalproject_add (RakNet_PROJECT
-		PREFIX "${CMAKE_SOURCE_DIR}/cmake-dep"
+		PREFIX ${DEPENDENCIES_DIR}
 		GIT_REPOSITORY "git://github.com/TheComet93/RakNet"
 		GIT_TAG "master"
 		CMAKE_ARGS ${COMMON_CMAKE_FLAGS}
@@ -176,15 +179,17 @@ if (NOT RakNet_FOUND)
 	)
 
 	# Set up RakNet variables
-	set (RAKNET_INCLUDES "${CMAKE_SOURCE_DIR}/cmake-dep/include/RakNet")
+	set (RAKNET_INCLUDES "${DEPENDENCIES_DIR}/include/RakNet")
 	set (RAKNET_LIBRARY RakNetDLL)
 endif ()
 
 include_directories (${RAKNET_INCLUDES})
 target_link_libraries (teabag ${RAKNET_LIBRARY})
 
-# OS X specific post build
-if (APPLE)
+# Post-build settings
+if (UNIX AND NOT APPLE)
+	# Copy dependencies to output directory
+elseif (APPLE)
 	set(BUNDLE_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app)
 	set(FRAMEWORKS_DIR ${BUNDLE_DIR}/Contents/Frameworks)
 
@@ -196,7 +201,7 @@ if (APPLE)
 	add_custom_command(TARGET teabag POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.framework ${FRAMEWORKS_DIR}/RenderSystem_GL.framework)
 	add_custom_command(TARGET teabag POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake-dep/lib/libRakNetDLL.dylib ${FRAMEWORKS_DIR})
+		COMMAND ${CMAKE_COMMAND} -E copy ${DEPENDENCIES_DIR}/lib/libRakNetDLL.dylib ${FRAMEWORKS_DIR})
 
 	# We need to write the correct path of each dependency relative to the
 	# executable in the app bundle. Use install_name_tool to modify the search

@@ -62,12 +62,15 @@ endif ()
 add_definitions (
 )
 
+# Dependency dir
+set (DEPENDENCIES_DIR "${CMAKE_BINARY_DIR}/cmake-dep")
+
 ###############################################################################
 # reconstruct folders ignored by git
 ###############################################################################
 
-file (MAKE_DIRECTORY "cmake-dep")
-file (WRITE "cmake-dep/.gitignore" "*")
+file (MAKE_DIRECTORY "${DEPENDENCIES_DIR}")
+file (WRITE "${DEPENDENCIES_DIR}/.gitignore" "*")
 file (MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 add_subdirectory (src)

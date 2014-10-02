@@ -152,7 +152,7 @@ if (NOT OGRE_FOUND)
 	# Set up Ogre variables
 	set(OGRE_INCLUDE_DIRS "${DEPENDENCIES_DIR}/include/OGRE;${DEPENDENCIES_DIR}/include/OIS")
 	if (APPLE)
-		set(OGRE_LIBRARIES "${DEPENDENCIES_DIR}/lib/RelWithDebInfo/Ogre.framework")
+		set(OGRE_LIBRARIES "${DEPENDENCIES_DIR}/lib/RelWithDebInfo/Ogre.framework/Ogre")
 		set(OGRE_PLUGIN_DIR_REL "${DEPENDENCIES_DIR}/lib/RelWithDebInfo")
 	elseif (UNIX)
 		set(OGRE_LIBRARIES "OgreMain")

@@ -172,8 +172,11 @@ include_directories (${OGRE_INCLUDE_DIRS})
 target_link_libraries (teabag ${OGRE_LIBRARIES})
 
 # Copy required plugins to local plugins folder
-file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
-file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+# TODO - don't do this, instead use the CopyMedia target
+if (UNIX AND NOT APPLE)
+	file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
+	file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+endif ()
 
 
 ################################################################################

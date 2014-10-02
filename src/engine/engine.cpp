@@ -20,6 +20,14 @@ Engine::Engine()
 
     m_EngineShutdown = false;
 
+    // Set the working directory
+    char* basePath = SDL_GetBasePath();
+#ifdef DW_WIN32
+    SetCurrentDirectoryA(basePath);
+#else
+    chdir(basePath);
+#endif
+
 	// Create Systems
     mRenderSystem = new RenderSystem();
     mEventSystem = new EventSystem();

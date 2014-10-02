@@ -1,31 +1,29 @@
-###############################################################################
-# create executable
-###############################################################################
-
 project (teabag)
 include (ExternalProject)
 
-# glob header and source files
+################################################################################
+# Executable
+################################################################################
+
+# Glob header and source files - save having to bother listing them here
 file (GLOB_RECURSE teabag_HEADERS "*.h" "*.hpp" "*.hxx")
 file (GLOB_RECURSE teabag_SOURCES "*.c" "*.cpp")
 
+# Apple has some .mm files which need to be included
 if (APPLE)
 	file (GLOB_RECURSE teabag_SOURCES_OSX "*.mm")
 	set (teabag_SOURCES ${teabag_SOURCES} ${teabag_SOURCES_OSX})
 endif()
 
-include_directories (
-	.
-	engine
-)
-
-# create executable
+# Add the executable
+include_directories (. engine)
 link_directories (${DEPENDENCIES_DIR}/lib)
 add_executable (teabag WIN32 MACOSX_BUNDLE ${teabag_HEADERS} ${teabag_SOURCES})
 
-###############################################################################
-# dependencies
-###############################################################################
+
+################################################################################
+# Dependencies
+################################################################################
 
 # Common CMake Flags
 set(COMMON_CMAKE_FLAGS
@@ -45,15 +43,19 @@ if (APPLE)
 		"-DCMAKE_CXX_FLAGS='-std=c++11 -stdlib=libc++ -Wno-deprecated-register'")
 endif()
 
-###############################################################################
+
+################################################################################
 # SDL2
+################################################################################
 
 find_package (SDL2 REQUIRED)
 include_directories (${SDL2_INCLUDE_DIR})
 target_link_libraries (teabag ${SDL2_LIBRARY})
 
-###############################################################################
+
+################################################################################
 # Bullet
+################################################################################
 find_package (BULLET COMPONENTS
 	BulletDynamics
 	BulletCollision
@@ -88,8 +90,10 @@ else ()
 	)
 endif ()
 
-###############################################################################
+
+################################################################################
 # MathGeoLib
+################################################################################
 message (STATUS "MathGeoLib will be downloaded automatically")
 externalproject_add (MathGeoLib_PROJECT
 	PREFIX ${DEPENDENCIES_DIR}
@@ -105,8 +109,10 @@ add_definitions (
 include_directories ("${DEPENDENCIES_DIR}/include/MathGeoLib")
 target_link_libraries (teabag MathGeoLib)
 
-###############################################################################
-# Ogre3D
+
+################################################################################
+# Ogre
+################################################################################
 find_package (OGRE)
 if (NOT OGRE_FOUND)
 	# Install Ogre's dependencies
@@ -169,8 +175,10 @@ target_link_libraries (teabag ${OGRE_LIBRARIES})
 file (GLOB OGRE_PLUGINS "${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL*")
 file (COPY ${OGRE_PLUGINS} DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
-###############################################################################
+
+################################################################################
 # RakNet
+################################################################################
 find_package (RakNet)
 if (NOT RakNet_FOUND)
 	# Build RakNet
@@ -192,26 +200,53 @@ endif ()
 include_directories (${RAKNET_INCLUDES})
 target_link_libraries (teabag ${RAKNET_LIBRARY})
 
-# Post-build settings
-if (UNIX AND NOT APPLE)
-	# Copy dependencies to output directory
+
+################################################################################
+# Post Build
+################################################################################
+
+add_custom_target(CopyMedia ALL)
+add_dependencies(CopyMedia teabag)
+
+if (WIN32)
+	# TODO - Windows
 elseif (APPLE)
 	set(BUNDLE_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app)
 	set(FRAMEWORKS_DIR ${BUNDLE_DIR}/Contents/Frameworks)
+	set(RESOURCES_DIR ${BUNDLE_DIR}/Contents/Resources)
+
+	# Game Resources
+  add_custom_command(TARGET CopyMedia POST_BUILD COMMAND
+    mkdir ARGS -p "${RESOURCES_DIR}/media")
+  add_custom_command(TARGET CopyMedia POST_BUILD COMMAND
+    rsync ARGS -r --delete
+    "${CMAKE_SOURCE_DIR}/media/"
+    "${RESOURCES_DIR}/media/")
 
 	# Copy dependencies into the app bundle
-	add_custom_command(TARGET teabag POST_BUILD
+	add_custom_command(TARGET CopyMedia POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${FRAMEWORKS_DIR})
-	add_custom_command(TARGET teabag POST_BUILD
+	add_custom_command(TARGET CopyMedia POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/Ogre.framework ${FRAMEWORKS_DIR}/Ogre.framework)
-	add_custom_command(TARGET teabag POST_BUILD
+	add_custom_command(TARGET CopyMedia POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.framework ${FRAMEWORKS_DIR}/RenderSystem_GL.framework)
-	add_custom_command(TARGET teabag POST_BUILD
+	add_custom_command(TARGET CopyMedia POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${DEPENDENCIES_DIR}/lib/libRakNetDLL.dylib ${FRAMEWORKS_DIR})
 
 	# We need to write the correct path of each dependency relative to the
 	# executable in the app bundle. Use install_name_tool to modify the search
 	# paths in the executable
-	add_custom_command(TARGET teabag POST_BUILD
+	add_custom_command(TARGET CopyMedia POST_BUILD
 		COMMAND install_name_tool -change libRakNetDLL.dylib @executable_path/../Frameworks/libRakNetDLL.dylib ${BUNDLE_DIR}/Contents/MacOS/teabag)
+elseif (UNIX)
+	# Game Resources
+  add_custom_command(TARGET CopyMedia POST_BUILD COMMAND
+    mkdir ARGS -p "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/media")
+  add_custom_command(TARGET CopyMedia POST_BUILD COMMAND
+    rsync ARGS -r --delete
+    "${CMAKE_SOURCE_DIR}/media/"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/media/")
+
+	# Copy dependencies to output directory
+	# TODO
 endif ()

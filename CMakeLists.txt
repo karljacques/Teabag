@@ -2,6 +2,8 @@
 
 cmake_minimum_required (VERSION 2.8.11)
 
+
+
 # Default build type: Debug
 # If the user specifies -DCMAKE_BUILD_TYPE on the command line, take their
 # definition and dump it in the cache along with proper documentation, otherwise
@@ -20,8 +22,10 @@ endif()
 # windows should place DLLs in the same folder as the executable
 ###############################################################################
 
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set (CMAKE_BINARY_DIR "${CMAKE_SOURCE_DIR}/bin")
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
+
 if (WIN32)
 	set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 else ()

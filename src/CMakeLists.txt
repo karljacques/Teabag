@@ -5,6 +5,7 @@ include (ExternalProject)
 # Executable
 ################################################################################
 
+
 # Glob header and source files - save having to bother listing them here
 file (GLOB_RECURSE teabag_HEADERS "*.h" "*.hpp" "*.hxx")
 file (GLOB_RECURSE teabag_SOURCES "*.c" "*.cpp")
@@ -211,9 +212,12 @@ target_link_libraries (teabag ${RAKNET_LIBRARY})
 add_custom_target(CopyMedia ALL)
 add_dependencies(CopyMedia teabag)
 
+
+
 if (WIN32)
 	# TODO - Windows
 elseif (APPLE)
+
 	set(BUNDLE_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/teabag.app)
 	set(FRAMEWORKS_DIR ${BUNDLE_DIR}/Contents/Frameworks)
 	set(RESOURCES_DIR ${BUNDLE_DIR}/Contents/Resources)

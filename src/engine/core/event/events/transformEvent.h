@@ -12,7 +12,7 @@ public:
 	float3 mPosition;
 	Quat mOrientation;
 
-	float3 mForceDir; // A bit silly as already have a float3 but whatever
+	float3 mSecondaryFloat; // Used to dictate size, direction - when not used as a transform event
 };
 
 #endif // transformEvent_h__

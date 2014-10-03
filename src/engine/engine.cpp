@@ -34,7 +34,8 @@ Engine::Engine()
     mInputSystem = new InputSystem( mEventSystem, mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
 	mNetworkSystem = new ServerNetworkSystem();
-	
+	mEntityManager = new EntityManager();
+
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );

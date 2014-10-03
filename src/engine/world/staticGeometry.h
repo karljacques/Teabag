@@ -5,21 +5,23 @@
 #include "engine/core/component/physics/physicsComponent.h"
 #include "engine/core/component/render/renderComponent.h"
 
-class StaticGeometry
+#include "engine/engine.h"
+
+class StaticGeometry :
+	public EventListener
 {
 public:
-	StaticGeometry( EntityManager* entityManager, RenderSystem* renderSystem, PhysicsManager* physicsManager );
+	StaticGeometry( Engine* engine );
 	~StaticGeometry(void);
 
 	// This method will create a new box that acts as static geometry.
 	// It needs to be provided a position, a size, and an angle.
-	void addGeometry( float3 position, float3 size, float3 angle = float3(0,0,0) );
+	Entity* addGeometry( float3 position, float3 size, float3 angle = float3(0,0,0) );
 
+	void handle( Event* e );
 private:
 	// Dependencies
-	EntityManager* mEntityManager;
-	PhysicsManager* mPhysicsManager;
-	RenderSystem* mRenderSystem;
+	Engine* mEngine;
 
 	std::vector<Entity*> mGeometryList;
 };

@@ -39,6 +39,8 @@ public:
 	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
 	EventSystem*		getEventSystem(){return mEventSystem; };
+	EntityManager*		getEntityManager(){return mEntityManager; };
+	NetworkSystem*		getNetworkSystem(){return mNetworkSystem; };
        
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
@@ -57,6 +59,7 @@ private:
     EventSystem* mEventSystem;
 	NetworkSystem* mNetworkSystem;
     
+	EntityManager* mEntityManager;
 	PhysicsManager* mPhysicsManager;
 
 	StaticGeometry* mStaticGeometry;

@@ -4,11 +4,9 @@
 #include "staticGeometry.h"
 
 
-StaticGeometry::StaticGeometry(EntityManager* entityManager, RenderSystem* renderSystem, PhysicsManager* physicsManager )
+StaticGeometry::StaticGeometry( Engine* engine )
 {
-	mEntityManager = entityManager;
-	mRenderSystem = renderSystem;
-	mPhysicsManager = physicsManager;
+	mEngine = engine;
 }
 
 
@@ -16,12 +14,12 @@ StaticGeometry::~StaticGeometry(void)
 {
 }
 
-void StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
+Entity* StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
 {
 	// Create the components needed
 	PositionComponent* posComp = new PositionComponent();
-	RenderComponent* rComp = new RenderComponent( mRenderSystem, posComp ); 
-	PhysicsComponent* phyComp = new PhysicsComponent( mPhysicsManager,posComp );
+	RenderComponent* rComp = new RenderComponent( mEngine->getRenderSystem(), posComp ); 
+	PhysicsComponent* phyComp = new PhysicsComponent( mEngine->getPhysicsManager(),posComp );
 
 
 	// Create entity and register components
@@ -44,8 +42,32 @@ void StaticGeometry::addGeometry( float3 position, float3 size, float3 angle )
 	rComp->setAsBox( size.x,size.y,size.z );
 
 	// Tell managers about new entity
-	mEntityManager->addEntity( ent );
+	mEngine->getEntityManager()->addEntity( ent );
 	mGeometryList.push_back(ent);
 
-	mEntityManager->update( 0 );
+	mEngine->getEntityManager()->update( 0 );
+
+	// If host, send event so that clients create geometry too.
+	if( mEngine->getNetworkSystem()->isHost() )
+	{
+		TransformEvent* te = new TransformEvent( EV_WORLD_CREATE_STATIC_BOX );
+		te->mPosition = position;
+		te->mOrientation = Quat::FromEulerXYX( angle.x,angle.y,angle.z );
+		te->mSecondaryFloat = size;
+
+		mEngine->getEventSystem()->dispatchEvent( te );
+	}
+
+	return ent;
+}
+
+void StaticGeometry::handle( Event* e )
+{
+	if( e->getEventType() == EV_WORLD_CREATE_STATIC_BOX )
+	{
+		TransformEvent* te = static_cast<TransformEvent*>(e);
+
+		Entity* ent = this->addGeometry( te->mPosition, te->mSecondaryFloat, te->mOrientation.ToEulerXYX() );
+		ent->addComponent( mNetworkSystem->getNetworkComponent(te->mGUID ));
+	}
 }

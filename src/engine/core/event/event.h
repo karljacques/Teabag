@@ -27,7 +27,10 @@ enum EV_EventType
 
 	// Physics
 	EV_CORE_TRANSFORM_UPDATE,
-	EV_CORE_APPLY_FORCE
+	EV_CORE_APPLY_FORCE,
+
+	// World
+	EV_WORLD_CREATE_STATIC_BOX
 };
 
 class Event
@@ -43,7 +46,8 @@ public:
 	// Setting and getting the GUID. This will only ever be done by the networking component and the rest of the components
 	// should be fairly (or hopefully completely) agnostic about it. For example, physics component will dispatch and event, 
 	// networkComponent will pick up on this event, attach the object's GUID to the event before pumping it up to the network system.
-	// Might prove unnecessary.
+	// The reverse is also true, when an event is coming in to create an object, the new network component will be assigned
+	// based on this GUID.
 	RakNet::RakNetGUID mGUID;
 
 private:

@@ -10,6 +10,8 @@ ClientNetworkSystem::ClientNetworkSystem()
 		RakNet::SocketDescriptor( )
 	};
 	peer->Startup( 2, socketDescriptors, 1 );
+
+	mHost = false;
 }
 
 int ClientNetworkSystem::receive()
@@ -17,7 +19,7 @@ int ClientNetworkSystem::receive()
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		OgreConsole::getSingleton().print( std::to_string( getPacketIdentifier(packet) ) );
+		OgreConsole::getSingleton().print( std::to_string( getPacketIdentifier(packet) - ID_USER_PACKET_ENUM ) );
 
 		if( getPacketIdentifier(packet)  == ID_CONNECTION_REQUEST_ACCEPTED )
 			OgreConsole::getSingleton().print("Connection Success");

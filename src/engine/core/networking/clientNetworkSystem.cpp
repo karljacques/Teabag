@@ -17,13 +17,15 @@ int ClientNetworkSystem::receive()
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		if( getPacketIdentifier(packet) == ID_CONNECTION_REQUEST_ACCEPTED )
+		OgreConsole::getSingleton().print( std::to_string( getPacketIdentifier(packet) ) );
+
+		if( getPacketIdentifier(packet)  == ID_CONNECTION_REQUEST_ACCEPTED )
 			OgreConsole::getSingleton().print("Connection Success");
 
 		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
 			OgreConsole::getSingleton().print("Connection Failed");
 
-		if( getPacketIdentifier(packet) == EV_CORE_MOUSE_PRESS )
+		if( ( getPacketIdentifier(packet) - ID_USER_PACKET_ENUM )  == EV_CORE_MOUSE_PRESS )
 			OgreConsole::getSingleton().print("Received a mouse press");
 
 	} 

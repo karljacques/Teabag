@@ -22,10 +22,10 @@ Engine::Engine()
 
     // Set the working directory
     char* basePath = SDL_GetBasePath();
-#ifdef DW_WIN32
-    SetCurrentDirectoryA(basePath);
+#ifdef WIN32
+	SetCurrentDirectoryA(basePath);
 #else
-    chdir(basePath);
+	chdir(basePath);
 #endif
 
 	// Create Systems

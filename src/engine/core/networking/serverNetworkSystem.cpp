@@ -34,10 +34,9 @@ void ServerNetworkSystem::handle( Event* e )
 	case EV_CORE_MOUSE_PRESS:
 		{
 			MouseEvent me = *static_cast<MouseEvent*>(e);
-			RakNet::BitStream* bs = new RakNet::BitStream();
-			bs->Write( (RakNet::MessageID)e->getEventType() );
-			bs->Write( me );
-			peer->Send( bs, PacketPriority::IMMEDIATE_PRIORITY, RELIABLE, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS,true );
+			RakNet::BitStream bs;
+			bs.WriteCasted<RakNet::MessageID>( e->getEventType() + ID_USER_PACKET_ENUM );
+			peer->Send( &bs, PacketPriority::IMMEDIATE_PRIORITY, RELIABLE, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS,true );
 		}
 		
 	}

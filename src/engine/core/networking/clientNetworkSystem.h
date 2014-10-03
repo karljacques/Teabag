@@ -7,7 +7,6 @@ class ClientNetworkSystem : public NetworkSystem
 {
 public:
 	ClientNetworkSystem();
-	~ClientNetworkSystem();
 
 	int receive();
 	void connect( const char* ip );

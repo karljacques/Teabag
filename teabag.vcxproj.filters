@@ -75,6 +75,9 @@
     <ClCompile Include="src\engine\core\graphics\renderSystem.cpp">
       <Filter>engine\core\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\component\network\networkComponent.cpp">
+      <Filter>engine\core\component\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -154,6 +157,9 @@
     <ClInclude Include="src\engine\core\graphics\renderSystem.h">
       <Filter>engine\core\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\component\network\networkComponent.h">
+      <Filter>engine\core\component\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -200,6 +206,9 @@
     </Filter>
     <Filter Include="engine\core\graphics\UI">
       <UniqueIdentifier>{7621234d-42fc-470b-91c0-4f00187337de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\component\network">
+      <UniqueIdentifier>{e1974c2a-aec1-4d1d-b376-b3d9dd0f0bac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

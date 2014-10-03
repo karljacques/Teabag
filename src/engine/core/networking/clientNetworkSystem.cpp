@@ -25,9 +25,6 @@ int ClientNetworkSystem::receive()
 		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
 			OgreConsole::getSingleton().print("Connection Failed");
 
-		if( ( getPacketIdentifier(packet) - ID_USER_PACKET_ENUM )  == EV_CORE_MOUSE_PRESS )
-			OgreConsole::getSingleton().print("Received a mouse press");
-
 	} 
 
 	return true;
@@ -39,11 +36,6 @@ void ClientNetworkSystem::connect( const char* ip )
 }
 
 void ClientNetworkSystem::handle( Event* e )
-{
-
-}
-
-ClientNetworkSystem::~ClientNetworkSystem()
 {
 
 }

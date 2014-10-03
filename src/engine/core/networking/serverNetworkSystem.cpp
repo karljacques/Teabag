@@ -41,8 +41,3 @@ void ServerNetworkSystem::handle( Event* e )
 		
 	}
 }
-
-ServerNetworkSystem::~ServerNetworkSystem()
-{
-	RakNet::RakPeerInterface::DestroyInstance( peer );
-}

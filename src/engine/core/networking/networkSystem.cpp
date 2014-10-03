@@ -11,9 +11,14 @@ NetworkSystem::NetworkSystem()
 unsigned char NetworkSystem::getPacketIdentifier(Packet *p)
 {
 	if ((unsigned char)p->data[0] == ID_TIMESTAMP )
+
+		// Returns byte after message ID and timestamp
 		return (unsigned char) p->data[sizeof(MessageID) + sizeof(RakNet::Time)];
 	else
 		return (unsigned char) p->data[0];
 }
 
-NetworkSystem::~NetworkSystem(){};
+NetworkSystem::~NetworkSystem()
+{
+	RakNet::RakPeerInterface::DestroyInstance( peer );
+};

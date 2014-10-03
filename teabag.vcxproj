@@ -98,6 +98,7 @@
     <ClCompile Include="src\engine\core\component\base\entity.cpp" />
     <ClCompile Include="src\engine\core\component\base\positionComponent.cpp" />
     <ClCompile Include="src\engine\core\component\control\spectatorControlComponent.cpp" />
+    <ClCompile Include="src\engine\core\component\network\networkComponent.cpp" />
     <ClCompile Include="src\engine\core\component\physics\physicsComponent.cpp" />
     <ClCompile Include="src\engine\core\component\render\cameraComponent.cpp" />
     <ClCompile Include="src\engine\core\component\render\renderComponent.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="src\engine\core\component\base\entity.h" />
     <ClInclude Include="src\engine\core\component\base\positionComponent.h" />
     <ClInclude Include="src\engine\core\component\control\spectatorControlComponent.h" />
+    <ClInclude Include="src\engine\core\component\network\networkComponent.h" />
     <ClInclude Include="src\engine\core\component\physics\physicsComponent.h" />
     <ClInclude Include="src\engine\core\component\render\cameraComponent.h" />
     <ClInclude Include="src\engine\core\component\render\renderComponent.h" />

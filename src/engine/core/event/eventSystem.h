@@ -35,7 +35,7 @@ private:
 
 	// Makes system safer when adding and removing listeners
 	std::queue<EventListener*> mNewEventListeners;
-	std::queue<EventListener*> mRemovedListeners;
+	std::vector<EventListener*> mRemovedListeners;
 
 
 };

@@ -13,6 +13,8 @@
 #include <Math/float3.h>
 #include <Math/Quat.h>
 
+#include <RakNetTypes.h>
+
 enum EV_EventType
 {
 	// Input
@@ -35,7 +37,14 @@ public:
 
     Event( int eventType );
 
+	// Holds the event type (EV_EventType) of this event.
     int     getEventType();
+
+	// Setting and getting the GUID. This will only ever be done by the networking component and the rest of the components
+	// should be fairly (or hopefully completely) agnostic about it. For example, physics component will dispatch and event, 
+	// networkComponent will pick up on this event, attach the object's GUID to the event before pumping it up to the network system.
+	// Might prove unnecessary.
+	RakNet::RakNetGUID mGUID;
 
 private:
 

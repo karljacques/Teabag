@@ -4,7 +4,8 @@
 
 using namespace RakNet;
 
-ClientNetworkSystem::ClientNetworkSystem()
+ClientNetworkSystem::ClientNetworkSystem( EventSystem* eventSystem )
+	: NetworkSystem( eventSystem )
 {
 	RakNet::SocketDescriptor socketDescriptors[1] = {
 		RakNet::SocketDescriptor( )
@@ -27,6 +28,23 @@ int ClientNetworkSystem::receive()
 		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
 			OgreConsole::getSingleton().print("Connection Failed");
 
+		// Is it an event? If so, we need to convert it back
+		unsigned char ev = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
+
+		BitStream bs( packet->data, packet->length, false );
+		Event* e;
+		switch(ev)
+		{
+		case EV_CLIENT_WORLD_CREATE_STATIC_BOX:
+			e = new TransformEvent(EV_CLIENT_WORLD_CREATE_STATIC_BOX);
+			TransformEvent* te = static_cast<TransformEvent*>(e);
+			bs.Read( new MessageID );
+			bs.Read( te->mGUID );
+
+			mEventSystem->dispatchEvent(te);
+
+		}
+
 	} 
 
 	return true;
@@ -41,3 +59,4 @@ void ClientNetworkSystem::handle( Event* e )
 {
 
 }
+

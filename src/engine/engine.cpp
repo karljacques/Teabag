@@ -33,16 +33,15 @@ Engine::Engine()
     mEventSystem = new EventSystem();
     mInputSystem = new InputSystem( mEventSystem, mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
-	mNetworkSystem = new ServerNetworkSystem();
+	mNetworkSystem = new ServerNetworkSystem( mEventSystem );
 	mEntityManager = new EntityManager();
+
+	mStaticGeometry = new StaticGeometry( this );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
-
-	// Register the network system to recieve all events
-	mEventSystem->registerListener( mNetworkSystem );
-
+	mEventSystem->registerListener( mStaticGeometry );
 	// Create the default camera
 	PositionComponent* defaultCameraPos = new PositionComponent();
 	CameraComponent* defaultCamera = new CameraComponent( mRenderSystem,defaultCameraPos );
@@ -50,7 +49,7 @@ Engine::Engine()
 	// Create console - Singleton
 	new OgreConsole(this);
 	OgreConsole::getSingleton().addCommand( "net.connect", &Console_Net_Connect );
-
+	OgreConsole::getSingleton().addCommand( "spawn", &Spawn_Static );
 }
 
 Engine::~Engine()
@@ -120,7 +119,7 @@ void Engine::SetAsClient(const char* ip)
 	mEventSystem->deregisterListener(mNetworkSystem);
 	delete mNetworkSystem;
 
-	this->mNetworkSystem = new ClientNetworkSystem();
+	this->mNetworkSystem = new ClientNetworkSystem( this->mEventSystem );
 	mEventSystem->registerListener(this->mNetworkSystem);
 	static_cast<ClientNetworkSystem*>(mNetworkSystem)->connect( ip );
 

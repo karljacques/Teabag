@@ -3,18 +3,19 @@
 
 using namespace RakNet;
 
-NetworkSystem::NetworkSystem()
+NetworkSystem::NetworkSystem( EventSystem* eventSystem )
+	: mEventSystem( eventSystem )
 {
 	peer = RakNet::RakPeerInterface::GetInstance();
 }
 
-void NetworkSystem::send( Event* e, RakNet::RakNetGUID guid )
+void NetworkSystem::send( Event* e )
 {
 	BitStream bs;
 
 	// Writes a 'header' of sorts, with the message ID and the GUID
 	bs.WriteCasted<MessageID>(e->getEventType() + ID_USER_PACKET_ENUM );
-	bs.WriteCasted<RakNetGUID>(guid);
+	bs.WriteCasted<unsigned int>(e->mGUID);
 
 	// Write to BS here, dependent on the event type. Lots of casting and writing.
 	// Maybe split into a separate function?
@@ -38,24 +39,26 @@ NetworkSystem::~NetworkSystem()
 	RakNet::RakPeerInterface::DestroyInstance( peer );
 };
 
-NetworkComponent* NetworkSystem::getNetworkComponent(RakNetGUID guid)
+NetworkComponent* NetworkSystem::getNetworkComponent(uint32 guid)
 {
-	return mNetworkComponents[guid];
+	// If it exists, return it; if it doesn't exist, create it.
+	if( mNetworkComponents[guid] )
+		return mNetworkComponents[guid];
+	else
+	{
+		// Create component and insert it into the map
+		// It can be retrieved with getNetworkComponent( guid )
+		NetworkComponent* net = new NetworkComponent( this, guid );
+		mNetworkComponents[guid] = net;
+		return net;
+	}
 }
 
-void NetworkSystem::removeNetworkComponent(RakNet::RakNetGUID guid)
+void NetworkSystem::removeNetworkComponent(uint32 guid)
 {
 	mNetworkComponents.erase(guid);
 }
 
-void NetworkSystem::createNetworkComponent(RakNet::RakNetGUID guid)
-{
-	// Create component and insert it into the map
-	// It can be retrieved with getNetworkComponent( guid )
-	NetworkComponent* net = new NetworkComponent( this, guid );
-	mNetworkComponents[guid] = net;
-	//mNetworkComponents.insert( std::pair<RakNetGUID, NetworkComponent*>(guid, net) );
-}
 
 bool NetworkSystem::isHost()
 {

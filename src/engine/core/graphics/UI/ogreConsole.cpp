@@ -289,3 +289,8 @@ void Console_Net_Connect( Ogre::StringVector& str )
 		OgreConsole::getSingleton().print( "No IP given." );
 	}
 }
+
+void Spawn_Static( Ogre::StringVector& str )
+{
+	OgreConsole::getSingleton().getEnginePtr()->getStaticGeometry()->addGeometry( float3(0,0,0),float3(10,1,10) );
+}

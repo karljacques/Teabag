@@ -4,7 +4,7 @@
 
 using namespace RakNet;
 
-ServerNetworkSystem::ServerNetworkSystem() : NetworkSystem()
+ServerNetworkSystem::ServerNetworkSystem( EventSystem* eventSystem ) : NetworkSystem( eventSystem )
 {
 	// Initialise server
 	RakNet::SocketDescriptor socketDescriptors[1] = {
@@ -31,6 +31,6 @@ int ServerNetworkSystem::receive()
 
 void ServerNetworkSystem::handle( Event* e )
 {
-	if( e->getEventType() != EV_CORE_MOUSE_MOVEMENT)
-		this->send( e, RakNetGUID(1) );
+
 }
+

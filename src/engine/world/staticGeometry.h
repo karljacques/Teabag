@@ -7,6 +7,8 @@
 
 #include "engine/engine.h"
 
+class Engine;
+
 class StaticGeometry :
 	public EventListener
 {

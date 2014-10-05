@@ -21,6 +21,8 @@
 
 #include "engine/core/graphics/UI/ogreConsole.h"
 
+class StaticGeometry;
+
 class Engine : public EventListener
 {
 public:
@@ -41,7 +43,8 @@ public:
 	EventSystem*		getEventSystem(){return mEventSystem; };
 	EntityManager*		getEntityManager(){return mEntityManager; };
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem; };
-       
+	StaticGeometry*		getStaticGeometry(){return mStaticGeometry; };
+
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
 

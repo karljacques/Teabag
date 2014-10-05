@@ -6,12 +6,13 @@
 class ClientNetworkSystem : public NetworkSystem
 {
 public:
-	ClientNetworkSystem();
+	ClientNetworkSystem( EventSystem* eventSystem );
 
 	int receive();
 	void connect( const char* ip );
 	void handle( Event* e );
-	
+
+
 private:
 
 };

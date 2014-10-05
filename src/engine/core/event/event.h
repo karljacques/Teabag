@@ -13,8 +13,6 @@
 #include <Math/float3.h>
 #include <Math/Quat.h>
 
-#include <RakNetTypes.h>
-
 enum EV_EventType
 {
 	// Input
@@ -30,7 +28,7 @@ enum EV_EventType
 	EV_CORE_APPLY_FORCE,
 
 	// World
-	EV_WORLD_CREATE_STATIC_BOX
+	EV_CLIENT_WORLD_CREATE_STATIC_BOX
 };
 
 class Event
@@ -48,7 +46,7 @@ public:
 	// networkComponent will pick up on this event, attach the object's GUID to the event before pumping it up to the network system.
 	// The reverse is also true, when an event is coming in to create an object, the new network component will be assigned
 	// based on this GUID.
-	RakNet::RakNetGUID mGUID;
+	unsigned int mGUID;
 
 private:
 

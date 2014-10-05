@@ -3,3 +3,5 @@
 #include <Ogre.h>
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+
+#include <stdint.h>

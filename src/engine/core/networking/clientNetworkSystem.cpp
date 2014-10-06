@@ -38,7 +38,8 @@ int ClientNetworkSystem::receive()
 		case EV_CLIENT_WORLD_CREATE_STATIC_BOX:
 			e = new TransformEvent(EV_CLIENT_WORLD_CREATE_STATIC_BOX);
 			TransformEvent* te = static_cast<TransformEvent*>(e);
-			bs.Read( new MessageID );
+			MessageID test;
+			bs.Read( test );
 			bs.Read( te->mGUID );
 
 			mEventSystem->dispatchEvent(te);

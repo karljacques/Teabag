@@ -8,6 +8,8 @@ class KeyboardEvent : public Event
 public:
 	KeyboardEvent( int eventType );
 
+	unsigned int getSize();
+
 	bool mPressed;
 	bool mReleased;
 

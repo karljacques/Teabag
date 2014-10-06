@@ -11,17 +11,18 @@ NetworkSystem::NetworkSystem( EventSystem* eventSystem )
 
 void NetworkSystem::send( Event* e )
 {
-	BitStream bs;
+	// Cast event to char*, make room for the packet ID
+	char* payload = new char[ e->getSize() + 1 ];
 
-	// Writes a 'header' of sorts, with the message ID and the GUID
-	bs.WriteCasted<MessageID>(e->getEventType() + ID_USER_PACKET_ENUM );
-	bs.WriteCasted<unsigned int>(e->mGUID);
+	// Copy in casted event to the payload, offset by 1 byte
+	memcpy( &payload[1],reinterpret_cast<char*>(e), e->getSize() );
 
-	// Write to BS here, dependent on the event type. Lots of casting and writing.
-	// Maybe split into a separate function?
+	// Set packet ID
+	payload[0] = (unsigned char)(e->getEventType() + ID_USER_PACKET_ENUM);
 
-	// Send to all connected clients. Priority will need to be set based on event type
-	peer->Send( &bs, PacketPriority::IMMEDIATE_PRIORITY, RELIABLE, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS,true );
+	// Send packet
+	peer->Send( payload, e->getSize()+1, PacketPriority::IMMEDIATE_PRIORITY, PacketReliability::RELIABLE, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+
 }
 
 unsigned char NetworkSystem::getPacketIdentifier(Packet *p)

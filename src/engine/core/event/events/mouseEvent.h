@@ -8,6 +8,8 @@ class MouseEvent : public Event
 public:
 	MouseEvent( int eventType );
 
+	unsigned int getSize();
+
 	int32_t mMouseMoveX;
 	int32_t mMouseMoveY;
 	int m_MouseMoveZ;

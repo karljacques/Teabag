@@ -292,5 +292,12 @@ void Console_Net_Connect( Ogre::StringVector& str )
 
 void Spawn_Static( Ogre::StringVector& str )
 {
-	OgreConsole::getSingleton().getEnginePtr()->getStaticGeometry()->addGeometry( float3(0,0,0),float3(10,1,10) );
+	StaticGeometry* g = OgreConsole::getSingleton().getEnginePtr()->getStaticGeometry();
+
+	// Floor
+	g->addGeometry( float3(0,-0.5f,0), float3(30.0,1.0f,30.0f) );
+
+	// Two ramps
+	g->addGeometry( float3( 0,5.0f, 0.0f), float3( 5.0f, 0.25f,5.0f ), float3(45.0/57.0f,0,0));
+	g->addGeometry( float3( 0,9.0f, 4.0f), float3( 5.0f, 0.25f,5.0f ), float3(-45.0f/57.0f,0,0));
 }

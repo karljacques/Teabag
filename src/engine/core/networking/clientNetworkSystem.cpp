@@ -31,19 +31,19 @@ int ClientNetworkSystem::receive()
 		// Is it an event? If so, we need to convert it back
 		unsigned char ev = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
 
-		BitStream bs( packet->data, packet->length, false );
-		Event* e;
-		switch(ev)
+		switch( ev )
 		{
 		case EV_CLIENT_WORLD_CREATE_STATIC_BOX:
-			e = new TransformEvent(EV_CLIENT_WORLD_CREATE_STATIC_BOX);
-			TransformEvent* te = static_cast<TransformEvent*>(e);
-			MessageID test;
-			bs.Read( test );
-			bs.Read( te->mGUID );
+
+			// Create data structure to copy RakNet's packet data into
+		    // otherwise RakNet could do some house cleaning and everything will crash.
+			char* data = new char[ sizeof(TransformEvent)  ];
+			memcpy( data, &packet->data[1], sizeof(TransformEvent));
+
+			// Cast data to a transform event
+			TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
 
 			mEventSystem->dispatchEvent(te);
-
 		}
 
 	} 

@@ -42,14 +42,31 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
     mEventSystem->registerListener( this );
 	mEventSystem->registerListener( mStaticGeometry );
-	// Create the default camera
-	PositionComponent* defaultCameraPos = new PositionComponent();
-	CameraComponent* defaultCamera = new CameraComponent( mRenderSystem,defaultCameraPos );
+
+	// Create spectator
+	Entity* camera = createEntity();
+
+	PositionComponent* cpc = new PositionComponent();
+	CameraComponent* cc = new CameraComponent( mRenderSystem, cpc );
+	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager, cpc );
+	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
+
+	mEventSystem->registerListener( s );
+
+	camera->addComponent(cc);
+	camera->addComponent(cpc);
+	camera->addComponent(cphyc);
+	camera->addComponent(s);
+
+	cpc->registerListener( cphyc );
+	s->registerListener(cphyc);
+
+	cpc->setPosition( float3(0,40,20 ));
 
 	// Create console - Singleton
 	new OgreConsole(this);
 	OgreConsole::getSingleton().addCommand( "net.connect", &Console_Net_Connect );
-	OgreConsole::getSingleton().addCommand( "spawn", &Spawn_Static );
+	OgreConsole::getSingleton().addCommand( "static.generate", &Spawn_Static );
 }
 
 Engine::~Engine()

@@ -13,6 +13,8 @@ public:
 	Quat mOrientation;
 
 	float3 mSecondaryFloat; // Used to dictate size, direction - when not used as a transform event
+
+	unsigned int getSize();
 };
 
 #endif // transformEvent_h__

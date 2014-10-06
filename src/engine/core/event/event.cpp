@@ -17,6 +17,11 @@ int Event::getEventType()
     return mEventType;
 }
 
+unsigned int Event::getSize()
+{
+	return sizeof( Event );
+}
+
 
 
 

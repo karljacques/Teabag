@@ -71,8 +71,8 @@ void StaticGeometry::handle( Event* e )
 	{
 		TransformEvent* te = static_cast<TransformEvent*>(e);
 
-		//Entity* ent = this->addGeometry( te->mPosition, te->mSecondaryFloat, te->mOrientation.ToEulerXYX() );
-		Entity* ent = this->addGeometry( float3(0,0,0), float3(10,1,10) );
+		Entity* ent = this->addGeometry( te->mPosition, te->mSecondaryFloat, te->mOrientation.ToEulerXYX() );
+
 		ent->addComponent( mEngine->getNetworkSystem()->getNetworkComponent( te->mGUID ));
 	}
 }

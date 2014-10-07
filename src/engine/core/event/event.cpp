@@ -22,6 +22,11 @@ unsigned int Event::getSize()
 	return sizeof( Event );
 }
 
+void Event::changeEventType(int ev)
+{
+	mEventType = ev;
+}
+
 
 
 

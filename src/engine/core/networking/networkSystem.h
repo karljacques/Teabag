@@ -24,7 +24,7 @@ public:
 	~NetworkSystem();
 
 	// Sends an event across the network
-	void send( Event* e );
+	void send( Event* e, PacketPriority p, PacketReliability r );
 
 	//receive packets, receive is implemented separately due to it
 	// being specific to who is the authority. 

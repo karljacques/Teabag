@@ -27,7 +27,11 @@ void PositionComponent::update( double dt )
 }
 void PositionComponent::handle( Event* e )
 {
-
+	if( e->getEventType() == EV_NETWORK_TRANSFORM_UPDATE )
+	{
+		this->setPosition( static_cast<TransformEvent*>(e)->mPosition);
+		this->setOrientation( static_cast<TransformEvent*>(e)->mOrientation);
+	}
 }
 
 void PositionComponent::setPosition( float3 pos )

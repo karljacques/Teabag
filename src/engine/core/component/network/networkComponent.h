@@ -2,6 +2,7 @@
 #define networkComponent_h__
 
 #include "common.h"
+#include "pch.h"
 #include "../base/component.h"
 #include "engine/core/networking/NetworkSystem.h"
 
@@ -19,6 +20,9 @@ private:
 
 	unsigned int mGUID;
 	NetworkSystem* mNetworkSystem;
+
+	// Time since last correctional update
+	Ogre::Timer mLastUpdate;
 
 };
 #endif // networkComponent_h__

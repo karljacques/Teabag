@@ -295,7 +295,7 @@ void Spawn_Static( Ogre::StringVector& str )
 	StaticGeometry* g = OgreConsole::getSingleton().getEnginePtr()->getStaticGeometry();
 
 	// Floor
-	g->addGeometry( float3(0,-0.5f,0), float3(30.0,1.0f,30.0f) );
+	g->addGeometry( float3(0,-0.5f,0), float3(70.0,1.0f,70.0f) );
 
 	// Two ramps
 	g->addGeometry( float3( 0,5.0f, 0.0f), float3( 5.0f, 0.25f,5.0f ), float3(45.0/57.0f,0,0));

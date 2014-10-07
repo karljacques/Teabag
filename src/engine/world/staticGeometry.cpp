@@ -33,7 +33,7 @@ Entity* StaticGeometry::addGeometry( float3 position, float3 size, float3 angle 
 	phyComp->registerListener( posComp );
 
 	// Set up physics
-	btBoxShape* box = new btBoxShape( size/2 );
+	btBoxShape* box = new btBoxShape( size/2 ); // TODO fix this memory leak
 	phyComp->initialise( box, 0, position, (Quat::RotateZ(angle.z)*Quat::RotateY(angle.y)*Quat::RotateX(angle.x)) );
 	posComp->setPosition(position);
 	posComp->setOrientation((Quat::RotateZ(angle.z)*Quat::RotateY(angle.y)*Quat::RotateX(angle.x)));

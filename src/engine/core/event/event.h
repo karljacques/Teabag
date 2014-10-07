@@ -28,7 +28,11 @@ enum EV_EventType
 	EV_CORE_APPLY_FORCE,
 
 	// World
-	EV_CLIENT_WORLD_CREATE_STATIC_BOX
+	EV_CLIENT_WORLD_CREATE_STATIC_BOX,
+	EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX,
+
+	// NETWORK
+	EV_NETWORK_TRANSFORM_UPDATE
 };
 
 class Event
@@ -40,6 +44,9 @@ public:
 
 	// Holds the event type (EV_EventType) of this event.
     int     getEventType();
+
+	// Changes the event type - only use this if you know what you're doing ;-)
+	void changeEventType( int ev );
 
 	// Returns the size of the event
 	virtual unsigned int getSize();

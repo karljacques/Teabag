@@ -112,15 +112,49 @@ void Engine::handle( Event* e )
     switch( e->getEventType() )
     {
         case EV_CORE_KEY_PRESS:
-            KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
-            switch (ke->mKeycode)
-            {
-				case SDL_SCANCODE_ESCAPE: // Escape
-                   m_EngineShutdown = true;
-                break;
-            }
-		
+			{
+				KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
+				switch (ke->mKeycode)
+				{
+					case SDL_SCANCODE_ESCAPE: // Escape
+					   m_EngineShutdown = true;
+					break;
+
+					case SDL_SCANCODE_X:
+
+						if( mNetworkSystem->isHost() )
+						{
+
+							NetworkComponent* net = mNetworkSystem->createNetworkComponent();
+							// Create a dynamic box
+							Entity* box = this->createBox(  float3(0,40.0f,0), float3(1.0f,1.0f,1.0f),net);
+
+					
+							
+							box->listenToAll(net);
+							box->addComponent( net );
+
+							TransformEvent* te = new TransformEvent( EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX );
+							te->mPosition =  float3(0,40.0f,0);
+							te->mSecondaryFloat = float3(1.0f,1.0f,1.0f);
+
+							net->handle(te);
+							delete te;
+						}
+					break;
+
+				}
+			}
         break;
+
+		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
+			{
+				TransformEvent* te = static_cast<TransformEvent*>(e);
+				NetworkComponent* net = mNetworkSystem->getNetworkComponent( te->mGUID );
+				Entity* box = createBox( te->mPosition, te->mSecondaryFloat, net );
+				
+				box->addComponent(net);
+			}
     }
 }
 
@@ -143,3 +177,27 @@ void Engine::SetAsClient(const char* ip)
 	
 }
 
+Entity* Engine::createBox( float3 pos, float3 size, NetworkComponent* net )
+{
+	Entity* cube = createEntity();
+	PositionComponent* posComp = new PositionComponent();
+	posComp->setPosition(pos);
+	cube->addComponent( posComp );
+
+	RenderComponent* render = new RenderComponent( mRenderSystem, posComp );
+	render->setAsBox( size.x,size.y,size.z);
+	posComp->registerListener( render );
+
+	cube->addComponent( render );
+
+	PhysicsComponent* phys = new PhysicsComponent( mPhysicsManager, posComp );
+	btCollisionShape* shapex = new btBoxShape( size/2 );
+	phys->initialise( shapex, 1.0f, pos );
+	phys->registerListener(render);
+	phys->registerListener(posComp);
+	cube->addComponent( phys );
+	
+	net->registerListener( posComp );
+	
+	return cube;
+}

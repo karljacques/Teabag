@@ -12,6 +12,8 @@ public:
 	void update( double dt );
 
 	void addComponent( Component* component );
+	void listenToAll( EventListener* listener );
+	void makeListenToMe( Component* listenTo );
 
 private:
 

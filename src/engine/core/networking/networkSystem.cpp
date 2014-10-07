@@ -9,7 +9,7 @@ NetworkSystem::NetworkSystem( EventSystem* eventSystem )
 	peer = RakNet::RakPeerInterface::GetInstance();
 }
 
-void NetworkSystem::send( Event* e )
+void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
 {
 	// Cast event to char*, make room for the packet ID
 	char* payload = new char[ e->getSize() + 1 ];
@@ -21,7 +21,7 @@ void NetworkSystem::send( Event* e )
 	payload[0] = (unsigned char)(e->getEventType() + ID_USER_PACKET_ENUM);
 
 	// Send packet
-	peer->Send( payload, e->getSize()+1, PacketPriority::IMMEDIATE_PRIORITY, PacketReliability::RELIABLE, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+	peer->Send( payload, e->getSize()+1, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
 
 }
 

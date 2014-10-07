@@ -54,7 +54,7 @@ public:
 
 	// Console functions/Engine manipulation
 	void SetAsClient( const char* ip );
-
+	Entity* createBox( float3 pos, float3 size, NetworkComponent* net );
 private:
 
     RenderSystem* mRenderSystem;

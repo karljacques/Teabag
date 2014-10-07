@@ -21,7 +21,6 @@ int ClientNetworkSystem::receive()
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
 		OgreConsole::getSingleton().print( std::to_string( getPacketIdentifier(packet) - ID_USER_PACKET_ENUM ) );
-
 		if( getPacketIdentifier(packet)  == ID_CONNECTION_REQUEST_ACCEPTED )
 			OgreConsole::getSingleton().print("Connection Success");
 
@@ -34,18 +33,48 @@ int ClientNetworkSystem::receive()
 		switch( ev )
 		{
 		case EV_CLIENT_WORLD_CREATE_STATIC_BOX:
+			{
+				// Create data structure to copy RakNet's packet data into
+				// otherwise RakNet could do some house cleaning and everything will crash.
+				char* data = new char[ sizeof(TransformEvent)  ];
+				memcpy( data, &packet->data[1], sizeof(TransformEvent));
 
-			// Create data structure to copy RakNet's packet data into
-		    // otherwise RakNet could do some house cleaning and everything will crash.
-			char* data = new char[ sizeof(TransformEvent)  ];
-			memcpy( data, &packet->data[1], sizeof(TransformEvent));
+				// Cast data to a transform event
+				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
 
-			// Cast data to a transform event
-			TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
+				mEventSystem->dispatchEvent(te);
+			}
+		break;
+		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
+			{
+				OgreConsole::getSingleton().print( "Spawning Cube..." );
 
-			mEventSystem->dispatchEvent(te);
-		}
+				// Create data structure to copy RakNet's packet data into
+				// otherwise RakNet could do some house cleaning and everything will crash.
+				char* data = new char[ sizeof(TransformEvent)  ];
+				memcpy( data, &packet->data[1], sizeof(TransformEvent));
 
+				// Cast data to a transform event
+				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
+				
+				mEventSystem->dispatchEvent(te);
+			}
+		case EV_CORE_TRANSFORM_UPDATE:
+			{
+				// Create data structure to copy RakNet's packet data into
+				// otherwise RakNet could do some house cleaning and everything will crash.
+				char* data = new char[ sizeof(TransformEvent)  ];
+				memcpy( data, &packet->data[1], sizeof(TransformEvent));
+
+				// Cast data to a transform event
+				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
+				te->changeEventType( EV_NETWORK_TRANSFORM_UPDATE );
+
+				if( mNetworkComponents[te->mGUID])
+					mNetworkComponents[te->mGUID]->dispatch(te);
+			}
+	}
+	break;
 	} 
 
 	return true;

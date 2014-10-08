@@ -15,5 +15,5 @@ MathGeoLib - https://github.com/juj/MathGeoLib
 Contributers
 ============
 
-TheComet - CMake build system and Linux port
+TheComet - CMake build system and Linux port  
 David Avedissian - OSX specific CMake script and Obj-C within the engine.

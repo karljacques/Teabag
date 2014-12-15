@@ -35,16 +35,16 @@ void CameraComponent::handle( Event* e )
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
 		TransformEvent* me = static_cast<TransformEvent*>(e);
-		mSceneNode->setPosition( me->mPosition );
-		mCamera->setOrientation( me->mOrientation );
+		mSceneNode->setPosition( me->mFloat3_1 );
+		mCamera->setOrientation( me->mQuaternion );
 	}
 }
 
 void CameraComponent::setPosition( float3 pos )
 {
 	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-	me->mPosition = pos;
-	me->mOrientation = mSceneNode->getOrientation();
+	me->mFloat3_1 = pos;
+	me->mQuaternion = mSceneNode->getOrientation();
 
 	dispatch(me);
 
@@ -56,8 +56,8 @@ void CameraComponent::lookAt( float3 pos )
 	mCamera->lookAt( pos );
 
 	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-	me->mPosition = mSceneNode->getPosition();
-	me->mOrientation = mCamera->getDerivedOrientation();
+	me->mFloat3_1 = mSceneNode->getPosition();
+	me->mQuaternion = mCamera->getDerivedOrientation();
 
 	dispatch( me );
 }

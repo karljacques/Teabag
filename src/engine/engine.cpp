@@ -133,8 +133,8 @@ void Engine::handle( Event* e )
 							box->addComponent( net );
 
 							TransformEvent* te = new TransformEvent( EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX );
-							te->mPosition =  float3(0,40.0f,0);
-							te->mSecondaryFloat = float3(1.0f,1.0f,1.0f);
+							te->mFloat3_1 =  float3(0,40.0f,0);
+							te->mFloat3_2 = float3(1.0f,1.0f,1.0f);
 
 							net->handle(te);
 							delete te;
@@ -149,7 +149,7 @@ void Engine::handle( Event* e )
 			{
 				TransformEvent* te = static_cast<TransformEvent*>(e);
 				NetworkComponent* net = mNetworkSystem->getNetworkComponent( te->mGUID );
-				Entity* box = createBox( te->mPosition, te->mSecondaryFloat, net );
+				Entity* box = createBox( te->mFloat3_1, te->mFloat3_2, net );
 				
 				box->addComponent(net);
 			}

@@ -120,7 +120,7 @@ void SpectatorControlComponent::update(double dt)
 		dir+=float3(mSpeed,0,0);
 
 	TransformEvent* te = new TransformEvent( EV_CORE_APPLY_FORCE );
-	te->mPosition = dir;
+	te->mFloat3_1 = dir;
 
 	dispatch(te);
 }

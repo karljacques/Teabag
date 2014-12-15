@@ -46,6 +46,7 @@ public:
     int     getEventType();
 
 	// Changes the event type - only use this if you know what you're doing ;-)
+	// Should always be copied first
 	void changeEventType( int ev );
 
 	// Returns the size of the event

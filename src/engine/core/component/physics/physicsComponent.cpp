@@ -22,15 +22,19 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 void PhysicsComponent::update(  double dt  )
 {
 	// Check to see if it has moved or rotated, if so inform the position component and send out events,.
-	if( mPositionComponent->getPosition().DistanceSq( mBody->getWorldTransform().getOrigin() ) < 0.5 
-		|| mPositionComponent->getOrientation().AngleBetween( mBody->getWorldTransform().getRotation() ) < 0.5 ) 
+	if( mPositionComponent->getPosition().DistanceSq( mBody->getWorldTransform().getOrigin() ) > 0.0025 
+		|| mPositionComponent->getOrientation().AngleBetween( mBody->getWorldTransform().getRotation() ) > 0.0025 ) 
 	{
 		mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
 		mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
 
 		TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-		me->mOrientation = mPositionComponent->getOrientation();
-		me->mPosition = mPositionComponent->getPosition();
+		me->mQuaternion = mPositionComponent->getOrientation();
+		me->mFloat3_1 = mPositionComponent->getPosition();
+
+		me->mFloat3_2 = mBody->getLinearVelocity();
+		me->mFloat3_3= mBody->getAngularVelocity();
+		
 
 		dispatch(me);
 	}
@@ -57,7 +61,7 @@ void PhysicsComponent::handle( Event* e )
 	case EV_CORE_TRANSFORM_UPDATE:
 		{
 			TransformEvent* me = static_cast<TransformEvent*>(e);
-			btTransform trans( me->mOrientation, me->mPosition );
+			btTransform trans( me->mQuaternion, me->mFloat3_1 );
 			mBody->setWorldTransform( trans );
 			mBody->activate(true);
 			break;
@@ -66,7 +70,16 @@ void PhysicsComponent::handle( Event* e )
 	case EV_CORE_APPLY_FORCE:
 		{
 			TransformEvent* te = static_cast<TransformEvent*>(e);
-			getBody()->applyCentralForce(  Quat(getBody()->getWorldTransform().getRotation()).Transform( te->mPosition ) );
+			getBody()->applyCentralForce(  Quat(getBody()->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
+			break;
+		}
+
+	case EV_NETWORK_TRANSFORM_UPDATE:
+		{
+			TransformEvent* me = static_cast<TransformEvent*>(e);
+			getBody()->setLinearVelocity( me->mFloat3_2 );
+			getBody()->setAngularVelocity( me->mFloat3_3 );
+			mBody->activate(true);
 			break;
 		}
 	}

@@ -59,7 +59,7 @@ int ClientNetworkSystem::receive()
 				
 				mEventSystem->dispatchEvent(te);
 			}
-		case EV_CORE_TRANSFORM_UPDATE:
+		case EV_NETWORK_TRANSFORM_UPDATE:
 			{
 				// Create data structure to copy RakNet's packet data into
 				// otherwise RakNet could do some house cleaning and everything will crash.
@@ -68,7 +68,6 @@ int ClientNetworkSystem::receive()
 
 				// Cast data to a transform event
 				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
-				//te->changeEventType( EV_NETWORK_TRANSFORM_UPDATE );
 
 				if( mNetworkComponents[te->mGUID])
 					mNetworkComponents[te->mGUID]->dispatch(te);

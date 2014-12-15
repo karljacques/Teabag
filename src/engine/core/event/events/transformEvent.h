@@ -9,10 +9,12 @@ class TransformEvent : public Event
 public:
 	TransformEvent( int EV_EventType );
 
-	float3 mPosition;
-	Quat mOrientation;
+	float3 mFloat3_1; // Used to indicate position in a transform event
+	float3 mFloat3_2; // Used to dictate size, direction, velocity - when used as a transform event extension
+	float3 mFloat3_3; // used to specify angular velocity when used as a transform event extension
 
-	float3 mSecondaryFloat; // Used to dictate size, direction - when not used as a transform event
+	Quat mQuaternion; // Specifies a rotation
+	Quat mQuaternion2; // Secondary rotation
 
 	unsigned int getSize();
 };

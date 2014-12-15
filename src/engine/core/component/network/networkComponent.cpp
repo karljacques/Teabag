@@ -16,9 +16,13 @@ void NetworkComponent::handle(Event* e)
 		mNetworkSystem->send( e, PacketPriority::IMMEDIATE_PRIORITY, PacketReliability::RELIABLE );
 	else if ( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		if( mLastUpdate.getMilliseconds() > 25 )
+		// Create a copy to send as a network event
+		TransformEvent* n = new TransformEvent( *static_cast<TransformEvent*>(e) );
+		n->changeEventType( EV_NETWORK_TRANSFORM_UPDATE );
+
+		if( mLastUpdate.getMilliseconds() > 100 )
 		{
-			mNetworkSystem->send(e, PacketPriority::LOW_PRIORITY, PacketReliability::UNRELIABLE );
+			mNetworkSystem->send(n, PacketPriority::LOW_PRIORITY, PacketReliability::UNRELIABLE_SEQUENCED );
 			mLastUpdate.reset();
 		}
 	}

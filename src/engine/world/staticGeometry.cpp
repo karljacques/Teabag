@@ -51,9 +51,9 @@ Entity* StaticGeometry::addGeometry( float3 position, float3 size, float3 angle 
 	if( mEngine->getNetworkSystem()->isHost() )
 	{
 		TransformEvent* te = new TransformEvent( EV_CLIENT_WORLD_CREATE_STATIC_BOX );
-		te->mPosition = position;
-		te->mOrientation = Quat::FromEulerXYX( angle.x,angle.y,angle.z );
-		te->mSecondaryFloat = size;
+		te->mFloat3_1 = position;
+		te->mQuaternion = Quat::FromEulerXYX( angle.x,angle.y,angle.z );
+		te->mFloat3_2 = size;
 
 		NetworkComponent* netComp = mEngine->getNetworkSystem()->createNetworkComponent();
 		ent->addComponent(netComp);
@@ -71,7 +71,7 @@ void StaticGeometry::handle( Event* e )
 	{
 		TransformEvent* te = static_cast<TransformEvent*>(e);
 
-		Entity* ent = this->addGeometry( te->mPosition, te->mSecondaryFloat, te->mOrientation.ToEulerXYX() );
+		Entity* ent = this->addGeometry( te->mFloat3_1, te->mFloat3_2, te->mQuaternion.ToEulerXYX() );
 
 		ent->addComponent( mEngine->getNetworkSystem()->getNetworkComponent( te->mGUID ));
 	}

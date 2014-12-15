@@ -18,8 +18,8 @@ void PositionComponent::update( double dt )
 	if( mUpdated )
 	{
 		TransformEvent* m = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-		m->mPosition = mPosition;
-		m->mOrientation = mOrientation;
+		m->mFloat3_1 = mPosition;
+		m->mQuaternion = mOrientation;
 
 		dispatch( m );
 		mUpdated = 0;
@@ -29,8 +29,18 @@ void PositionComponent::handle( Event* e )
 {
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		this->setPosition( static_cast<TransformEvent*>(e)->mPosition);
-		this->setOrientation( static_cast<TransformEvent*>(e)->mOrientation);
+		this->setPosition( static_cast<TransformEvent*>(e)->mFloat3_1);
+		this->setOrientation( static_cast<TransformEvent*>(e)->mQuaternion);
+	}
+
+	// Interpolate between client position and host position
+	if( e->getEventType() == EV_NETWORK_TRANSFORM_UPDATE )
+	{
+		TransformEvent* te = static_cast<TransformEvent*>(e);
+		float3 newPosition = (this->mPosition + te->mFloat3_1)/2;
+		
+		this->setPosition( newPosition );
+		this->setOrientation(te->mQuaternion);
 	}
 }
 
@@ -39,8 +49,8 @@ void PositionComponent::setPosition( float3 pos )
 	mPosition = pos;
 
 	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-	me->mPosition = pos;
-	me->mOrientation = mOrientation; // For the sake of the physics engine
+	me->mFloat3_1 = pos;
+	me->mQuaternion = mOrientation; // For the sake of the physics engine
 	dispatch( me );
 }
 
@@ -54,8 +64,8 @@ void PositionComponent::setOrientation( Quat orientation )
 	mOrientation = orientation;
 
 	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-	me->mOrientation = orientation;
-	me->mPosition = mPosition; // For the sake of the physics engine
+	me->mQuaternion = orientation;
+	me->mFloat3_1 = mPosition; // For the sake of the physics engine
 	dispatch( me );
 }
 

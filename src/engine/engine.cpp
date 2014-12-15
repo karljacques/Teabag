@@ -129,8 +129,6 @@ void Engine::handle( Event* e )
 							// Create a dynamic box
 							Entity* box = this->createBox(  float3(0,40.0f,0), float3(1.0f,1.0f,1.0f),net);
 
-					
-							
 							box->listenToAll(net);
 							box->addComponent( net );
 
@@ -194,7 +192,7 @@ Entity* Engine::createBox( float3 pos, float3 size, NetworkComponent* net )
 	btCollisionShape* shapex = new btBoxShape( size/2 );
 	phys->initialise( shapex, 1.0f, pos );
 	phys->registerListener(render);
-	phys->registerListener(posComp);
+	posComp->registerListener(phys);
 	cube->addComponent( phys );
 	
 	net->registerListener( posComp );

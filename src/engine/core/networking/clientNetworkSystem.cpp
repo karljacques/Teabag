@@ -68,7 +68,7 @@ int ClientNetworkSystem::receive()
 
 				// Cast data to a transform event
 				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
-				te->changeEventType( EV_NETWORK_TRANSFORM_UPDATE );
+				//te->changeEventType( EV_NETWORK_TRANSFORM_UPDATE );
 
 				if( mNetworkComponents[te->mGUID])
 					mNetworkComponents[te->mGUID]->dispatch(te);

@@ -16,7 +16,7 @@ void NetworkComponent::handle(Event* e)
 		mNetworkSystem->send( e, PacketPriority::IMMEDIATE_PRIORITY, PacketReliability::RELIABLE );
 	else if ( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		if( mLastUpdate.getMilliseconds() > 500 )
+		if( mLastUpdate.getMilliseconds() > 25 )
 		{
 			mNetworkSystem->send(e, PacketPriority::LOW_PRIORITY, PacketReliability::UNRELIABLE );
 			mLastUpdate.reset();

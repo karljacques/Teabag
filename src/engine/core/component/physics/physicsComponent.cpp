@@ -21,14 +21,20 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 
 void PhysicsComponent::update(  double dt  )
 {
-	mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
-	mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
+	// Check to see if it has moved or rotated, if so inform the position component and send out events,.
+	if( mPositionComponent->getPosition().DistanceSq( mBody->getWorldTransform().getOrigin() ) < 0.5 
+		|| mPositionComponent->getOrientation().AngleBetween( mBody->getWorldTransform().getRotation() ) < 0.5 ) 
+	{
+		mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
+		mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
 
-	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
-	me->mOrientation = mPositionComponent->getOrientation();
-	me->mPosition = mPositionComponent->getPosition();
+		TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+		me->mOrientation = mPositionComponent->getOrientation();
+		me->mPosition = mPositionComponent->getPosition();
 
-	dispatch(me);
+		dispatch(me);
+	}
+	
 }
 
 void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation )

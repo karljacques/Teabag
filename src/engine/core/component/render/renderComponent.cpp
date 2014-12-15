@@ -8,6 +8,8 @@ RenderComponent::RenderComponent( RenderSystem* renderSystem, PositionComponent*
 	mRenderSystem = renderSystem;
 	mSceneNode = renderSystem->getRootSceneNode()->createChildSceneNode();
 	mPositionComponent = positionComponent;
+
+	srand( 0 );
 }
 
 

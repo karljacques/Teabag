@@ -65,3 +65,19 @@ bool NetworkSystem::isHost()
 {
 	return mHost;
 }
+
+int NetworkSystem::getConnectedClients()
+{
+	return peer->NumberOfConnections();
+}
+
+int NetworkSystem::pingPeer(int client)
+{
+	if( client < this->getConnectedClients() )
+	{
+		// Return ping of specified client
+		return peer->GetAveragePing( peer->GetSystemAddressFromIndex(client) );
+	}
+
+	return -1;
+}

@@ -65,8 +65,12 @@ Engine::Engine()
 
 	// Create console - Singleton
 	new OgreConsole(this);
+
 	OgreConsole::getSingleton().addCommand( "net.connect", &Console_Net_Connect );
-	OgreConsole::getSingleton().addCommand( "static.generate", &Spawn_Static );
+	OgreConsole::getSingleton().addCommand( "net.status", &Console_Net_Status );
+
+	OgreConsole::getSingleton().addCommand( "geo.spawn", &Console_Geometry_Spawn );
+	
 }
 
 Engine::~Engine()

@@ -290,7 +290,7 @@ void Console_Net_Connect( Ogre::StringVector& str )
 	}
 }
 
-void Spawn_Static( Ogre::StringVector& str )
+void Console_Geometry_Spawn( Ogre::StringVector& str )
 {
 	StaticGeometry* g = OgreConsole::getSingleton().getEnginePtr()->getStaticGeometry();
 
@@ -300,4 +300,39 @@ void Spawn_Static( Ogre::StringVector& str )
 	// Two ramps
 	g->addGeometry( float3( 0,5.0f, 0.0f), float3( 5.0f, 0.25f,5.0f ), float3(45.0/57.0f,0,0));
 	g->addGeometry( float3( 0,9.0f, 4.0f), float3( 5.0f, 0.25f,5.0f ), float3(-45.0f/57.0f,0,0));
+}
+
+void Console_Net_Status(Ogre::StringVector& str)
+{
+	// Lots of printing to do, shortcut it
+	OgreConsole* c = OgreConsole::getSingletonPtr();
+
+	// Get network system
+	NetworkSystem* net = OgreConsole::getSingleton().getEnginePtr()->getNetworkSystem();
+	int connectedClients = net->getConnectedClients();
+
+	c->print("NETWORK STATUS");
+	
+	if( net->isHost() )
+	{
+		c->print("Engine is in SERVER mode.");
+		c->print(std::to_string(connectedClients) + " peer(s) connected");
+
+		for( int i=0; i<connectedClients; i++ )
+			c->print("Client #"+std::to_string(i+1) + "(" + std::to_string( net->pingPeer(i) ) + "ms)");
+
+	}else
+	{
+		c->print("Engine is in CLIENT mode.");
+
+		if( connectedClients < 1 )
+		{
+			c->print("NOT connected to a server.");
+		}
+		else
+		{
+			c->print("Ping: " + std::to_string( net->pingPeer(0) ));
+		}
+	}
+	
 }

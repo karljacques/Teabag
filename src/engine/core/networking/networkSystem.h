@@ -42,6 +42,10 @@ public:
 	// Is the system host?
 	bool isHost();
 
+	int getConnectedClients();
+	
+	int pingPeer( int client );
+
 protected:
 
 	// Map of network components

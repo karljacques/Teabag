@@ -1,14 +1,17 @@
 #ifndef keyboardEvent_h__
 #define keyboardEvent_h__
 
-#include "../event.h"
-
-class KeyboardEvent : public Event
+struct KeyboardEvent
 {
-public:
-	KeyboardEvent( int eventType );
 
-	unsigned int getSize();
+	KeyboardEvent()
+	{
+		mPressed = 0;
+		mReleased = 0;
+
+		mKeycode = 0;
+		mKey = 0;
+	}
 
 	bool mPressed;
 	bool mReleased;

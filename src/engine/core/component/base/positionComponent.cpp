@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "positionComponent.h"
-
+#include "engine/core/event/eventSystem.h"
 
 PositionComponent::PositionComponent(void)
 {
@@ -17,11 +17,13 @@ void PositionComponent::update( double dt )
 {
 	if( mUpdated )
 	{
-		TransformEvent* m = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+		Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
+		TransformEvent* m = e->getData<TransformEvent>();
 		m->mFloat3_1 = mPosition;
 		m->mQuaternion = mOrientation;
 
-		dispatch( m );
+		dispatch( e );
+
 		mUpdated = 0;
 	}
 }
@@ -29,29 +31,23 @@ void PositionComponent::handle( Event* e )
 {
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		this->setPosition( static_cast<TransformEvent*>(e)->mFloat3_1);
-		this->setOrientation( static_cast<TransformEvent*>(e)->mQuaternion);
+		TransformEvent* te = e->getData<TransformEvent>();
+		this->setPosition( te->mFloat3_1);
+		this->setOrientation( te->mQuaternion);
 	}
 
-	// Interpolate between client position and host position
-	if( e->getEventType() == EV_NETWORK_TRANSFORM_UPDATE )
-	{
-		TransformEvent* te = static_cast<TransformEvent*>(e);
-		float3 newPosition = (this->mPosition + te->mFloat3_1)/2;
-		
-		this->setPosition( newPosition );
-		this->setOrientation(te->mQuaternion);
-	}
 }
 
 void PositionComponent::setPosition( float3 pos )
 {
 	mPosition = pos;
 
-	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
+	TransformEvent* me = e->getData<TransformEvent>();
 	me->mFloat3_1 = pos;
 	me->mQuaternion = mOrientation; // For the sake of the physics engine
-	dispatch( me );
+	dispatch( e );
+
 }
 
 float3 PositionComponent::getPosition()
@@ -63,10 +59,11 @@ void PositionComponent::setOrientation( Quat orientation )
 {
 	mOrientation = orientation;
 
-	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
+	TransformEvent* me = e->getData<TransformEvent>();
 	me->mQuaternion = orientation;
 	me->mFloat3_1 = mPosition; // For the sake of the physics engine
-	dispatch( me );
+	dispatch( e );
 }
 
 Quat PositionComponent::getOrientation()

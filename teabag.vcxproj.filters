@@ -42,15 +42,6 @@
     <ClCompile Include="src\engine\core\component\control\spectatorControlComponent.cpp">
       <Filter>engine\core\component\control</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\event\events\keyboardEvent.cpp">
-      <Filter>engine\core\event\events</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\event\events\mouseEvent.cpp">
-      <Filter>engine\core\event\events</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\event\events\transformEvent.cpp">
-      <Filter>engine\core\event\events</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\networking\serverNetworkSystem.cpp">
       <Filter>engine\core\networking</Filter>
     </ClCompile>

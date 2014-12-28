@@ -33,7 +33,7 @@ OgreConsole::OgreConsole( Engine* eng )
 
 	this->init( UIScreen );
 
-	eng->getEventSystem()->registerListener(this);
+	EventSystem::getSingletonPtr()->registerListener(this);
 }
  
 OgreConsole::~OgreConsole()
@@ -87,7 +87,7 @@ void OgreConsole::handle( Event* arg)
 {
  if( arg->getEventType() == EV_CORE_KEY_PRESS )
  {
-	 KeyboardEvent* e = static_cast<KeyboardEvent*>(arg);
+	 KeyboardEvent* e = arg->getData<KeyboardEvent>();
 
 	 if( e->mKeycode == SDL_SCANCODE_F1 )
 	 {
@@ -149,7 +149,7 @@ void OgreConsole::handle( Event* arg)
 	 return;
  if( arg->getEventType() == EV_CORE_TEXT_INPUT )
  {
-	 KeyboardEvent* e = static_cast<KeyboardEvent*>(arg);
+	 KeyboardEvent* e = arg->getData<KeyboardEvent>();
 	 for(unsigned int c=0;c<sizeof(legalchars);c++)
 	 {
 		 prompt+=e->mKey;

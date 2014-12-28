@@ -3,8 +3,7 @@
 
 using namespace RakNet;
 
-NetworkSystem::NetworkSystem( EventSystem* eventSystem )
-	: mEventSystem( eventSystem )
+NetworkSystem::NetworkSystem( )
 {
 	peer = RakNet::RakPeerInterface::GetInstance();
 }
@@ -12,16 +11,16 @@ NetworkSystem::NetworkSystem( EventSystem* eventSystem )
 void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
 {
 	// Cast event to char*, make room for the packet ID
-	char* payload = new char[ e->getSize() + 1 ];
+	char* payload = new char[ sizeof(Event) + 1 ];
 
 	// Copy in casted event to the payload, offset by 1 byte
-	memcpy( &payload[1],reinterpret_cast<char*>(e), e->getSize() );
+	memcpy( &payload[1],reinterpret_cast<char*>(e), sizeof(Event) );
 
 	// Set packet ID
 	payload[0] = (unsigned char)(e->getEventType() + ID_USER_PACKET_ENUM);
 
 	// Send packet
-	peer->Send( payload, e->getSize()+1, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+	peer->Send( payload, sizeof(Event)+1, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
 
 }
 

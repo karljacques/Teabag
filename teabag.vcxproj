@@ -111,15 +111,6 @@
     <ClCompile Include="src\engine\core\event\eventSystem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\engine\core\event\events\keyboardEvent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\event\events\mouseEvent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\event\events\transformEvent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\engine\core\graphics\renderSystem.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\ogreConsole.cpp" />

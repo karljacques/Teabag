@@ -17,13 +17,12 @@ class InputSystem
 {
 public:
         
-    InputSystem( EventSystem* eventSys, SDL_Window* window );
+    InputSystem(  SDL_Window* window );
         
     void update();
 private:
         
 	SDL_Event		m_inputEvent;
-    EventSystem*	m_EventSystem;
 
 	// Window 
 	SDL_Window* mWindow;

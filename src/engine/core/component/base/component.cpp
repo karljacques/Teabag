@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "component.h"
+#include "engine/core/event/eventSystem.h"
 
 Component::Component(void)
 {
@@ -36,8 +37,8 @@ void Component::dispatch( Event* e )
 	for( auto i=mListeners.begin(); i!=mListeners.end(); i++ )
 		(*i)->handle( e );
 
-	// Delete dispatched event
-	delete e;
+	EventSystem::getSingletonPtr()->releaseEvent(e);
+
 }
 
 void Component::update( double dt )

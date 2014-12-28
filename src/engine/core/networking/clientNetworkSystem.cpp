@@ -4,8 +4,7 @@
 
 using namespace RakNet;
 
-ClientNetworkSystem::ClientNetworkSystem( EventSystem* eventSystem )
-	: NetworkSystem( eventSystem )
+ClientNetworkSystem::ClientNetworkSystem( )
 {
 	RakNet::SocketDescriptor socketDescriptors[1] = {
 		RakNet::SocketDescriptor( )
@@ -30,51 +29,16 @@ int ClientNetworkSystem::receive()
 		// Is it an event? If so, we need to convert it back
 		unsigned char ev = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
 
-		switch( ev )
-		{
-		case EV_CLIENT_WORLD_CREATE_STATIC_BOX:
-			{
-				// Create data structure to copy RakNet's packet data into
-				// otherwise RakNet could do some house cleaning and everything will crash.
-				char* data = new char[ sizeof(TransformEvent)  ];
-				memcpy( data, &packet->data[1], sizeof(TransformEvent));
+		// Create data structure to copy RakNet's packet data into
+		// otherwise RakNet could do some house cleaning and everything will crash.
+		char* data = new char[ sizeof(Event)  ];
+		memcpy( data, &packet->data[1], sizeof(Event));
 
-				// Cast data to a transform event
-				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
+		// Cast data to a transform event
+		Event* te = reinterpret_cast<Event*>(data);
 
-				mEventSystem->dispatchEvent(te);
-			}
-		break;
-		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
-			{
-				OgreConsole::getSingleton().print( "Spawning Cube..." );
-
-				// Create data structure to copy RakNet's packet data into
-				// otherwise RakNet could do some house cleaning and everything will crash.
-				char* data = new char[ sizeof(TransformEvent)  ];
-				memcpy( data, &packet->data[1], sizeof(TransformEvent));
-
-				// Cast data to a transform event
-				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
-				
-				mEventSystem->dispatchEvent(te);
-			}
-		case EV_NETWORK_TRANSFORM_UPDATE:
-			{
-				// Create data structure to copy RakNet's packet data into
-				// otherwise RakNet could do some house cleaning and everything will crash.
-				char* data = new char[ sizeof(TransformEvent)  ];
-				memcpy( data, &packet->data[1], sizeof(TransformEvent));
-
-				// Cast data to a transform event
-				TransformEvent* te = reinterpret_cast<TransformEvent*>(data);
-
-				if( mNetworkComponents[te->mGUID])
-					mNetworkComponents[te->mGUID]->dispatch(te);
-			}
+		EventSystem::getSingletonPtr()->dispatchEvent(te);
 	}
-	break;
-	} 
 
 	return true;
 }

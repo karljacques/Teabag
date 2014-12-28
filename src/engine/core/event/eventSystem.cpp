@@ -7,6 +7,9 @@
 //
 
 #include "eventSystem.h"
+#include <Ogre.h>
+
+template<> EventSystem* Ogre::Singleton<EventSystem>::msSingleton = 0;
 
 EventSystem::EventSystem()
 {
@@ -15,7 +18,9 @@ EventSystem::EventSystem()
 
 void EventSystem::dispatchEvent( Event* e )
 {
-    mEventList.push(e);
+	// Add to active list
+	mEventList.push_back(e);
+
 }
 
 void EventSystem::handleEvents()
@@ -63,9 +68,9 @@ void EventSystem::handleEvents()
 		}
 
 
-        // Delete the event
-        mEventList.pop();
-        delete e;
+        // Put the event back in the inactive pool
+        mEventList.pop_front();
+        mEventPool.push_back(e);
     }
 
 }
@@ -78,4 +83,34 @@ void EventSystem::registerListener(EventListener* e)
 void EventSystem::deregisterListener(EventListener* e )
 {
 	mRemovedListeners.push_back(e);
+}
+
+Event* EventSystem::getEvent( int eventType )
+{
+	// See if there are any events pooled. If there are, return it. If there are not, create a new one, add it to the inactive pool, and return a pointer.
+	if( mEventPool.size() > 0 )
+	{
+		Event* e = mEventPool.back();
+		mEventPool.pop_back();
+		e->changeEventType(eventType);
+		e->mGUID = 0;
+		return e;
+	}
+	else
+	{
+		Event* e = new Event( eventType );
+		return e;
+	}
+}
+
+void EventSystem::releaseEvent(Event* e)
+{
+	// Find the event to release
+	auto i = std::find( mEventList.begin(), mEventList.end(), e);
+	if( i != mEventList.end() )
+		mEventList.erase( i );
+
+	// Add it to the inactive pool.
+	mEventPool.push_back(e);
+
 }

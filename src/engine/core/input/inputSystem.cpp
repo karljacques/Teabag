@@ -5,7 +5,7 @@
 //  Created by Karl Jacques on 24/05/2014.
 //
 //
-
+#include "pch.h"
 #include <SDL.h>
 #include "inputSystem.h"
 #include "../event/eventSystem.h"
@@ -38,35 +38,34 @@ void InputSystem::update()
 			{
 				// Key down, create and dispatch event
 				Event*	e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_KEY_PRESS );
-				KeyboardEvent* ke = e->getData<KeyboardEvent>();
+				KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 				ke->mPressed = true;
 				ke->mReleased =false;
 				ke->mKeycode = m_inputEvent.key.keysym.scancode;
-				EventSystem::getSingletonPtr()->dispatchEvent( e );
-
+				//EventSystem::getSingletonPtr()->dispatchEvent( e );
+				break;
 			}
-			break;
+			
 
 			case SDL_KEYUP:
 				{
 					// Key down, create and dispatch event
 					Event*	e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_KEY_RELEASE );
-					KeyboardEvent* ke = e->getData<KeyboardEvent>();
+					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mPressed = false;
 					ke->mReleased = true;
 					ke->mKeycode = m_inputEvent.key.keysym.scancode;
-					EventSystem::getSingletonPtr()->dispatchEvent( e );
-
+					//EventSystem::getSingletonPtr()->dispatchEvent( e );
+					break;
 				}
-			break;
+			
 
 			case SDL_TEXTINPUT:
 				{
 					Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TEXT_INPUT );
-					KeyboardEvent* ke = e->getData<KeyboardEvent>();
+					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mKey = *m_inputEvent.text.text;
 					EventSystem::getSingletonPtr()->dispatchEvent(e);
-					OgreConsole::getSingletonPtr()->print("TextEvent");
 					break;
 				}
 
@@ -86,9 +85,10 @@ void InputSystem::update()
 			case SDL_MOUSEBUTTONDOWN:
 				{
 					Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_PRESS );
-					MouseEvent* m = e->getData<MouseEvent>();
+					MouseEvent* m = e->createEventData<MouseEvent>();
 					m->mMouseButton = m_inputEvent.button.button;
 					//EventSystem::getSingletonPtr()->dispatchEvent(e);
+					break;
 				}
 				
 				
@@ -104,7 +104,7 @@ void InputSystem::update()
 	x/=2;
 	y/=2;
 
-	/*
+	
 	// If Window is focused, center the mouse
 	if( mWindowActive)
 	{
@@ -112,13 +112,17 @@ void InputSystem::update()
 		SDL_GetMouseState(&MouseX,&MouseY);
 		int DeltaX = MouseX - x;
 		int DeltaY = MouseY - y;
-		Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_MOVEMENT );
-		MouseEvent* m = e->getData<MouseEvent>();
-		m->mMouseMoveX = DeltaX;
-		m->mMouseMoveY = DeltaY;
+		if( DeltaX > 1 || DeltaY > 1 )
+		{
+			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_MOVEMENT );
+			MouseEvent* m = e->getData<MouseEvent>();
+			m->mMouseMoveX = DeltaX;
+			m->mMouseMoveY = DeltaY;
 
-		//EventSystem::getSingletonPtr()->dispatchEvent( e );
+			EventSystem::getSingletonPtr()->dispatchEvent( e );
+		}
+		
 		SDL_WarpMouseInWindow(  mWindow, x, y );
 	}
-	*/
+	
 }

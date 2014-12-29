@@ -109,13 +109,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\engine\core\event\eventSystem.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\engine\core\graphics\renderSystem.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\ogreConsole.cpp" />
     <ClCompile Include="src\engine\core\input\inputSystem.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\engine\core\networking\clientNetworkSystem.cpp" />
     <ClCompile Include="src\engine\core\networking\networkSystem.cpp" />

@@ -18,7 +18,7 @@ void PositionComponent::update( double dt )
 	if( mUpdated )
 	{
 		Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
-		TransformEvent* m = e->getData<TransformEvent>();
+		TransformEvent* m = e->createEventData<TransformEvent>();
 		m->mFloat3_1 = mPosition;
 		m->mQuaternion = mOrientation;
 
@@ -43,7 +43,7 @@ void PositionComponent::setPosition( float3 pos )
 	mPosition = pos;
 
 	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
-	TransformEvent* me = e->getData<TransformEvent>();
+	TransformEvent* me = e->createEventData<TransformEvent>();
 	me->mFloat3_1 = pos;
 	me->mQuaternion = mOrientation; // For the sake of the physics engine
 	dispatch( e );
@@ -60,7 +60,7 @@ void PositionComponent::setOrientation( Quat orientation )
 	mOrientation = orientation;
 
 	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
-	TransformEvent* me = e->getData<TransformEvent>();
+	TransformEvent* me = e->createEventData<TransformEvent>();
 	me->mQuaternion = orientation;
 	me->mFloat3_1 = mPosition; // For the sake of the physics engine
 	dispatch( e );

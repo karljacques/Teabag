@@ -5,9 +5,9 @@
 //  Created by Karl Jacques on 24/05/2014.
 //
 //
-
+#include "pch.h"
 #include "eventSystem.h"
-#include <Ogre.h>
+#include "engine/core/graphics/UI/ogreConsole.h"
 
 template<> EventSystem* Ogre::Singleton<EventSystem>::msSingleton = 0;
 
@@ -38,7 +38,20 @@ void EventSystem::handleEvents()
         Event* e = mEventList.front();
 
 		auto iter = mEventListeners.begin();
-		
+		if( e->getEventType() == EV_CORE_MOUSE_MOVEMENT )
+		{
+			OgreConsole::getSingletonPtr()->print("MouseMoveEvent");
+		}
+
+		if( e->getEventType() == EV_CORE_KEY_PRESS )
+		{
+			OgreConsole::getSingletonPtr()->print("KeyPressEvent");
+		}
+
+		if( e->getEventType() == EV_CORE_TEXT_INPUT )
+		{
+			OgreConsole::getSingletonPtr()->print("TextEvent");
+		}
         // Dispatch events to listeners
 		while ( iter != mEventListeners.end() )
 		{
@@ -60,6 +73,8 @@ void EventSystem::handleEvents()
 			{
 				(*iter)->handle(e);
 				iter++;
+
+				
 			}else{
 				iter=mEventListeners.erase(iter);
 			}
@@ -70,7 +85,7 @@ void EventSystem::handleEvents()
 
         // Put the event back in the inactive pool
         mEventList.pop_front();
-        mEventPool.push_back(e);
+        releaseEvent(e);
     }
 
 }
@@ -105,11 +120,6 @@ Event* EventSystem::getEvent( int eventType )
 
 void EventSystem::releaseEvent(Event* e)
 {
-	// Find the event to release
-	auto i = std::find( mEventList.begin(), mEventList.end(), e);
-	if( i != mEventList.end() )
-		mEventList.erase( i );
-
 	// Add it to the inactive pool.
 	mEventPool.push_back(e);
 

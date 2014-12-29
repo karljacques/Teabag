@@ -150,12 +150,10 @@ void OgreConsole::handle( Event* arg)
  if( arg->getEventType() == EV_CORE_TEXT_INPUT )
  {
 	 KeyboardEvent* e = arg->getData<KeyboardEvent>();
-	 for(unsigned int c=0;c<sizeof(legalchars);c++)
-	 {
-		 prompt+=e->mKey;
-		 mUpdatePrompt = true;
-		 break;
-	 }
+	 // TODO check legality of character
+	 prompt+=e->mKey;
+	 mUpdatePrompt = true;
+
  }
 
 }

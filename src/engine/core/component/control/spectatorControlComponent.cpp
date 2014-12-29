@@ -120,13 +120,13 @@ void SpectatorControlComponent::update(double dt)
 	if( mRight )
 		dir+=float3(mSpeed,0,0);
 
+
 	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_APPLY_FORCE);
-	TransformEvent* te = e->getData<TransformEvent>();
+	TransformEvent* te = e->createEventData<TransformEvent>();
 	te->mFloat3_1 = dir;
 
 	dispatch(e);
 
-	EventSystem::getSingletonPtr()->releaseEvent(e);
 }
 
 void SpectatorControlComponent::applyForceInDir( float3 dir )

@@ -41,7 +41,6 @@ void PhysicsComponent::update(  double dt  )
 
 		dispatch(e);
 
-		EventSystem::getSingletonPtr()->releaseEvent(e);
 	}
 	
 }

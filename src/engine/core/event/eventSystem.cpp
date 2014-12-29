@@ -23,7 +23,20 @@ EventSystem::EventSystem()
 /* An event given to this function must be added to a list which will then dispatch it to event listeners*/
 void EventSystem::dispatchEvent( Event* e )
 {
-	mEventList.push_back(e);
+	/* Prevent Null Events */
+	if( e->getEventType() == EV_NULL )
+		return;
+
+	/* Prevent duplicates */
+	if( std::find( mEventList.begin(), mEventList.end(), e ) == mEventList.end() )
+	{
+		mEventList.push_back(e);
+	}else
+	{
+		OgreConsole::getSingletonPtr()->print("Duplicate Event");
+		releaseEvent(e);
+		
+	}
 }
 
 /* Dispatch events to global listeners */
@@ -58,7 +71,7 @@ void EventSystem::handleEvents()
 		{
 			for( auto e = mEventList.begin(); e != mEventList.end(); e++ )
 			{
-				(*lsnr)->handle(*e);
+				(*lsnr)->handle(*e);			
 			}
 		}
 	}
@@ -110,7 +123,7 @@ Event* EventSystem::getEvent( int eventType )
 	}
 	else
 	{
-		/* Not enough events in pool, create a new one. THIS IS SLOW - make sure there are enough in the pool to satisfy the game */
+		/* Not enough events in pool, create a new one. This is slower - make sure there are enough in the pool to satisfy the game */
 		OgreConsole::getSingletonPtr()->print("Insufficient Events - created a new one");
 		return new Event(eventType);
 	}
@@ -119,6 +132,11 @@ Event* EventSystem::getEvent( int eventType )
 /* This should add the event back to the pool of events */
 void EventSystem::releaseEvent(Event* e)
 {
+	e->changeEventType(EV_NULL); // Help identify rogue events
+
+	/* Prevent duplicates in the pool */
+	if( std::find( mEventPool.begin(), mEventPool.end(), e ) == mEventPool.end() )
+	{
 		mEventPool.push_back(e);
-		e->changeEventType(EV_NULL); // Help identify rogue events
+	}
 }

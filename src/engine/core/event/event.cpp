@@ -10,6 +10,7 @@
 Event::Event( int eventType )
 {
     mEventType = eventType;
+	mGUID = 0;
 }
 
 int Event::getEventType()

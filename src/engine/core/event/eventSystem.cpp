@@ -13,7 +13,7 @@ template<> EventSystem* Ogre::Singleton<EventSystem>::msSingleton = 0;
 
 EventSystem::EventSystem()
 {
-
+	d_eventDrift = 0;
 }
 
 void EventSystem::dispatchEvent( Event* e )
@@ -43,22 +43,13 @@ void EventSystem::handleEvents()
     // loop through events
     while ( mEventList.size() > 0 ) {
         Event* e = mEventList.front();
-
-		auto iter = mEventListeners.begin();
 		if( e->getEventType() == EV_CORE_MOUSE_MOVEMENT )
 		{
-			//OgreConsole::getSingletonPtr()->print("MouseMoveEvent");
-		}
+			OgreConsole::getSingletonPtr()->print("MOUSEMOVE");
 
-		if( e->getEventType() == EV_CORE_KEY_PRESS )
-		{
-			OgreConsole::getSingletonPtr()->print("KeyPressEvent");
 		}
+		auto iter = mEventListeners.begin();
 
-		if( e->getEventType() == EV_CORE_TEXT_INPUT )
-		{
-			//OgreConsole::getSingletonPtr()->print("TextEvent");
-		}
         // Dispatch events to listeners
 		while ( iter != mEventListeners.end() )
 		{
@@ -85,8 +76,6 @@ void EventSystem::handleEvents()
 			}else{
 				iter=mEventListeners.erase(iter);
 			}
-
-			
 		}
 
 
@@ -109,6 +98,13 @@ void EventSystem::deregisterListener(EventListener* e )
 
 Event* EventSystem::getEvent( int eventType )
 {
+	if( d_eventDrift != 0 )
+	{
+		OgreConsole::getSingletonPtr()->print( "Event Discrepency: " + std::to_string(d_eventDrift) );
+	}
+
+	d_eventDrift++;
+
 	// See if there are any events pooled. If there are, return it. If there are not, create a new one, add it to the inactive pool, and return a pointer.
 	if( mEventPool.size() > 0 )
 	{
@@ -130,4 +126,7 @@ void EventSystem::releaseEvent(Event* e)
 	// Add it to the inactive pool.
 	mEventPool.push_back(e);
 
+	d_eventDrift--;
+
+	
 }

@@ -113,12 +113,12 @@ void InputSystem::update()
 		int DeltaY = MouseY - y;
 		if( DeltaX != 0 || DeltaY != 0 )
 		{
-			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_MOVEMENT );
-			MouseEvent* m = e->getData<MouseEvent>();
-			m->mMouseMoveX = DeltaX;
-			m->mMouseMoveY = DeltaY;
+			//Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_MOVEMENT );
+			//MouseEvent* m = e->createEventData<MouseEvent>();
+			//m->mMouseMoveX = DeltaX;
+			//m->mMouseMoveY = DeltaY;
 
-			EventSystem::getSingletonPtr()->dispatchEvent( e );
+			//EventSystem::getSingletonPtr()->dispatchEvent( e );
 		}
 		
 		SDL_WarpMouseInWindow(  mWindow, x, y );

@@ -121,11 +121,11 @@ void SpectatorControlComponent::update(double dt)
 		dir+=float3(mSpeed,0,0);
 
 
-	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_APPLY_FORCE);
-	TransformEvent* te = e->createEventData<TransformEvent>();
-	te->mFloat3_1 = dir;
+	//Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_APPLY_FORCE);
+	//TransformEvent* te = e->createEventData<TransformEvent>();
+	//te->mFloat3_1 = dir;
 
-	dispatch(e);
+	//dispatch(e);
 
 }
 

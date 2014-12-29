@@ -52,6 +52,7 @@ private:
 	std::queue<EventListener*> mNewEventListeners;
 	std::vector<EventListener*> mRemovedListeners;
 
-
+	// Debugging variables
+	int d_eventDrift;
 };
 #endif /* defined(__YorkshireTea__eventSystem__) */

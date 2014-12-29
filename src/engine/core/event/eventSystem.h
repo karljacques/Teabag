@@ -9,11 +9,12 @@
 #ifndef __YorkshireTea__eventSystem__
 #define __YorkshireTea__eventSystem__
 
-#include <iostream>
-#include <queue>
+#include "pch.h"
+
 #include "event.h"
 #include "eventListener.h"
-#include <Ogre.h> // For Singleton
+
+#define MAX_EVENT_POOL 150
 
 class EventSystem : public Ogre::Singleton<EventSystem>
 {
@@ -39,7 +40,7 @@ public:
 
 private:
 
-	// Active Events
+	// Global Events
     std::deque<Event*> mEventList;
 
 	// Pooled Inactive Events

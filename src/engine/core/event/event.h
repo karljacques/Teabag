@@ -17,6 +17,9 @@
 
 enum EV_EventType
 {
+	// DEFAULT
+	EV_NULL,
+
 	// Input
     EV_CORE_MOUSE_PRESS,
     EV_CORE_MOUSE_RELEASE,

@@ -42,10 +42,10 @@ void InputSystem::update()
 				ke->mPressed = true;
 				ke->mReleased =false;
 				ke->mKeycode = m_inputEvent.key.keysym.scancode;
-				//EventSystem::getSingletonPtr()->dispatchEvent( e );
-				break;
+				EventSystem::getSingletonPtr()->dispatchEvent( e );
+				
 			}
-			
+			break;
 
 			case SDL_KEYUP:
 				{
@@ -55,10 +55,10 @@ void InputSystem::update()
 					ke->mPressed = false;
 					ke->mReleased = true;
 					ke->mKeycode = m_inputEvent.key.keysym.scancode;
-					//EventSystem::getSingletonPtr()->dispatchEvent( e );
-					break;
+					EventSystem::getSingletonPtr()->dispatchEvent( e );
+					
 				}
-			
+			break;
 
 			case SDL_TEXTINPUT:
 				{
@@ -66,9 +66,9 @@ void InputSystem::update()
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mKey = *m_inputEvent.text.text;
 					EventSystem::getSingletonPtr()->dispatchEvent(e);
-					break;
+					
 				}
-
+			break;
 			case SDL_WINDOWEVENT:
 				switch( m_inputEvent.window.event )
 				{
@@ -87,10 +87,9 @@ void InputSystem::update()
 					Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_PRESS );
 					MouseEvent* m = e->createEventData<MouseEvent>();
 					m->mMouseButton = m_inputEvent.button.button;
-					//EventSystem::getSingletonPtr()->dispatchEvent(e);
-					break;
+					EventSystem::getSingletonPtr()->dispatchEvent(e);
 				}
-				
+			break;
 				
 
 		}
@@ -112,7 +111,7 @@ void InputSystem::update()
 		SDL_GetMouseState(&MouseX,&MouseY);
 		int DeltaX = MouseX - x;
 		int DeltaY = MouseY - y;
-		if( DeltaX > 1 || DeltaY > 1 )
+		if( DeltaX != 0 || DeltaY != 0 )
 		{
 			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_MOUSE_MOVEMENT );
 			MouseEvent* m = e->getData<MouseEvent>();

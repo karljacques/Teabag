@@ -18,6 +18,11 @@ EventSystem::EventSystem()
 
 void EventSystem::dispatchEvent( Event* e )
 {
+	// Make sure event isn't already on the list (TODO Fix why this is happening to begin with!!!)
+	for( auto i=mEventList.begin(); i!=mEventList.end(); i++ )
+		if( (*i) == e )
+			return;
+
 	// Add to active list
 	mEventList.push_back(e);
 
@@ -32,6 +37,8 @@ void EventSystem::handleEvents()
 		mEventListeners.push_back( mNewEventListeners.front() );
 		mNewEventListeners.pop();
 	}
+	if( mEventList.size() > 1 )
+		OgreConsole::getSingletonPtr()->print(std::to_string(mEventList.size()));
 
     // loop through events
     while ( mEventList.size() > 0 ) {
@@ -40,7 +47,7 @@ void EventSystem::handleEvents()
 		auto iter = mEventListeners.begin();
 		if( e->getEventType() == EV_CORE_MOUSE_MOVEMENT )
 		{
-			OgreConsole::getSingletonPtr()->print("MouseMoveEvent");
+			//OgreConsole::getSingletonPtr()->print("MouseMoveEvent");
 		}
 
 		if( e->getEventType() == EV_CORE_KEY_PRESS )
@@ -50,7 +57,7 @@ void EventSystem::handleEvents()
 
 		if( e->getEventType() == EV_CORE_TEXT_INPUT )
 		{
-			OgreConsole::getSingletonPtr()->print("TextEvent");
+			//OgreConsole::getSingletonPtr()->print("TextEvent");
 		}
         // Dispatch events to listeners
 		while ( iter != mEventListeners.end() )

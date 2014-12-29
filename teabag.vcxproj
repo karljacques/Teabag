@@ -56,7 +56,7 @@
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalOptions>/Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zm2000 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>MATH_OGRE_INTEROP;MATH_BULLET_INTEROP</PreprocessorDefinitions>
     </ClCompile>
     <Link>

@@ -57,6 +57,7 @@ Icon
 *.user
 *.userosscache
 *.sln.docstates
+*.v11.suo
 
 # Build results
 [Dd]ebug/

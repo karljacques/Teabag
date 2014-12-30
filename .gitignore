@@ -58,6 +58,7 @@ Icon
 *.userosscache
 *.sln.docstates
 *.v11.suo
+teabag.v11.suo
 
 # Build results
 [Dd]ebug/

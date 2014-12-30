@@ -9,15 +9,42 @@ public:
 	Entity(void);
 	~Entity(void);
 
-	void update( double dt );
+	void addComponent( Component* c );
+	void removeComponent( Component* c );
 
-	void addComponent( Component* component );
-	void listenToAll( EventListener* listener );
-	void makeListenToMe( Component* listenTo );
+	template <class T>
+	T* getComponent();
 
-private:
+	template <class T>
+	bool hasComponent();
 
 	std::vector<Component*> mComponents;
 };
+
+
 #endif // entity_h__
 
+template <class T>
+T* Entity::getComponent()
+{
+	for( auto i = mComponents.begin(); i != mComponents.end(); i++ )
+	{
+		if typeid( (**i) == typeid(T) )
+		{
+			return *i;
+		}
+	}
+}
+
+template <class T>
+bool Entity::hasComponent()
+{
+	for( auto i = mComponents.begin(); i != mComponents.end(); i++ )
+	{
+		if typeid( (**i) == typeid(T) )
+		{
+			return true;
+		}
+	}
+	return false;
+}

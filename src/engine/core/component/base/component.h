@@ -12,15 +12,8 @@ public:
 	Component(void);
 	~Component(void);
 
-	void registerListener( EventListener* comp );
-	void deregisterListener( EventListener* comp );
-
-	void dispatch( Event* e );
-	virtual void update( double dt );
-	
-protected:
-	// Components listening for updates on this one
-	std::vector<EventListener*> mListeners;
+	/* Global identifier, the same on every networked system */
+	int mGUID;
 
 	// Entity that this component belongs to - perhaps my comments state the obvious too much.
 	Entity* mParent;

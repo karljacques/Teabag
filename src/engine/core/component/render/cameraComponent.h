@@ -5,31 +5,15 @@
 #include "engine/core/graphics/renderSystem.h"
 #include "engine/core/event/eventListener.h"
 
-// dependent on Ogre
-class CameraComponent :
-	public Component, public EventListener
+class CameraComponent :public Component
 {
 public:
-	CameraComponent( RenderSystem* renderSystem, PositionComponent* positionComponent );
+	CameraComponent(  );
 	~CameraComponent(void);
 
-	void handle(  Event* e );
-
-	// Don't want to put these in position component
-	void setPosition( float3 pos );
-	void lookAt( float3 pos );
-	void update(  double dt  );
-
-	// Little hack function
-	void setOffset( float3 offset );
-
-private:
-
-	RenderSystem* mRenderSystem;
 	Ogre::Camera* mCamera;
 	Ogre::Viewport* mViewport;
 	Ogre::SceneNode* mSceneNode;
 
-	PositionComponent* mPositionComponent;
 };
 

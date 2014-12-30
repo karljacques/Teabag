@@ -36,32 +36,9 @@ Engine::Engine()
 	mNetworkSystem = new ServerNetworkSystem( );
 	mEntityManager = new EntityManager();
 
-	mStaticGeometry = new StaticGeometry( this );
-
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 	EventSystem::getSingletonPtr()->registerListener( this );
-	EventSystem::getSingletonPtr()->registerListener( mStaticGeometry );
-
-	// Create spectator
-	Entity* camera = createEntity();
-
-	PositionComponent* cpc = new PositionComponent();
-	CameraComponent* cc = new CameraComponent( mRenderSystem, cpc );
-	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager, cpc );
-	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
-
-	EventSystem::getSingletonPtr()->registerListener( s );
-
-	camera->addComponent(cc);
-	camera->addComponent(cpc);
-	camera->addComponent(cphyc);
-	camera->addComponent(s);
-
-	cpc->registerListener( cphyc );
-	s->registerListener(cphyc);
-
-	cpc->setPosition( float3(0,40,20 ));
 
 	// Create console - Singleton
 	new OgreConsole(this);
@@ -123,53 +100,13 @@ void Engine::handle( Event* e )
 					   m_EngineShutdown = true;
 					break;
 
-					case SDL_SCANCODE_X:
-
-						if( mNetworkSystem->isHost() )
-						{
-
-							NetworkComponent* net = mNetworkSystem->createNetworkComponent();
-							// Create a dynamic box
-							Entity* box = this->createBox(  float3(0,40.0f,0), float3(1.0f,1.0f,1.0f),net);
-
-							box->listenToAll(net);
-							box->addComponent( net );
-
-							// Create event and create transform event payloads
-							Event* evt = EventSystem::getSingletonPtr()->getEvent(  EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX );
-							TransformEvent* te = evt->createEventData<TransformEvent>();
-							te->mFloat3_1 =  float3(0,40.0f,0);
-							te->mFloat3_2 = float3(1.0f,1.0f,1.0f);
-
-							// Handle and release event
-							net->handle(evt);
-							EventSystem::getSingletonPtr()->releaseEvent(e);
-							
-
-						}
-					break;
-
 				}
 			}
         break;
 
-		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
-			{
-				TransformEvent* te = e->getData<TransformEvent>();
-				NetworkComponent* net = mNetworkSystem->getNetworkComponent( e->mGUID );
-				Entity* box = createBox( te->mFloat3_1, te->mFloat3_2, net );
-				
-				box->addComponent(net);
-			}
     }
 }
 
-Entity* Engine::createEntity()
-{
-	Entity* ent = new Entity();
-	mEntities.push_back(ent);
-	return ent;
-}
 
 void Engine::SetAsClient(const char* ip)
 {
@@ -181,29 +118,4 @@ void Engine::SetAsClient(const char* ip)
 	static_cast<ClientNetworkSystem*>(mNetworkSystem)->connect( ip );
 
 	
-}
-
-Entity* Engine::createBox( float3 pos, float3 size, NetworkComponent* net )
-{
-	Entity* cube = createEntity();
-	PositionComponent* posComp = new PositionComponent();
-	posComp->setPosition(pos);
-	cube->addComponent( posComp );
-
-	RenderComponent* render = new RenderComponent( mRenderSystem, posComp );
-	render->setAsBox( size.x,size.y,size.z);
-	posComp->registerListener( render );
-
-	cube->addComponent( render );
-
-	PhysicsComponent* phys = new PhysicsComponent( mPhysicsManager, posComp );
-	btCollisionShape* shapex = new btBoxShape( size/2 );
-	phys->initialise( shapex, 1.0f, pos );
-	phys->registerListener(render);
-	posComp->registerListener(phys);
-	cube->addComponent( phys );
-	
-	net->registerListener( posComp );
-	
-	return cube;
 }

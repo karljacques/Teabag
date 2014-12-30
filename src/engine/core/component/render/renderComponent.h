@@ -7,19 +7,12 @@
 #include "engine/core/event/eventListener.h"
 #include "common.h"
 
-class RenderComponent : public Component, public EventListener
+class RenderComponent : public Component
 {
 public:
-	RenderComponent( RenderSystem* renderSystem, PositionComponent* positionComponent );
+	RenderComponent( );
 	~RenderComponent(void);
 
-	void update( double dt );
-	void setAsBox( float x,float y,float z );
-
-	void handle( Event* e );
-
-private:
-	RenderSystem*		 mRenderSystem;
 
 	Ogre::MovableObject* mObject;
 	Ogre::SceneNode*	 mSceneNode;

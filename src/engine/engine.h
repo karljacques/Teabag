@@ -34,26 +34,19 @@ public:
     void handle( Event* e );
         
     bool isShuttingDown();
-        
-    // Terrain commands
 
 	// Systems getters
 	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
 	EntityManager*		getEntityManager(){return mEntityManager; };
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem; };
-	StaticGeometry*		getStaticGeometry(){return mStaticGeometry; };
 
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
 
-	// Entities
-	std::vector<Entity*> mEntities;
-	Entity* createEntity();
-
 	// Console functions/Engine manipulation
 	void SetAsClient( const char* ip );
-	Entity* createBox( float3 pos, float3 size, NetworkComponent* net );
+
 private:
 
     RenderSystem* mRenderSystem;
@@ -63,11 +56,7 @@ private:
 	EntityManager* mEntityManager;
 	PhysicsManager* mPhysicsManager;
 
-	StaticGeometry* mStaticGeometry;
-
     bool m_EngineShutdown;
-
-
 };
 
 #endif // engine_h__

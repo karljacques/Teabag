@@ -7,28 +7,14 @@
 #include "engine/core/event/eventListener.h"
 #include "common.h"
 
-class PhysicsComponent :
-	public Component,public EventListener
+class PhysicsComponent :public Component
 {
 public:
-	PhysicsComponent( PhysicsManager* physicsManager, PositionComponent* positionComponent );
-	~PhysicsComponent(void);
+	PhysicsComponent( );
+	~PhysicsComponent();
 
-	void setAsBox( float x, float y, float z );
-	void update(  double dt );
-	void handle( Event* e );
-
-	void initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation = Quat(0,0,0,1) );
-
-
-	// Getters
-	btRigidBody* getBody(){ return mBody; };
-	
-private:
-	PhysicsManager* mPhysicsManager;
 	btRigidBody* mBody;
 
-	PositionComponent* mPositionComponent;
 };
 
 #endif // physicsComponent_h__

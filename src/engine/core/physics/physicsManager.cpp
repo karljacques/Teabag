@@ -49,7 +49,7 @@ void PhysicsManager::update( double dt )
 		This will also be where you send out events for collisions etc */
 	for( auto i=mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		PhysicsComponent* comp = i->second;
+		PhysicsComponent* comp = *i;
 
 		/* If the object has moved past the move tolerance since the last update, send out events and update the position data */
 		if( comp->position.DistanceSq( comp->body->getWorldTransform().getOrigin() ) > MOVE_TOLERANCE 

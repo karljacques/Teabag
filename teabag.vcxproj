@@ -96,10 +96,6 @@
   <ItemGroup>
     <ClCompile Include="src\engine\core\component\base\component.cpp" />
     <ClCompile Include="src\engine\core\component\base\entity.cpp" />
-    <ClCompile Include="src\engine\core\component\base\positionComponent.cpp" />
-    <ClCompile Include="src\engine\core\component\control\spectatorControlComponent.cpp" />
-    <ClCompile Include="src\engine\core\component\network\networkComponent.cpp" />
-    <ClCompile Include="src\engine\core\component\physics\physicsComponent.cpp" />
     <ClCompile Include="src\engine\core\component\render\cameraComponent.cpp" />
     <ClCompile Include="src\engine\core\component\render\renderComponent.cpp" />
     <ClCompile Include="src\engine\core\event\event.cpp">
@@ -123,7 +119,6 @@
     <ClCompile Include="src\engine\core\physics\physicsManager.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\engine\world\entityManager.cpp" />
-    <ClCompile Include="src\engine\world\staticGeometry.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -131,11 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\engine\core\componentManager.h" />
     <ClInclude Include="src\engine\core\component\base\component.h" />
     <ClInclude Include="src\engine\core\component\base\entity.h" />
-    <ClInclude Include="src\engine\core\component\base\positionComponent.h" />
-    <ClInclude Include="src\engine\core\component\control\spectatorControlComponent.h" />
-    <ClInclude Include="src\engine\core\component\network\networkComponent.h" />
     <ClInclude Include="src\engine\core\component\physics\physicsComponent.h" />
     <ClInclude Include="src\engine\core\component\render\cameraComponent.h" />
     <ClInclude Include="src\engine\core\component\render\renderComponent.h" />
@@ -155,7 +148,6 @@
     <ClInclude Include="src\engine\core\physics\physicsManager.h" />
     <ClInclude Include="src\engine\engine.h" />
     <ClInclude Include="src\engine\world\entityManager.h" />
-    <ClInclude Include="src\engine\world\staticGeometry.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

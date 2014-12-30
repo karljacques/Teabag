@@ -7,7 +7,7 @@
 
 #include "engine/core/event/eventSystem.h"
 #include "engine/core/event/eventListener.h"
-#include "engine/core/component/network/networkComponent.h"
+
 
 #define MAX_CONNECTIONS 16
 #define SERVER_PORT 2343

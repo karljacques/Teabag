@@ -22,7 +22,6 @@ public:
 };
 
 
-#endif // entity_h__
 
 template <class T>
 T* Entity::getComponent()
@@ -35,7 +34,6 @@ T* Entity::getComponent()
 		}
 	}
 }
-
 template <class T>
 bool Entity::hasComponent()
 {
@@ -48,3 +46,5 @@ bool Entity::hasComponent()
 	}
 	return false;
 }
+
+#endif // entity_h__

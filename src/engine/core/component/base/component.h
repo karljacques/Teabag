@@ -15,8 +15,6 @@ public:
 	/* Global identifier, the same on every networked system */
 	int GUID;
 
-	// Entity that this component belongs to - perhaps my comments state the obvious too much.
-	Entity* mParent;
 };
 
 #endif // component_h__

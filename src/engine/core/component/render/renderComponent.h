@@ -2,7 +2,6 @@
 #define renderComponent_h__
 
 #include "engine/core/component/base/component.h"
-#include "engine/core/component/base/positionComponent.h"
 #include "engine/core/graphics/renderSystem.h"
 #include "engine/core/event/eventListener.h"
 #include "common.h"

@@ -25,9 +25,3 @@ void EntityManager::removeEntity( Entity* e )
 			break;
 		}
 }
-
-void EntityManager::update( double dt )
-{
-	for( auto i=mEntities.begin(); i!=mEntities.end(); i++ )
-		(*i)->update(dt);
-}

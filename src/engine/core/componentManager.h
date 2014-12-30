@@ -7,14 +7,18 @@ public:
 	ComponentManager( EntityManager* ent )
 	{
 		mEntityMgr = ent;
+		mNetworkSys = net;
 	}
 	
 	T* createComponent( );
 	void removeComponent( T* comp );
 
+	T* getComponentByGUID( int guid );
+
 protected:
 	std::vector<T*> mComponents;
 	EntityManager* mEntityMgr;
+	NetworkSystem* mNetworkSys;
 
 };
 
@@ -37,4 +41,15 @@ void ComponentManager::removeComponent( T* comp )
 			return;
 		}
 	}
+}
+
+template <class T>
+T* ComponentManager::getComponentByGUID( int guid )
+{
+	for( auto i = mComponents.begin(); i != mComponents.end(); i++ )
+	{
+		if( (*i)->GUID == GUID )
+			return (*i);
+	}
+	return nullptr;
 }

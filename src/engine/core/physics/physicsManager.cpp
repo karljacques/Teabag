@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "physicsManager.h"
 #include "..\event\eventSystem.h"
+#include "..\networking\networkSystem.h"
 
 #define MOVE_TOLERANCE 0.0025
-
-PhysicsManager::PhysicsManager( EntityManager* ent )
+/* Must always pass ent and net to the component manager */
+PhysicsManager::PhysicsManager( EntityManager* ent ) : ComponentManager(ent)
 {
 		
 		// Build the broadphase
@@ -27,25 +28,17 @@ PhysicsManager::~PhysicsManager()
 	delete mWorld;
 }
 
-Component* PhysicsManager::createComponent( btCollisionShape* shape, btScalar* mass, float3 pos, Quat rot)
+void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass, float3 pos, Quat rot)
 {
-	/* Create Component*/
-	PhysicsComponent* comp = new PhysicsComponent();
-	mComponents.push_back( comp );
-
 	/* Physics Setup */
 	btVector3 nullVector(0,0,0);
 	shape->calculateLocalInertia( 1, nullVector);
 
 	/* Construct in correct position */
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass,
-		new btDefaultMotionState( btTransform( rot, pos))
-		, shape, nullVector);
-
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass, new btDefaultMotionState( btTransform( rot, pos)) , shape, nullVector);
 	comp->body = new btRigidBody(fallRigidBodyCI);
 	mWorld->addRigidBody(comp->body);
 
-	return comp;
 }
 
 void PhysicsManager::update( double dt )
@@ -56,7 +49,7 @@ void PhysicsManager::update( double dt )
 		This will also be where you send out events for collisions etc */
 	for( auto i=mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		PhysicsComponent* comp = *i;
+		PhysicsComponent* comp = i->second;
 
 		/* If the object has moved past the move tolerance since the last update, send out events and update the position data */
 		if( comp->position.DistanceSq( comp->body->getWorldTransform().getOrigin() ) > MOVE_TOLERANCE 
@@ -84,31 +77,36 @@ void PhysicsManager::update( double dt )
 
 void PhysicsManager::handle( Event* e )
 {
-	switch( e->getEventType() )
+	PhysicsComponent* comp = getComponentByGUID( e->mGUID );
+
+	if( comp != nullptr )
 	{
-	case EV_CORE_TRANSFORM_UPDATE:
+		switch( e->getEventType() )
 		{
-			TransformEvent* me = e->getData<TransformEvent>();
-			btTransform trans( me->mQuaternion, me->mFloat3_1 );
-			mBody->setWorldTransform( trans );
-			mBody->activate(true);
-			break;
-		}
+		case EV_CORE_TRANSFORM_UPDATE:
+			{
+				TransformEvent* me = e->getData<TransformEvent>();
+				btTransform trans( me->mQuaternion, me->mFloat3_1 );
+				comp->body->setWorldTransform( trans );
+				comp->body->activate(true);
+				break;
+			}
 
-	case EV_CORE_APPLY_FORCE:
-		{
-			TransformEvent* te = e->getData<TransformEvent>();
-			getBody()->applyCentralForce(  Quat(getBody()->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
-			break;
-		}
+		case EV_CORE_APPLY_FORCE:
+			{
+				TransformEvent* te = e->getData<TransformEvent>();
+				comp->body->applyCentralForce(  Quat(comp->body->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
+				break;
+			}
 
-	case EV_NETWORK_TRANSFORM_UPDATE:
-		{
-			TransformEvent* me = e->getData<TransformEvent>();
-			getBody()->setLinearVelocity( me->mFloat3_2 );
-			getBody()->setAngularVelocity( me->mFloat3_3 );
-			mBody->activate(true);
-			break;
+		case EV_NETWORK_TRANSFORM_UPDATE:
+			{
+				TransformEvent* me = e->getData<TransformEvent>();
+				comp->body->setLinearVelocity( me->mFloat3_2 );
+				comp->body->setAngularVelocity( me->mFloat3_3 );
+				comp->body->activate(true);
+				break;
+			}
 		}
 	}
 }

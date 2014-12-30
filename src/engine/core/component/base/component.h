@@ -13,7 +13,7 @@ public:
 	~Component(void);
 
 	/* Global identifier, the same on every networked system */
-	int mGUID;
+	int GUID;
 
 	// Entity that this component belongs to - perhaps my comments state the obvious too much.
 	Entity* mParent;

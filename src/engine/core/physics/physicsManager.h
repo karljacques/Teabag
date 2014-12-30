@@ -5,8 +5,9 @@
 #include "engine/core/component/base/component.h"
 #include "engine/core/component/physics/physicsComponent.h"
 #include "engine/core/event/eventListener.h"
+#include "engine/core/componentManager.h"
 
-class PhysicsManager : public EventListener
+class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>
 {
 public:
 	PhysicsManager( EntityManager* ent );
@@ -18,12 +19,10 @@ public:
 	// Getters
 	btDiscreteDynamicsWorld* getDiscreteDynamicsWorld(){ return mWorld; };
 
-	Component* createComponent( btCollisionShape* shape, btScalar* mass, float3 pos, Quat rot);
+	void initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass, float3 pos, Quat rot);
 private:
 	btDiscreteDynamicsWorld* mWorld;
 
-	// List of all physics components
-	std::list<PhysicsComponent*> mComponents;
 
 };
 #endif // physicsManager_h__

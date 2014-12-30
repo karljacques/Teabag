@@ -13,8 +13,13 @@
 #include <Math/float3.h>
 #include <Math/Quat.h>
 
+#define EVENT_PAYLOAD_SIZE 64
+
 enum EV_EventType
 {
+	// DEFAULT
+	EV_NULL,
+
 	// Input
     EV_CORE_MOUSE_PRESS,
     EV_CORE_MOUSE_RELEASE,
@@ -49,9 +54,6 @@ public:
 	// Should always be copied first
 	void changeEventType( int ev );
 
-	// Returns the size of the event
-	virtual unsigned int getSize();
-
 	// Setting and getting the GUID. This will only ever be done by the networking component and the rest of the components
 	// should be fairly (or hopefully completely) agnostic about it. For example, physics component will dispatch and event, 
 	// networkComponent will pick up on this event, attach the object's GUID to the event before pumping it up to the network system.
@@ -59,12 +61,31 @@ public:
 	// based on this GUID.
 	unsigned int mGUID;
 
+	template <class T>
+	T* getData();
+
+	template <class T>
+	T* createEventData();
+
+
 private:
 
     int     mEventType;
-
+	char data[EVENT_PAYLOAD_SIZE];
 };
 
+template <class T>
+T* Event::getData()
+{
+	return reinterpret_cast<T*>(data);
+}
+
+template <class T>
+T* Event::createEventData()
+{
+	T* ptr = new(data) T;
+	return getData<T>();
+}
 #include "events/keyboardEvent.h"
 #include "events/mouseEvent.h"
 #include "events/transformEvent.h"

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "cameraComponent.h"
-
+#include "engine/core/event/eventSystem.h"
 
 CameraComponent::CameraComponent(RenderSystem* renderSystem, PositionComponent* positionComponent ) 
 {
@@ -34,7 +34,7 @@ void CameraComponent::handle( Event* e )
 {
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		TransformEvent* me = static_cast<TransformEvent*>(e);
+		TransformEvent* me = e->getData<TransformEvent>();
 		mSceneNode->setPosition( me->mFloat3_1 );
 		mCamera->setOrientation( me->mQuaternion );
 	}
@@ -42,11 +42,12 @@ void CameraComponent::handle( Event* e )
 
 void CameraComponent::setPosition( float3 pos )
 {
-	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+	Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
+	TransformEvent* me = e->createEventData<TransformEvent>();
 	me->mFloat3_1 = pos;
 	me->mQuaternion = mSceneNode->getOrientation();
 
-	dispatch(me);
+	dispatch(e);
 
 	mSceneNode->setPosition(pos);
 }
@@ -55,11 +56,12 @@ void CameraComponent::lookAt( float3 pos )
 {
 	mCamera->lookAt( pos );
 
-	TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+	Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
+	TransformEvent* me = e->createEventData<TransformEvent>();
 	me->mFloat3_1 = mSceneNode->getPosition();
 	me->mQuaternion = mCamera->getDerivedOrientation();
 
-	dispatch( me );
+	dispatch( e );
 }
 
 void CameraComponent::setOffset( float3 offset )

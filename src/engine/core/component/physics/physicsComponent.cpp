@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "engine/core/event/eventSystem.h"
 #include "physicsComponent.h"
 #include "engine/core/component/base/entity.h"
 
@@ -28,7 +29,9 @@ void PhysicsComponent::update(  double dt  )
 		mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
 		mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
 
-		TransformEvent* me = new TransformEvent( EV_CORE_TRANSFORM_UPDATE );
+		Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
+		TransformEvent* me = e->createEventData<TransformEvent>();
+
 		me->mQuaternion = mPositionComponent->getOrientation();
 		me->mFloat3_1 = mPositionComponent->getPosition();
 
@@ -36,7 +39,8 @@ void PhysicsComponent::update(  double dt  )
 		me->mFloat3_3= mBody->getAngularVelocity();
 		
 
-		dispatch(me);
+		dispatch(e);
+
 	}
 	
 }
@@ -60,7 +64,7 @@ void PhysicsComponent::handle( Event* e )
 	{
 	case EV_CORE_TRANSFORM_UPDATE:
 		{
-			TransformEvent* me = static_cast<TransformEvent*>(e);
+			TransformEvent* me = e->getData<TransformEvent>();
 			btTransform trans( me->mQuaternion, me->mFloat3_1 );
 			mBody->setWorldTransform( trans );
 			mBody->activate(true);
@@ -69,14 +73,14 @@ void PhysicsComponent::handle( Event* e )
 
 	case EV_CORE_APPLY_FORCE:
 		{
-			TransformEvent* te = static_cast<TransformEvent*>(e);
+			TransformEvent* te = e->getData<TransformEvent>();
 			getBody()->applyCentralForce(  Quat(getBody()->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
 			break;
 		}
 
 	case EV_NETWORK_TRANSFORM_UPDATE:
 		{
-			TransformEvent* me = static_cast<TransformEvent*>(e);
+			TransformEvent* me = e->getData<TransformEvent>();
 			getBody()->setLinearVelocity( me->mFloat3_2 );
 			getBody()->setAngularVelocity( me->mFloat3_3 );
 			mBody->activate(true);

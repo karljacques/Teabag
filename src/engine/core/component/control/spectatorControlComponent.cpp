@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "engine/core/event/eventSystem.h"
 #include "spectatorControlComponent.h"
 #include <SDL.h>
 
@@ -42,7 +43,7 @@ void SpectatorControlComponent::handle( Event* e )
 		case EV_CORE_KEY_PRESS:
 			{			
 				// Cast to keypress event
-				KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
+				KeyboardEvent* ke = e->getData<KeyboardEvent>();
 				switch( ke->mKeycode )
 				{
 				case SDL_SCANCODE_W:
@@ -67,7 +68,7 @@ void SpectatorControlComponent::handle( Event* e )
 
 		case EV_CORE_KEY_RELEASE:
 			{
-				KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
+				KeyboardEvent* ke = e->getData<KeyboardEvent>();
 				switch( ke->mKeycode )
 				{
 				case SDL_SCANCODE_W:
@@ -92,7 +93,7 @@ void SpectatorControlComponent::handle( Event* e )
 
 		case EV_CORE_MOUSE_MOVEMENT:
 			{
-				MouseEvent* me = static_cast<MouseEvent*>(e);
+				MouseEvent* me = e->getData<MouseEvent>();
 				
 				// Update internal angles
 				xAng = xAng*Quat::RotateX( -me->mMouseMoveY/1000.0  );
@@ -119,10 +120,13 @@ void SpectatorControlComponent::update(double dt)
 	if( mRight )
 		dir+=float3(mSpeed,0,0);
 
-	TransformEvent* te = new TransformEvent( EV_CORE_APPLY_FORCE );
+
+	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_APPLY_FORCE);
+	TransformEvent* te = e->createEventData<TransformEvent>();
 	te->mFloat3_1 = dir;
 
-	dispatch(te);
+	dispatch(e);
+
 }
 
 void SpectatorControlComponent::applyForceInDir( float3 dir )

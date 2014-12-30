@@ -10,6 +10,7 @@
 Event::Event( int eventType )
 {
     mEventType = eventType;
+	mGUID = 0;
 }
 
 int Event::getEventType()
@@ -17,10 +18,6 @@ int Event::getEventType()
     return mEventType;
 }
 
-unsigned int Event::getSize()
-{
-	return sizeof( Event );
-}
 
 void Event::changeEventType(int ev)
 {

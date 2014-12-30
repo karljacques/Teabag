@@ -20,7 +20,7 @@ class NetworkComponent;
 class NetworkSystem : public EventListener
 {
 public:
-	NetworkSystem( EventSystem* eventSystem );
+	NetworkSystem(  );
 	~NetworkSystem();
 
 	// Sends an event across the network
@@ -52,7 +52,6 @@ protected:
 	std::map<uint32,NetworkComponent*> mNetworkComponents;
 	RakNet::RakPeerInterface * peer;
 	bool mHost;
-	EventSystem* mEventSystem;
 
 	uint32 _find_free_guid();
 };

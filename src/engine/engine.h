@@ -40,7 +40,6 @@ public:
 	// Systems getters
 	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
-	EventSystem*		getEventSystem(){return mEventSystem; };
 	EntityManager*		getEntityManager(){return mEntityManager; };
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem; };
 	StaticGeometry*		getStaticGeometry(){return mStaticGeometry; };
@@ -59,7 +58,6 @@ private:
 
     RenderSystem* mRenderSystem;
     InputSystem* mInputSystem;
-    EventSystem* mEventSystem;
 	NetworkSystem* mNetworkSystem;
     
 	EntityManager* mEntityManager;

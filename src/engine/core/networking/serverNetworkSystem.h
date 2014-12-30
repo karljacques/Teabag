@@ -7,7 +7,7 @@
 class ServerNetworkSystem : public NetworkSystem
 {
 public:
-	ServerNetworkSystem( EventSystem* eventSystem );
+	ServerNetworkSystem(  );
 
 	int receive();
 	void handle( Event* e );

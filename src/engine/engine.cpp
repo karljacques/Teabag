@@ -30,18 +30,18 @@ Engine::Engine()
 
 	// Create Systems
     mRenderSystem = new RenderSystem();
-    mEventSystem = new EventSystem();
-    mInputSystem = new InputSystem( mEventSystem, mRenderSystem->getSDLWindow() );
+    new EventSystem();
+    mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
-	mNetworkSystem = new ServerNetworkSystem( mEventSystem );
+	mNetworkSystem = new ServerNetworkSystem( );
 	mEntityManager = new EntityManager();
 
 	mStaticGeometry = new StaticGeometry( this );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
-    mEventSystem->registerListener( this );
-	mEventSystem->registerListener( mStaticGeometry );
+	EventSystem::getSingletonPtr()->registerListener( this );
+	EventSystem::getSingletonPtr()->registerListener( mStaticGeometry );
 
 	// Create spectator
 	Entity* camera = createEntity();
@@ -51,7 +51,7 @@ Engine::Engine()
 	PhysicsComponent* cphyc = new PhysicsComponent( mPhysicsManager, cpc );
 	SpectatorControlComponent* s = new SpectatorControlComponent( cphyc );
 
-	mEventSystem->registerListener( s );
+	EventSystem::getSingletonPtr()->registerListener( s );
 
 	camera->addComponent(cc);
 	camera->addComponent(cpc);
@@ -77,7 +77,6 @@ Engine::~Engine()
 {
 	SDL_Quit();
 
-    delete mEventSystem;
     delete mInputSystem;
 	delete mRenderSystem;
 }
@@ -93,7 +92,7 @@ void Engine::update()
 
 	// Update systems and managers
     mInputSystem->update();
-    mEventSystem->handleEvents();
+	EventSystem::getSingletonPtr()->handleEvents();
 	mPhysicsManager->update( dt );
 
 	mNetworkSystem->receive();
@@ -117,7 +116,7 @@ void Engine::handle( Event* e )
     {
         case EV_CORE_KEY_PRESS:
 			{
-				KeyboardEvent* ke = static_cast<KeyboardEvent*>(e);
+				KeyboardEvent* ke = e->getData<KeyboardEvent>();
 				switch (ke->mKeycode)
 				{
 					case SDL_SCANCODE_ESCAPE: // Escape
@@ -136,12 +135,17 @@ void Engine::handle( Event* e )
 							box->listenToAll(net);
 							box->addComponent( net );
 
-							TransformEvent* te = new TransformEvent( EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX );
+							// Create event and create transform event payloads
+							Event* evt = EventSystem::getSingletonPtr()->getEvent(  EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX );
+							TransformEvent* te = evt->createEventData<TransformEvent>();
 							te->mFloat3_1 =  float3(0,40.0f,0);
 							te->mFloat3_2 = float3(1.0f,1.0f,1.0f);
 
-							net->handle(te);
-							delete te;
+							// Handle and release event
+							net->handle(evt);
+							EventSystem::getSingletonPtr()->releaseEvent(e);
+							
+
 						}
 					break;
 
@@ -151,8 +155,8 @@ void Engine::handle( Event* e )
 
 		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
 			{
-				TransformEvent* te = static_cast<TransformEvent*>(e);
-				NetworkComponent* net = mNetworkSystem->getNetworkComponent( te->mGUID );
+				TransformEvent* te = e->getData<TransformEvent>();
+				NetworkComponent* net = mNetworkSystem->getNetworkComponent( e->mGUID );
 				Entity* box = createBox( te->mFloat3_1, te->mFloat3_2, net );
 				
 				box->addComponent(net);
@@ -169,11 +173,11 @@ Entity* Engine::createEntity()
 
 void Engine::SetAsClient(const char* ip)
 {
-	mEventSystem->deregisterListener(mNetworkSystem);
+	EventSystem::getSingletonPtr()->deregisterListener(mNetworkSystem);
 	delete mNetworkSystem;
 
-	this->mNetworkSystem = new ClientNetworkSystem( this->mEventSystem );
-	mEventSystem->registerListener(this->mNetworkSystem);
+	this->mNetworkSystem = new ClientNetworkSystem( );
+	EventSystem::getSingletonPtr()->registerListener(this->mNetworkSystem);
 	static_cast<ClientNetworkSystem*>(mNetworkSystem)->connect( ip );
 
 	

@@ -50,15 +50,20 @@ Entity* StaticGeometry::addGeometry( float3 position, float3 size, float3 angle 
 	// If host, send event so that clients create geometry too.
 	if( mEngine->getNetworkSystem()->isHost() )
 	{
-		TransformEvent* te = new TransformEvent( EV_CLIENT_WORLD_CREATE_STATIC_BOX );
-		te->mFloat3_1 = position;
-		te->mQuaternion = Quat::FromEulerXYX( angle.x,angle.y,angle.z );
-		te->mFloat3_2 = size;
+		Event* te = EventSystem::getSingletonPtr()->getEvent(EV_CLIENT_WORLD_CREATE_STATIC_BOX);
+		TransformEvent* data = te->createEventData<TransformEvent>();
+		data->mFloat3_1 = position;
+		data->mQuaternion = Quat::FromEulerXYX( angle.x,angle.y,angle.z );
+		data->mFloat3_2 = size;
 
 		NetworkComponent* netComp = mEngine->getNetworkSystem()->createNetworkComponent();
 		ent->addComponent(netComp);
-
+		
+		// TODO this needs to be modified so that the event goes through the proper channels.
 		netComp->handle(te);
+
+		// Manually release event in meantime
+		EventSystem::getSingletonPtr()->releaseEvent(te);
 	}
 
 	return ent;
@@ -69,10 +74,10 @@ void StaticGeometry::handle( Event* e )
 	// Networked Event, will only receive in client mode
 	if( e->getEventType() == EV_CLIENT_WORLD_CREATE_STATIC_BOX )
 	{
-		TransformEvent* te = static_cast<TransformEvent*>(e);
+		TransformEvent* te = e->getData<TransformEvent>();
 
 		Entity* ent = this->addGeometry( te->mFloat3_1, te->mFloat3_2, te->mQuaternion.ToEulerXYX() );
 
-		ent->addComponent( mEngine->getNetworkSystem()->getNetworkComponent( te->mGUID ));
+		ent->addComponent( mEngine->getNetworkSystem()->getNetworkComponent( e->mGUID ));
 	}
 }

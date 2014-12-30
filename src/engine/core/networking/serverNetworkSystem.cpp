@@ -4,7 +4,7 @@
 
 using namespace RakNet;
 
-ServerNetworkSystem::ServerNetworkSystem( EventSystem* eventSystem ) : NetworkSystem( eventSystem )
+ServerNetworkSystem::ServerNetworkSystem(  )
 {
 	// Initialise server
 	RakNet::SocketDescriptor socketDescriptors[1] = {

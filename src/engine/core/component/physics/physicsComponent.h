@@ -13,7 +13,10 @@ public:
 	PhysicsComponent( );
 	~PhysicsComponent();
 
-	btRigidBody* mBody;
+	btRigidBody* body;
+
+	float3 position;
+	Quat orientation;
 
 };
 

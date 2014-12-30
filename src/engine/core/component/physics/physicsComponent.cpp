@@ -20,43 +20,6 @@ void PhysicsComponent::setAsBox( float x, float y, float z )
 	initialise(boxShape, 1, float3(0,30,0) );
 }
 
-void PhysicsComponent::update(  double dt  )
-{
-	// Check to see if it has moved or rotated, if so inform the position component and send out events,.
-	if( mPositionComponent->getPosition().DistanceSq( mBody->getWorldTransform().getOrigin() ) > 0.0025 
-		|| mPositionComponent->getOrientation().AngleBetween( mBody->getWorldTransform().getRotation() ) > 0.0025 ) 
-	{
-		mPositionComponent->_setPosition( mBody->getWorldTransform().getOrigin() );
-		mPositionComponent->_setOrientation( mBody->getWorldTransform().getRotation() );
-
-		Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
-		TransformEvent* me = e->createEventData<TransformEvent>();
-
-		me->mQuaternion = mPositionComponent->getOrientation();
-		me->mFloat3_1 = mPositionComponent->getPosition();
-
-		me->mFloat3_2 = mBody->getLinearVelocity();
-		me->mFloat3_3= mBody->getAngularVelocity();
-		
-
-		dispatch(e);
-
-	}
-	
-}
-
-void PhysicsComponent::initialise( btCollisionShape* shape, btScalar mass, float3 position, Quat orientation )
-{
-	btVector3 nullVector(0,0,0);
-	shape->calculateLocalInertia( 1, nullVector);
-
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass,
-		new btDefaultMotionState( btTransform( orientation, position))
-		, shape, nullVector);
-
-	mBody = new btRigidBody(fallRigidBodyCI);
-	mPhysicsManager->getDiscreteDynamicsWorld()->addRigidBody(mBody);
-}
 
 void PhysicsComponent::handle( Event* e )
 {

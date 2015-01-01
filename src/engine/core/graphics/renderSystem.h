@@ -13,6 +13,7 @@
 
 #include "..\component\render\renderComponent.h"
 #include "..\component\componentManager.h"
+#include "..\..\world\entityManager.h"
 
 class RenderSystem : public ComponentManager<RenderComponent>, public EventListener
 {

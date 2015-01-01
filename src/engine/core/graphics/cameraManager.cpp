@@ -15,17 +15,17 @@ CameraManager::~CameraManager()
 void CameraManager::createNewCamera(CameraComponent* comp)
 {
 	// Create camera and viewport
-	Ogre::Camera* camera = mRenderSystem->getSceneMgr()->createCamera( renderSystem->generateName() );
+	Ogre::Camera* camera = mRenderSystem->getSceneMgr()->createCamera( mRenderSystem->generateName() );
 	camera->setNearClipDistance(1.0f);
 	camera->setFarClipDistance(2000.0f);
 
-	Ogre::Viewport* viewport = renderSystem->getRenderWindow()->addViewport( camera );
+	Ogre::Viewport* viewport = mRenderSystem->getRenderWindow()->addViewport( camera );
 	viewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));
 
 	camera->setAspectRatio(Ogre::Real(viewport->getActualWidth()) / Ogre::Real(viewport->getActualHeight()) );
 
 	// Attach to scenenode
-	comp->mSceneNode = renderSystem->getRootSceneNode()->createChildSceneNode();
+	comp->mSceneNode = mRenderSystem->getRootSceneNode()->createChildSceneNode();
 	comp->mSceneNode->attachObject( camera );
 
 	// Register camera pair with rendersystem

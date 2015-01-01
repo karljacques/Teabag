@@ -18,6 +18,10 @@ public:
 	template <class T>
 	bool hasComponent();
 
+	unsigned int LUID;
+	unsigned int GUID;
+
+private:
 	std::vector<Component*> mComponents;
 };
 
@@ -28,11 +32,13 @@ T* Entity::getComponent()
 {
 	for( auto i = mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		if typeid( (**i) == typeid(T) )
+		if( typeid(**i) == typeid(T) )
 		{
-			return *i;
+			return static_cast<T*>(*i);
 		}
 	}
+
+	return nullptr;
 }
 template <class T>
 bool Entity::hasComponent()

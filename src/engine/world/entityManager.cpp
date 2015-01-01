@@ -4,6 +4,7 @@
 
 EntityManager::EntityManager(void)
 {
+	mLUIDCount = 0;
 }
 
 
@@ -11,17 +12,41 @@ EntityManager::~EntityManager(void)
 {
 }
 
-void EntityManager::addEntity( Entity* e )
+Entity* EntityManager::createEntity( )
 {
+	Entity* e = new Entity();
+	e->LUID = mLUIDCount;
+	mLUIDCount++;
 	mEntities.push_back(e);
+	return e;
 }
 
-void EntityManager::removeEntity( Entity* e )
+void EntityManager::removeEntity( unsigned int LUID )
 {
 	for( auto i=mEntities.begin(); i!=mEntities.end(); i++ )
-		if( (*i) == e )
+		if( (*i)->LUID == LUID )
 		{
 			mEntities.erase( i );
 			break;
 		}
+}
+
+Entity* EntityManager::getByLUID(unsigned int LUID)
+{
+	for( auto i=mEntities.begin(); i!=mEntities.end(); i++ )
+		if( (*i)->LUID == LUID )
+		{
+			return (*i);
+		}
+	return nullptr;
+}
+
+bool EntityManager::entityExists(unsigned int LUID)
+{
+	for( auto i=mEntities.begin(); i!=mEntities.end(); i++ )
+		if( (*i)->LUID == LUID )
+		{
+			return true;
+		}
+	return false;
 }

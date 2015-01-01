@@ -61,6 +61,8 @@ public:
 	// based on this GUID.
 	unsigned int mGUID;
 
+	unsigned int LUID;
+
 	template <class T>
 	T* getData();
 
@@ -72,6 +74,7 @@ private:
 
     int     mEventType;
 	char data[EVENT_PAYLOAD_SIZE];
+	
 };
 
 template <class T>

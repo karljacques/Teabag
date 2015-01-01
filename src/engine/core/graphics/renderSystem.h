@@ -10,13 +10,15 @@
 #define __Teabag__Rendersystem__
 
 #include "pch.h"
-#include <SDL.h>
 
-class RenderSystem
+#include "..\component\render\renderComponent.h"
+#include "..\component\componentManager.h"
+
+class RenderSystem : public ComponentManager<RenderComponent>, public EventListener
 {
 public:
         
-    RenderSystem();
+    RenderSystem( EntityManager* ent );
     ~RenderSystem();
         
     // Getters
@@ -34,6 +36,12 @@ public:
 	// Camera methods
 	void addCameraPair( Ogre::Camera* c, Ogre::Viewport* v);
 
+	// Component Methods
+	void initComponent( RenderComponent* comp );
+	void setAsBox( RenderComponent* comp, float3 dim );
+
+	void handle( Event* e );
+
 private:
         
     // Core
@@ -48,6 +56,9 @@ private:
     // Window
     size_t          m_WindowHandle;
 	SDL_Window*			  mWindow;
+
+	// Dependency
+	EntityManager* mEntityMgr;
 };
 
 #endif /* defined( __Teabag__Rendersystem__) */

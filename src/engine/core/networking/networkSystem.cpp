@@ -39,26 +39,6 @@ NetworkSystem::~NetworkSystem()
 	RakNet::RakPeerInterface::DestroyInstance( peer );
 };
 
-NetworkComponent* NetworkSystem::getNetworkComponent(uint32 guid)
-{
-	// If it exists, return it; if it doesn't exist, create it.
-	if( mNetworkComponents[guid] )
-		return mNetworkComponents[guid];
-	else
-	{
-		// Create component and insert it into the map
-		// It can be retrieved with getNetworkComponent( guid )
-		NetworkComponent* net = new NetworkComponent( this, guid );
-		mNetworkComponents[guid] = net;
-		return net;
-	}
-}
-
-void NetworkSystem::removeNetworkComponent(uint32 guid)
-{
-	mNetworkComponents.erase(guid);
-}
-
 
 bool NetworkSystem::isHost()
 {

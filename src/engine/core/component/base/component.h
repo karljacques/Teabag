@@ -13,7 +13,10 @@ public:
 	~Component(void);
 
 	/* Global identifier, the same on every networked system */
-	int GUID;
+	unsigned int GUID;
+
+	/* Local identifier, used to sync components */
+	unsigned int LUID;
 
 };
 

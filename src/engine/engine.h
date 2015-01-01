@@ -16,12 +16,8 @@
 #include "core/physics/physicsManager.h"
 
 #include "core/component/base/entity.h"
-
-#include "engine/world/staticGeometry.h"
-
 #include "engine/core/graphics/UI/ogreConsole.h"
 
-class StaticGeometry;
 
 class Engine : public EventListener
 {

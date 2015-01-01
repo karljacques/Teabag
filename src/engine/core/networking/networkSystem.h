@@ -34,11 +34,6 @@ public:
 	// that it may have a timestamp
 	unsigned char getPacketIdentifier( RakNet::Packet* p );
 
-	// Handles the creation and synchronization of network components
-	NetworkComponent* createNetworkComponent();
-	void removeNetworkComponent( uint32 guid ); // Call this whilst you still have the GUID, but this method does not delete the component or unregister it, you still need to do this!
-	NetworkComponent* getNetworkComponent( uint32 guid );
-
 	// Is the system host?
 	bool isHost();
 

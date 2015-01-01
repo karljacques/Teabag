@@ -290,14 +290,7 @@ void Console_Net_Connect( Ogre::StringVector& str )
 
 void Console_Geometry_Spawn( Ogre::StringVector& str )
 {
-	StaticGeometry* g = OgreConsole::getSingleton().getEnginePtr()->getStaticGeometry();
 
-	// Floor
-	g->addGeometry( float3(0,-0.5f,0), float3(70.0,1.0f,70.0f) );
-
-	// Two ramps
-	g->addGeometry( float3( 0,5.0f, 0.0f), float3( 5.0f, 0.25f,5.0f ), float3(45.0/57.0f,0,0));
-	g->addGeometry( float3( 0,9.0f, 4.0f), float3( 5.0f, 0.25f,5.0f ), float3(-45.0f/57.0f,0,0));
 }
 
 void Console_Net_Status(Ogre::StringVector& str)

@@ -11,7 +11,6 @@
 
 #include "engine.h"
 #include "engine/core/component/render/cameraComponent.h"
-#include "engine/core/component/control/spectatorControlComponent.h"
 #include "engine/world/entityManager.h"
 
 Engine::Engine()
@@ -29,12 +28,13 @@ Engine::Engine()
 #endif
 
 	// Create Systems
-    mRenderSystem = new RenderSystem();
     new EventSystem();
     mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
 	mPhysicsManager = new PhysicsManager();
 	mNetworkSystem = new ServerNetworkSystem( );
 	mEntityManager = new EntityManager();
+
+	 mRenderSystem = new RenderSystem( mEntityManager );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
@@ -73,10 +73,6 @@ void Engine::update()
 	mPhysicsManager->update( dt );
 
 	mNetworkSystem->receive();
-
-	// Update game entities
-	for( auto i = mEntities.begin(); i != mEntities.end(); i++ )
-		(*i)->update( dt );
 
     // render after everything is updated
     mRenderSystem->renderOneFrame();

@@ -96,8 +96,6 @@
   <ItemGroup>
     <ClCompile Include="src\engine\core\component\base\component.cpp" />
     <ClCompile Include="src\engine\core\component\base\entity.cpp" />
-    <ClCompile Include="src\engine\core\component\render\cameraComponent.cpp" />
-    <ClCompile Include="src\engine\core\component\render\renderComponent.cpp" />
     <ClCompile Include="src\engine\core\event\event.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -107,6 +105,7 @@
     <ClCompile Include="src\engine\core\event\eventSystem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\cameraManager.cpp" />
     <ClCompile Include="src\engine\core\graphics\renderSystem.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\Gorilla.cpp" />
     <ClCompile Include="src\engine\core\graphics\UI\ogreConsole.cpp" />
@@ -126,9 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
-    <ClInclude Include="src\engine\core\componentManager.h" />
     <ClInclude Include="src\engine\core\component\base\component.h" />
     <ClInclude Include="src\engine\core\component\base\entity.h" />
+    <ClInclude Include="src\engine\core\component\componentManager.h" />
     <ClInclude Include="src\engine\core\component\physics\physicsComponent.h" />
     <ClInclude Include="src\engine\core\component\render\cameraComponent.h" />
     <ClInclude Include="src\engine\core\component\render\renderComponent.h" />
@@ -138,6 +137,7 @@
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
+    <ClInclude Include="src\engine\core\graphics\cameraManager.h" />
     <ClInclude Include="src\engine\core\graphics\renderSystem.h" />
     <ClInclude Include="src\engine\core\graphics\UI\Gorilla.h" />
     <ClInclude Include="src\engine\core\graphics\UI\ogreConsole.h" />

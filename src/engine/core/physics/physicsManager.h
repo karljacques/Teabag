@@ -4,13 +4,13 @@
 #include <btBulletDynamicsCommon.h>
 #include "engine/core/component/base/component.h"
 #include "engine/core/component/physics/physicsComponent.h"
-#include "engine/core/event/eventListener.h"
-#include "engine/core/componentManager.h"
+#include "../component/componentManager.h"
+
 
 class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>
 {
 public:
-	PhysicsManager( EntityManager* ent );
+	PhysicsManager( );
 	~PhysicsManager();
 
 	void update( double dt );

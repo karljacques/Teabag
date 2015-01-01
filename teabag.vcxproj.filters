@@ -24,12 +24,6 @@
     <ClCompile Include="src\engine\core\component\base\entity.cpp">
       <Filter>engine\core\component\base</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\component\render\renderComponent.cpp">
-      <Filter>engine\core\component\render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\component\render\cameraComponent.cpp">
-      <Filter>engine\core\component\render</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\networking\serverNetworkSystem.cpp">
       <Filter>engine\core\networking</Filter>
     </ClCompile>
@@ -52,6 +46,9 @@
       <Filter>engine\core\graphics\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\core\graphics\renderSystem.cpp">
+      <Filter>engine\core\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\graphics\cameraManager.cpp">
       <Filter>engine\core\graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -124,8 +121,11 @@
     <ClInclude Include="src\engine\core\graphics\renderSystem.h">
       <Filter>engine\core\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\componentManager.h">
-      <Filter>engine\core</Filter>
+    <ClInclude Include="src\engine\core\graphics\cameraManager.h">
+      <Filter>engine\core\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\component\componentManager.h">
+      <Filter>engine\core\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

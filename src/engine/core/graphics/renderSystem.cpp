@@ -13,9 +13,14 @@
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include "OSXUtils.h"
 #endif
+#include "..\component\physics\physicsComponent.h"
 
-RenderSystem::RenderSystem()
+RenderSystem::RenderSystem( EntityManager* ent )
 {
+
+	// Dependency injection
+	mEntityMgr = ent;
+
     // The idea here is to open an SDL window *without* creating a GL context
     // and let Ogre create its own GL context, since it seems to be a little
     // sensitive when given an external one.
@@ -90,7 +95,6 @@ RenderSystem::RenderSystem()
 	
 }
 
-
 RenderSystem::~RenderSystem()
 {
 
@@ -144,4 +148,69 @@ Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"
 Ogre::Viewport* RenderSystem::getViewport()
 {
 	return m_CameraMap.begin()->second;
+}
+
+void RenderSystem::initComponent( RenderComponent* comp )
+{
+	comp->mSceneNode = getRootSceneNode()->createChildSceneNode();
+}
+
+void RenderSystem::setAsBox( RenderComponent* comp, float3 dim )
+
+{
+	Ogre::ManualObject* cube = new Ogre::ManualObject("Cube");
+	cube->begin("BaseWhiteNoLighting");
+
+	float x = dim.x/2.0;
+	float y = dim.y/2.0;
+	float z = dim.z/2.0;
+
+	float c1 = rand() %255;
+	float c2 = rand() %255;
+	float c3 = rand() %255;
+
+	// Random-ish colours
+	cube->position( x,y,-z ); // v0
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position(-x,y,-z ); // v1 
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position(-x,-y,-z); // v2
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position( x,-y,-z); // v3 
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position( x,-y,z ); // v4
+
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position( x,y,z  ); // v5
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position( -x,y,z ); // v6
+	cube->colour( x*c1,y*c2,z*c3 );
+	cube->position( -x,-y,z); // v7
+	cube->colour( x*c1,y*c2,z*c3 );
+
+	cube->quad( 0,1,2,3 );
+	cube->quad( 5,6,1,0 );
+	cube->quad( 6,5,4,7 );
+	cube->quad( 1,6,7,2 );
+	cube->quad( 5,0,3,4 );
+	cube->quad( 3,2,7,4 );
+
+	cube->end(); 
+
+	comp->mObject = cube;
+	comp->mSceneNode->attachObject(comp->mObject);
+}
+
+void RenderSystem::handle( Event* e )
+{
+	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
+	{
+		RenderComponent* comp = getComponentByLUID( e->LUID );
+		if( comp )
+		{
+			PhysicsComponent* phys = mEntityMgr->getByLUID(e->LUID)->getComponent<PhysicsComponent>();
+			comp->mSceneNode->setPosition( phys->position );
+			comp->mSceneNode->setOrientation( phys->orientation );
+		}
+	}
 }

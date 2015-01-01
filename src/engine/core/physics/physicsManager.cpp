@@ -4,8 +4,9 @@
 #include "..\networking\networkSystem.h"
 
 #define MOVE_TOLERANCE 0.0025
-/* Must always pass ent and net to the component manager */
-PhysicsManager::PhysicsManager( EntityManager* ent ) : ComponentManager(ent)
+#define GRAVITY_ACCELERATION -9.81f
+
+PhysicsManager::PhysicsManager( )
 {
 		
 		// Build the broadphase
@@ -20,7 +21,7 @@ PhysicsManager::PhysicsManager( EntityManager* ent ) : ComponentManager(ent)
 
 		// The world.
 		mWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-		mWorld->setGravity(btVector3(0, -9.81f, 0));
+		mWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
 }
 
 PhysicsManager::~PhysicsManager()
@@ -49,7 +50,7 @@ void PhysicsManager::update( double dt )
 		This will also be where you send out events for collisions etc */
 	for( auto i=mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		PhysicsComponent* comp = *i;
+		PhysicsComponent* comp = i->second;
 
 		/* If the object has moved past the move tolerance since the last update, send out events and update the position data */
 		if( comp->position.DistanceSq( comp->body->getWorldTransform().getOrigin() ) > MOVE_TOLERANCE 
@@ -77,9 +78,9 @@ void PhysicsManager::update( double dt )
 
 void PhysicsManager::handle( Event* e )
 {
-	PhysicsComponent* comp = getComponentByGUID( e->mGUID );
+	PhysicsComponent* comp = getComponentByLUID( e->LUID );
 
-	if( comp != nullptr )
+	if( comp )
 	{
 		switch( e->getEventType() )
 		{

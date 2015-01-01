@@ -4,6 +4,8 @@
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
+#include <SDL.h>
+
 #include <stdint.h>
 
 #include <iostream>

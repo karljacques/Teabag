@@ -131,11 +131,6 @@ void RenderSystem::renderOneFrame()
     m_Root->renderOneFrame();
 }
 
-void RenderSystem::addCameraPair( Ogre::Camera* c, Ogre::Viewport* v)
-{
-	m_CameraMap[c] = v;
-}
-
 
 Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"*/)
 {
@@ -145,10 +140,6 @@ Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"
 	return prefix + std::to_string(++countMap[prefix]);
 }
 
-Ogre::Viewport* RenderSystem::getViewport()
-{
-	return m_CameraMap.begin()->second;
-}
 
 void RenderSystem::initComponent( RenderComponent* comp )
 {

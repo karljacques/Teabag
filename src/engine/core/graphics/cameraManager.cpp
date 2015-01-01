@@ -28,8 +28,8 @@ void CameraManager::createNewCamera(CameraComponent* comp)
 	comp->mSceneNode = mRenderSystem->getRootSceneNode()->createChildSceneNode();
 	comp->mSceneNode->attachObject( camera );
 
-	// Register camera pair with rendersystem
-	mRenderSystem->addCameraPair( camera, viewport );
+	// Register camera pair
+	m_CameraMap[camera] = viewport;
 }
 
 void CameraManager::setCameraOffset(CameraComponent* comp, float3 offset)
@@ -64,4 +64,9 @@ void CameraManager::handle(Event* e)
 			comp->mCamera->setOrientation( me->mQuaternion );
 		}
 	}
+}
+
+Ogre::Viewport* CameraManager::getViewport()
+{
+	return m_CameraMap.begin()->second;
 }

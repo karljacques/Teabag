@@ -50,9 +50,6 @@ private:
     Ogre::SceneManager*   m_SceneMgr;
     Ogre::RenderWindow*   m_RenderWindow;
     Ogre::SceneNode*      m_RootSceneNode;
-
-    // Multiple Viewport and Camera support
-    std::map<Ogre::Camera*,Ogre::Viewport*>    m_CameraMap;
         
     // Window
     size_t          m_WindowHandle;

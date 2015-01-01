@@ -17,6 +17,7 @@
 
 #include "core/component/base/entity.h"
 #include "engine/core/graphics/UI/ogreConsole.h"
+#include "core/graphics/cameraManager.h"
 
 
 class Engine : public EventListener
@@ -36,7 +37,7 @@ public:
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
 	EntityManager*		getEntityManager(){return mEntityManager; };
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem; };
-
+	CameraManager*		getCameraManager(){return mCameraManager; };
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
 
@@ -51,6 +52,7 @@ private:
     
 	EntityManager* mEntityManager;
 	PhysicsManager* mPhysicsManager;
+	CameraManager* mCameraManager;
 
     bool m_EngineShutdown;
 };

@@ -7,6 +7,7 @@
 
 class CameraManager: public ComponentManager<CameraComponent>, public EventListener
 {
+public:
 	CameraManager( RenderSystem* rend );
 	~CameraManager();
 
@@ -14,9 +15,14 @@ class CameraManager: public ComponentManager<CameraComponent>, public EventListe
 	void setCameraOffset( CameraComponent* comp, float3 offset );
 	void lookAt( CameraComponent* comp, float3 pos );
 
+	Ogre::Viewport* getViewport();
+
 	void handle(Event* e);
 private:
 
 	RenderSystem* mRenderSystem;
+
+	// Multiple Viewport and Camera support
+	std::map<Ogre::Camera*,Ogre::Viewport*>    m_CameraMap;
 };
 #endif // cameraManager_h__

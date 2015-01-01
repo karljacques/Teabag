@@ -12,7 +12,7 @@ public:
 	T* ComponentManager<T>::createComponent( int LUID )
 	{
 		T* comp = new T;
-		mComponents[LUID] = T;
+		mComponents[LUID] = comp;
 		comp->LUID = LUID;
 		return comp;
 	}

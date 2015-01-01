@@ -29,7 +29,7 @@ OgreConsole::OgreConsole( Engine* eng )
 {
 	Gorilla::Silverback* silverback = new Gorilla::Silverback();
 	silverback->loadAtlas("dejavu");
-	Gorilla::Screen* UIScreen = silverback->createScreen( eng->getRenderSystem()->getViewport(),"dejavu" );
+	Gorilla::Screen* UIScreen = silverback->createScreen( eng->getCameraManager()->getViewport(),"dejavu" );
 
 	this->init( UIScreen );
 

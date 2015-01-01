@@ -29,16 +29,23 @@ Engine::Engine()
 
 	// Create Systems
     new EventSystem();
-    mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
+    mEntityManager = new EntityManager();
+
 	mPhysicsManager = new PhysicsManager();
 	mNetworkSystem = new ServerNetworkSystem( );
-	mEntityManager = new EntityManager();
-
-	 mRenderSystem = new RenderSystem( mEntityManager );
+	
+	mRenderSystem = new RenderSystem( mEntityManager );
+	mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
+	mCameraManager = new CameraManager( mRenderSystem );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 	EventSystem::getSingletonPtr()->registerListener( this );
+
+	// Create a default camera
+	Entity* ent = mEntityManager->createEntity();
+	CameraComponent* comp = mCameraManager->createComponent(ent->LUID);
+	mCameraManager->createNewCamera( comp );
 
 	// Create console - Singleton
 	new OgreConsole(this);

@@ -7,11 +7,9 @@
 //
 
 #include "pch.h"
-#include <SDL.h>
-
 #include "engine.h"
-#include "engine/core/component/render/cameraComponent.h"
-#include "engine/world/entityManager.h"
+#include "manager\network\clientNetworkSystem.h"
+#include "manager\network\serverNetworkSystem.h"
 
 Engine::Engine()
 {
@@ -42,12 +40,19 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 	EventSystem::getSingletonPtr()->registerListener( this );
 
+	// Register all the listening managers as listeners
+	EventSystem* e = EventSystem::getSingletonPtr();
+	e->registerListener(mPhysicsManager);
+	e->registerListener(mRenderSystem);
+	e->registerListener(mCameraManager);
+
 	// Create a default camera
 	Entity* ent = mEntityManager->createEntity();
 	CameraComponent* comp = mCameraManager->createComponent(ent->LUID);
 	mCameraManager->createNewCamera( comp );
 
-	// Create console - Singleton
+	/* Create console - Singleton
+		Registers itself as an event listener */
 	new OgreConsole(this);
 
 	OgreConsole::getSingleton().addCommand( "net.connect", &Console_Net_Connect );

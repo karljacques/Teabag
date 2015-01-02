@@ -10,7 +10,6 @@
 #define __YorkshireTea__inputSystem__
 
 #include <iostream>
-#include <SDL.h>
 #include "../event/eventSystem.h"
 
 class InputSystem

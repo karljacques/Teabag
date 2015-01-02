@@ -13,6 +13,7 @@
 
 #include "event.h"
 #include "eventListener.h"
+#include "..\render\UI\ogreConsole.h"
 
 #define MAX_EVENT_POOL 150
 

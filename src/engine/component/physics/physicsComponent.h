@@ -1,10 +1,7 @@
 #ifndef physicsComponent_h__
 #define physicsComponent_h__
 
-#include "engine/core/component/base/component.h"
-
-#include "engine/core/event/eventListener.h"
-#include "common.h"
+#include "..\base\component.h"
 
 class PhysicsComponent :public Component
 {

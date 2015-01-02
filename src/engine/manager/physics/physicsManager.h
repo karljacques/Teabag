@@ -1,11 +1,10 @@
 #ifndef physicsManager_h__
 #define physicsManager_h__
 
-#include <btBulletDynamicsCommon.h>
-#include "engine/core/component/base/component.h"
-#include "engine/core/component/physics/physicsComponent.h"
-#include "../component/componentManager.h"
-
+#include "pch.h"
+#include "..\..\component\physics\physicsComponent.h"
+#include "..\..\core\event\eventListener.h"
+#include "..\..\core\entity-component\componentManager.h"
 
 class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>
 {

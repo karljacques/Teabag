@@ -1,24 +1,25 @@
+
 #ifndef engine_h__
 #define engine_h__
 
+/*
+//  Teabag
 //
-//  YorkshireTea
-//
-//  Created by Karl Jacques on 26/05/2014.
+//  Created as 'Yorkshire Tea' by Karl Jacques on 26/05/2014.
 //
 //
+*/
 
-#include "core/graphics/renderSystem.h"
-#include "core/input/inputSystem.h"
-#include "core/event/eventSystem.h"
-#include "core/networking/clientNetworkSystem.h"
-#include "core/networking/serverNetworkSystem.h"
-#include "core/physics/physicsManager.h"
+#include "manager\render\renderSystem.h"
+#include "manager\physics\physicsManager.h"
+#include "core\entity-component\entityManager.h"
+#include "manager\network\networkSystem.h"
+#include "manager\render\cameraManager.h"
+#include "core\input\inputSystem.h"
 
-#include "core/component/base/entity.h"
-#include "engine/core/graphics/UI/ogreConsole.h"
-#include "core/graphics/cameraManager.h"
+#include "core\render\UI\ogreConsole.h"
 
+class InputSystem;
 
 class Engine : public EventListener
 {

@@ -1,7 +1,8 @@
 #ifndef entity_h__
 #define entity_h__
 
-#include "engine/core/component/base/component.h"
+#include "..\..\component\base\component.h"
+
 
 class Entity
 {

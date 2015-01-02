@@ -13,7 +13,6 @@
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include "OSXUtils.h"
 #endif
-#include "..\component\physics\physicsComponent.h"
 
 RenderSystem::RenderSystem( EntityManager* ent )
 {

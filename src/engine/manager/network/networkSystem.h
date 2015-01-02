@@ -1,12 +1,10 @@
 #ifndef networkSystem_h__
 #define networkSystem_h__
 
-#include <RakPeerInterface.h>
-#include <MessageIdentifiers.h>
-#include <BitStream.h>
 
-#include "engine/core/event/eventSystem.h"
-#include "engine/core/event/eventListener.h"
+#include "..\..\core\event\eventListener.h"
+
+
 
 
 #define MAX_CONNECTIONS 16
@@ -14,8 +12,6 @@
 #define CLIENT_PORT 2344
 
 typedef unsigned int uint32;
-
-class NetworkComponent;
 
 class NetworkSystem : public EventListener
 {
@@ -43,8 +39,6 @@ public:
 
 protected:
 
-	// Map of network components
-	std::map<uint32,NetworkComponent*> mNetworkComponents;
 	RakNet::RakPeerInterface * peer;
 	bool mHost;
 

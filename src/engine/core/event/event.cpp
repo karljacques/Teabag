@@ -5,6 +5,7 @@
 //  Created by Karl Jacques on 27/05/2014.
 //
 //
+#include "pch.h"
 #include "event.h"
 
 Event::Event( int eventType )

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/core/component/base/entity.h"
+#include "entity.h"
 
 class EntityManager
 {

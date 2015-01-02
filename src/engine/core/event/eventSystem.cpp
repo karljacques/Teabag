@@ -7,7 +7,8 @@
 //
 #include "pch.h"
 #include "eventSystem.h"
-#include "engine/core/graphics/UI/ogreConsole.h"
+
+
 
 template<> EventSystem* Ogre::Singleton<EventSystem>::msSingleton = 0;
 

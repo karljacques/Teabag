@@ -1,8 +1,9 @@
-#include "pch.h"
-#include "networkSystem.h"
-
 #ifndef serverNetworkSystem_h__
 #define serverNetworkSystem_h__
+
+#include "pch.h"
+#include "networkSystem.h"
+#include "..\..\core\render\UI\ogreConsole.h"
 
 class ServerNetworkSystem : public NetworkSystem
 {
@@ -11,8 +12,6 @@ public:
 
 	int receive();
 	void handle( Event* e );
-
-
 
 private:
 

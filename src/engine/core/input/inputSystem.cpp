@@ -6,10 +6,11 @@
 //
 //
 #include "pch.h"
-#include <SDL.h>
+
 #include "inputSystem.h"
-#include "../event/eventSystem.h"
-#include "engine/core/graphics/ui/ogreConsole.h"
+
+
+
 
 InputSystem::InputSystem(  SDL_Window* window )
 {

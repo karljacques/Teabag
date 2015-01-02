@@ -10,7 +10,7 @@ class Component
 {
 public:
 	Component(void);
-	~Component(void);
+	virtual ~Component(void);
 
 	/* Global identifier, the same on every networked system */
 	unsigned int GUID;

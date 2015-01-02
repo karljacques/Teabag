@@ -103,7 +103,6 @@ void PhysicsManager::handle( Event* e )
 			{
 				TransformEvent* te = e->getData<TransformEvent>();
 				comp->body->applyCentralForce(  Quat(comp->body->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
-				OgreConsole::getSingletonPtr()->print("Spectator Position: " + std::to_string( comp->body->getWorldTransform().getOrigin().x() )+ " " + std::to_string( comp->body->getWorldTransform().getOrigin().y() )+ " " + std::to_string( comp->body->getWorldTransform().getOrigin().z() )  );
 				break;
 			}
 

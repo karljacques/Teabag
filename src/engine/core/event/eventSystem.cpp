@@ -35,7 +35,7 @@ void EventSystem::dispatchEvent( Event* e )
 		mEventQueue.push_back(e);
 	}else
 	{
-		OgreConsole::getSingletonPtr()->print("Duplicate Event");
+		OgreConsole::getSingletonPtr()->print("Duplicate Event: " +std::to_string( e->getEventType() ));
 		releaseEvent(e);
 		
 	}

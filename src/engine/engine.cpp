@@ -58,7 +58,7 @@ Engine::Engine()
 	ent->addComponent(comp);
 
 	PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
-	mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(100,0,0), Quat(0,0,0,1) );
+	mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(0,0,0), Quat(0,0,0,1) );
 	phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 	ent->addComponent(phys);
 	phys->body->setDamping( 0.9f, 1.0f );

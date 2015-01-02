@@ -39,6 +39,13 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 	comp->body = new btRigidBody(fallRigidBodyCI);
 	mWorld->addRigidBody(comp->body);
 
+	/* Send out event to tell new position to components */
+	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
+	TransformEvent* te = e->createEventData<TransformEvent>();
+	te->mFloat3_1 = pos;
+	te->mQuaternion = rot;
+	EventSystem::getSingletonPtr()->dispatchEvent(e);
+
 }
 
 void PhysicsManager::update( double dt )
@@ -96,6 +103,7 @@ void PhysicsManager::handle( Event* e )
 			{
 				TransformEvent* te = e->getData<TransformEvent>();
 				comp->body->applyCentralForce(  Quat(comp->body->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
+				OgreConsole::getSingletonPtr()->print("Spectator Position: " + std::to_string( comp->body->getWorldTransform().getOrigin().x() )+ " " + std::to_string( comp->body->getWorldTransform().getOrigin().y() )+ " " + std::to_string( comp->body->getWorldTransform().getOrigin().z() )  );
 				break;
 			}
 

@@ -6,8 +6,8 @@ void SpectatorManager::handle( Event* e )
 	/* Transform key presses into forces */
 	if( e->getEventType() == EV_CORE_KEY_PRESS )
 	{
-		float3 dir;
-		float speed = 1.0f;
+		float3 dir(0,0,0);
+		float speed = 10.0f;
 
 		// Cast to key press
 		KeyboardEvent* k = e->getData<KeyboardEvent>();
@@ -42,4 +42,29 @@ void SpectatorManager::handle( Event* e )
 			EventSystem::getSingletonPtr()->dispatchEvent(ne);
 		}
 	}
+
+	/* Handle mouse movement */
+	if( e->getEventType() == EV_CORE_MOUSE_MOVEMENT )
+	{
+		MouseEvent* me = e->getData<MouseEvent>();
+
+		for( auto i=mComponents.begin(); i!=mComponents.end();i++ )
+		{
+			SpectatorComponent s = *i->second;
+			s.xAng = s.xAng*Quat::RotateX( -me->mMouseMoveY/1000.0f );
+			s.yAng = s.yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f );
+
+			// Get the physics component
+			PhysicsComponent* phys = mEntityManager->getByLUID(s.LUID)->getComponent<PhysicsComponent>();
+			btTransform updated( s.xAng*s.yAng, phys->body->getWorldTransform().getOrigin() );
+			phys->body->setWorldTransform(updated);
+			phys->body->activate(true);
+		}
+
+	}
+}
+
+SpectatorManager::SpectatorManager(EntityManager* ent)
+{
+	mEntityManager = ent;
 }

@@ -7,7 +7,7 @@ class CameraComponent :public Component
 {
 public:
 
-	Ogre::Camera* mCamera;
+	Ogre::Camera* camera;
 	Ogre::Viewport* mViewport;
 	Ogre::SceneNode* mSceneNode;
 

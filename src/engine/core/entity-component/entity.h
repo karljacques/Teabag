@@ -33,7 +33,7 @@ T* Entity::getComponent()
 {
 	for( auto i = mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		if( typeid(**i) == typeid(T) )
+		if( typeid(**i).name() == typeid(T).name() )
 		{
 			return static_cast<T*>(*i);
 		}

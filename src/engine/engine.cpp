@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "manager\network\clientNetworkSystem.h"
 #include "manager\network\serverNetworkSystem.h"
+#include "manager\abstract\spectatorManager.h"
 
 Engine::Engine()
 {
@@ -36,6 +37,8 @@ Engine::Engine()
 	mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
 	mCameraManager = new CameraManager( mRenderSystem );
 
+	SpectatorManager* mSpectatorManager = new SpectatorManager();
+
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 	EventSystem::getSingletonPtr()->registerListener( this );
@@ -45,11 +48,30 @@ Engine::Engine()
 	e->registerListener(mPhysicsManager);
 	e->registerListener(mRenderSystem);
 	e->registerListener(mCameraManager);
+	e->registerListener(mSpectatorManager);
 
-	// Create a default camera
+	// Create a spectator
 	Entity* ent = mEntityManager->createEntity();
+
 	CameraComponent* comp = mCameraManager->createComponent(ent->LUID);
 	mCameraManager->createNewCamera( comp );
+	ent->addComponent(comp);
+
+	SpectatorComponent* spec = mSpectatorManager->createComponent(ent->LUID);
+	ent->addComponent(spec);
+
+	PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
+	phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
+	ent->addComponent(phys);
+
+	// Create a static box
+	Entity* box = mEntityManager->createEntity();
+
+	RenderComponent* rend = mRenderSystem->createComponent(box->LUID);
+	mRenderSystem->setAsBox(rend, float3(1,1,1));
+	box->addComponent(rend);
+
+
 
 	/* Create console - Singleton
 		Registers itself as an event listener */

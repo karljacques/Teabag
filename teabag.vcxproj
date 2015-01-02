@@ -101,9 +101,11 @@
     <ClCompile Include="src\engine\core\event\eventListener.cpp" />
     <ClCompile Include="src\engine\core\event\eventSystem.cpp" />
     <ClCompile Include="src\engine\core\input\inputSystem.cpp" />
+    <ClCompile Include="src\engine\core\network\snapshotManager.cpp" />
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp" />
     <ClCompile Include="src\engine\core\render\UI\ogreConsole.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
+    <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp" />
     <ClCompile Include="src\engine\manager\network\clientNetworkSystem.cpp" />
     <ClCompile Include="src\engine\manager\network\networkSystem.cpp" />
     <ClCompile Include="src\engine\manager\network\serverNetworkSystem.cpp" />
@@ -117,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\engine\component\abstract\spectatorComponent.h" />
     <ClInclude Include="src\engine\component\base\component.h" />
     <ClInclude Include="src\engine\component\physics\physicsComponent.h" />
     <ClInclude Include="src\engine\component\render\cameraComponent.h" />
@@ -131,10 +134,12 @@
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
+    <ClInclude Include="src\engine\core\network\snapshotManager.h" />
     <ClInclude Include="src\engine\core\render\OSXUtils.h" />
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h" />
     <ClInclude Include="src\engine\core\render\UI\ogreConsole.h" />
     <ClInclude Include="src\engine\engine.h" />
+    <ClInclude Include="src\engine\manager\abstract\spectatorManager.h" />
     <ClInclude Include="src\engine\manager\network\clientNetworkSystem.h" />
     <ClInclude Include="src\engine\manager\network\networkSystem.h" />
     <ClInclude Include="src\engine\manager\network\serverNetworkSystem.h" />

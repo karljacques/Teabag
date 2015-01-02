@@ -51,6 +51,12 @@
     <ClCompile Include="src\engine\core\render\UI\ogreConsole.cpp">
       <Filter>engine\core\render\UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\network\snapshotManager.cpp">
+      <Filter>engine\core\network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp">
+      <Filter>engine\manager\abstract</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -130,6 +136,15 @@
     <ClInclude Include="src\engine\core\render\UI\ogreConsole.h">
       <Filter>engine\core\render\UI</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\network\snapshotManager.h">
+      <Filter>engine\core\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\abstract\spectatorManager.h">
+      <Filter>engine\manager\abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\abstract\spectatorComponent.h">
+      <Filter>engine\component\abstract</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -179,6 +194,15 @@
     </Filter>
     <Filter Include="engine\core\render\UI">
       <UniqueIdentifier>{aad8f8bf-f49f-4ab5-8d65-2bf01f559478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\network">
+      <UniqueIdentifier>{81add22d-60bc-4756-9d35-65979b360815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\manager\abstract">
+      <UniqueIdentifier>{42cad735-92fb-4106-8f97-6ddb561427a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\component\abstract">
+      <UniqueIdentifier>{1b3da9f1-ff50-45cc-bd5f-8b8911ac19e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

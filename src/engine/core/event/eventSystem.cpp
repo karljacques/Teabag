@@ -71,7 +71,8 @@ void EventSystem::handleEvents()
 		{
 			for( auto e = mEventList.begin(); e != mEventList.end(); e++ )
 			{
-				(*lsnr)->handle(*e);			
+				if( (*e)->sentBy != (*lsnr))
+					(*lsnr)->handle(*e);			
 			}
 		}
 	}
@@ -111,22 +112,30 @@ void EventSystem::deregisterListener(EventListener* e )
 }
 
 /* Get a new event. This must remove it from the pool of events */
-Event* EventSystem::getEvent( int eventType )
+Event* EventSystem::getEvent( int eventType, int LUID, EventListener* sentBy )
 {
+	Event* e;
 	/* Check there are enough events, remove it, set type and return */
 	if( mEventPool.size() > 0 )
 	{
-		Event* e = mEventPool.back();
+		e = mEventPool.back();
 		mEventPool.pop_back();
 		e->changeEventType(eventType);
-		return e;
 	}
 	else
 	{
 		/* Not enough events in pool, create a new one. This is slower - make sure there are enough in the pool to satisfy the game */
 		OgreConsole::getSingletonPtr()->print("Insufficient Events - created a new one");
-		return new Event(eventType);
+		e  = new Event(eventType);
+		
 	}
+
+	/* Add LUID */
+	e->LUID = LUID;
+
+	/* Add a sent by field to the event*/
+	e->sentBy = sentBy;
+	return e;
 }
 
 /* This should add the event back to the pool of events */

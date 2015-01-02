@@ -68,8 +68,7 @@ void PhysicsManager::update( double dt )
 			comp->orientation =  comp->body->getWorldTransform().getRotation();
 
 			/* Create event */
-			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
-			e->LUID = comp->LUID;
+			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE,comp->LUID,this );
 			TransformEvent* me = e->createEventData<TransformEvent>();
 
 			me->mQuaternion =comp->orientation;
@@ -98,15 +97,8 @@ void PhysicsManager::handle( Event* e )
 				btTransform trans( me->mQuaternion, me->mFloat3_1 );
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
-				break;
-			}
 
-		case EV_NETWORK_TRANSFORM_UPDATE:
-			{
-				TransformEvent* me = e->getData<TransformEvent>();
-				comp->body->setLinearVelocity( me->mFloat3_2 );
-				comp->body->setAngularVelocity( me->mFloat3_3 );
-				comp->body->activate(true);
+				
 				break;
 			}
 		}

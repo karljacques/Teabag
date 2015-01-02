@@ -12,6 +12,8 @@
 #include <iostream>
 #include "event.h"
 
+class Event;
+
 class EventListener
 {
 public:

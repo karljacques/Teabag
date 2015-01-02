@@ -60,7 +60,7 @@ void SpectatorManager::handle( Event* e )
 			}
 		}
 	}
-	/* Handle mouse movement 
+	/* Handle mouse movement */
 	if( e->getEventType() == EV_CORE_MOUSE_MOVEMENT )
 	{
 		MouseEvent* me = e->getData<MouseEvent>();
@@ -71,21 +71,13 @@ void SpectatorManager::handle( Event* e )
 			s.xAng = s.xAng*Quat::RotateX( -me->mMouseMoveY/1000.0f );
 			s.yAng = s.yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f );
 
-			// Get the physics component - retrieve position
+			// Get the physics component - set new orientation
 			PhysicsComponent* phys = mEntityManager->getByLUID(s.LUID)->getComponent<PhysicsComponent>();
-			float3 pos = phys->position;
-			
-			// Dispatch event updating the rotation
-			Event* ne = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
-			ne->LUID = s.LUID;
-			TransformEvent* t = ne->createEventData<TransformEvent>();
-			t->mFloat3_1 = pos;
-			t->mQuaternion = s.xAng*s.yAng;
-			EventSystem::getSingletonPtr()->dispatchEvent(ne);
+			phys->body->setWorldTransform( btTransform( s.yAng*s.xAng , phys->body->getWorldTransform().getOrigin()));
+			phys->body->activate((true));
 		}
 		
 	}
-	*/
 }
 
 SpectatorManager::SpectatorManager(EntityManager* ent)

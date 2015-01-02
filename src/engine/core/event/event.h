@@ -16,6 +16,7 @@
 #include "events/keyboardEvent.h"
 #include "events/mouseEvent.h"
 #include "events/transformEvent.h"
+#include "eventListener.h"
 
 #define EVENT_PAYLOAD_SIZE 64
 
@@ -43,6 +44,8 @@ enum EV_EventType
 	// NETWORK
 	EV_NETWORK_TRANSFORM_UPDATE
 };
+
+class EventListener;
 
 class Event
 {
@@ -72,6 +75,8 @@ public:
 
 	template <class T>
 	T* createEventData();
+
+	EventListener* sentBy;
 
 
 private:

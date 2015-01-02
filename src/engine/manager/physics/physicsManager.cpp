@@ -47,6 +47,12 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 	te->mQuaternion = rot;
 	EventSystem::getSingletonPtr()->dispatchEvent(e);
 
+	comp->position = pos;
+	comp->orientation = rot;
+
+	comp->body->setWorldTransform(btTransform(rot,pos));
+	comp->body->activate(true);
+
 }
 
 void PhysicsManager::update( double dt )
@@ -99,6 +105,16 @@ void PhysicsManager::handle( Event* e )
 				comp->body->activate(true);
 
 				
+				break;
+			}
+
+		case EV_CORE_TRANSFORM_UPDATE_ORIENTATION:
+			{
+				TransformEvent* me = e->getData<TransformEvent>();
+				btTransform trans(me->mQuaternion, comp->position );
+				comp->orientation = me->mQuaternion;
+				comp->body->setWorldTransform( trans );
+				comp->body->activate(true);
 				break;
 			}
 		}

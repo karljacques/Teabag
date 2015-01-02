@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "cameraManager.h"
 #include "..\..\core\event\eventSystem.h"
 
 
@@ -40,15 +39,14 @@ void CameraManager::setCameraOffset(CameraComponent* comp, float3 offset)
 
 void CameraManager::lookAt(CameraComponent* comp, float3 pos)
 {
-	/*comp->camera->lookAt( pos );
+	comp->camera->lookAt( pos );
 
-	Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
+	Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE_ORIENTATION, comp->LUID,this );
 	TransformEvent* me = e->createEventData<TransformEvent>();
-	me->mFloat3_1 = comp->mSceneNode->getPosition();
 	me->mQuaternion = comp->camera->getDerivedOrientation();
 
 	EventSystem::getSingletonPtr()->dispatchEvent(e);
-	*/
+	
 }
 
 void CameraManager::handle(Event* e)

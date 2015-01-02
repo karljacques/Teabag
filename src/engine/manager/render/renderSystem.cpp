@@ -189,7 +189,6 @@ void RenderSystem::setAsBox( RenderComponent* comp, float3 dim )
 
 	comp->mObject = cube;
 	comp->mSceneNode->attachObject(comp->mObject);
-	comp->mSceneNode->setPosition(0,0,-20);
 }
 
 void RenderSystem::handle( Event* e )

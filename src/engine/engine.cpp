@@ -50,33 +50,41 @@ Engine::Engine()
 	e->registerListener(mCameraManager);
 	e->registerListener(mSpectatorManager);
 
-	// Create a spectator
-	Entity* ent = mEntityManager->createEntity();
+	{
+		// Create a spectator
+		Entity* ent = mEntityManager->createEntity();
 
-	CameraComponent* comp = mCameraManager->createComponent(ent->LUID);
-	mCameraManager->createNewCamera( comp );
-	ent->addComponent(comp);
+		CameraComponent* comp = mCameraManager->createComponent(ent->LUID);
+		mCameraManager->createNewCamera( comp );
+		ent->addComponent(comp);
 
-	SpectatorComponent* spec = mSpectatorManager->createComponent(ent->LUID);
-	ent->addComponent(spec);
+		SpectatorComponent* spec = mSpectatorManager->createComponent(ent->LUID);
+		ent->addComponent(spec);
 
-	PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
-	mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(0,0,0), Quat(0,0,0,1) );
-	phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
-	ent->addComponent(phys);
-	phys->body->setDamping( 0.9f, 1.0f );
+		PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
+		mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(40,0,0), Quat(0,0,0,1) );
+		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
+		ent->addComponent(phys);
+		phys->body->setDamping( 0.9f, 1.0f );
 
-	//mCameraManager->lookAt( comp, float3( 0,0,0 ));
+		mCameraManager->lookAt( comp, float3( 0,0,0 ));
+	}
+	
+	{
 
-	// Create a static box
-	Entity* box = mEntityManager->createEntity();
+		// Create a static ground
+		Entity* box = mEntityManager->createEntity();
 
-	RenderComponent* rend = mRenderSystem->createComponent(box->LUID);
-	mRenderSystem->initComponent( rend );
-	mRenderSystem->setAsBox(rend, float3(10,10,10));
-	box->addComponent(rend);
+		RenderComponent* rend = mRenderSystem->createComponent(box->LUID);
+		mRenderSystem->initComponent( rend );
+		mRenderSystem->setAsBox(rend, float3(100,1,100));
+		box->addComponent(rend);
 
+		PhysicsComponent* phys = mPhysicsManager->createComponent(box->LUID);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 0.5f,50.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
+		box->addComponent(phys);
 
+	}
 
 	/* Create console - Singleton
 		Registers itself as an event listener */

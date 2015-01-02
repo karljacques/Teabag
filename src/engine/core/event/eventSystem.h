@@ -44,6 +44,9 @@ private:
 	// Global Events
     std::deque<Event*> mEventList;
 
+	// Events to be processed next loop
+	std::deque<Event*> mEventQueue;
+
 	// Pooled Inactive Events
 	std::vector<Event*> mEventPool;
 

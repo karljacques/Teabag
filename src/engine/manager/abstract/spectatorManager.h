@@ -9,5 +9,5 @@
 class SpectatorManager : public ComponentManager<SpectatorComponent>, public EventListener
 {
 	void handle( Event* e );
-}
+};
 #endif // spectatorManager_h__

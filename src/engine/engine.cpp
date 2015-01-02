@@ -61,6 +61,7 @@ Engine::Engine()
 	ent->addComponent(spec);
 
 	PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
+	mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(0,0,0), Quat(0,0,0,1) );
 	phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 	ent->addComponent(phys);
 
@@ -68,6 +69,7 @@ Engine::Engine()
 	Entity* box = mEntityManager->createEntity();
 
 	RenderComponent* rend = mRenderSystem->createComponent(box->LUID);
+	mRenderSystem->initComponent( rend );
 	mRenderSystem->setAsBox(rend, float3(1,1,1));
 	box->addComponent(rend);
 

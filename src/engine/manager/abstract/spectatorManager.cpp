@@ -7,7 +7,7 @@ void SpectatorManager::handle( Event* e )
 	if( e->getEventType() == EV_CORE_KEY_PRESS )
 	{
 		float3 dir;
-		float speed;
+		float speed = 1.0f;
 
 		// Cast to key press
 		KeyboardEvent* k = e->getData<KeyboardEvent>();
@@ -35,7 +35,7 @@ void SpectatorManager::handle( Event* e )
 			i->second->speed = speed;
 
 			// Apply force
-			Event* ne = EventSystem::getSingletonPtr()->getEvent();
+			Event* ne = EventSystem::getSingletonPtr()->getEvent(EV_CORE_APPLY_FORCE);
 			ne->LUID = i->second->LUID;
 			TransformEvent* te = ne->createEventData<TransformEvent>();
 			te->mFloat3_1 = dir*speed;

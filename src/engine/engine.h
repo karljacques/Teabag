@@ -18,6 +18,7 @@
 #include "core\input\inputSystem.h"
 
 #include "core\render\UI\ogreConsole.h"
+#include "manager\abstract\spectatorManager.h"
 
 class InputSystem;
 
@@ -55,7 +56,10 @@ private:
 	PhysicsManager* mPhysicsManager;
 	CameraManager* mCameraManager;
 
+	SpectatorManager* mSpectatorManager;
+
     bool m_EngineShutdown;
+	
 };
 
 #endif // engine_h__

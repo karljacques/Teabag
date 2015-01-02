@@ -45,7 +45,7 @@ RenderSystem::RenderSystem( EntityManager* ent )
     // Prepare Ogre render window parameters
     Ogre::NameValuePairList lParams;
     lParams["FSAA"] = "0";
-    lParams["vsync"] = "true";
+    lParams["vsync"] = "false";
 
     // Get SDL window handle and insert into parameter list so ogre knows which
     // external window to use.
@@ -189,6 +189,7 @@ void RenderSystem::setAsBox( RenderComponent* comp, float3 dim )
 
 	comp->mObject = cube;
 	comp->mSceneNode->attachObject(comp->mObject);
+	comp->mSceneNode->setPosition(0,0,-20);
 }
 
 void RenderSystem::handle( Event* e )

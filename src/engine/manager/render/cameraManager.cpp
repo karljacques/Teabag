@@ -40,7 +40,7 @@ void CameraManager::setCameraOffset(CameraComponent* comp, float3 offset)
 
 void CameraManager::lookAt(CameraComponent* comp, float3 pos)
 {
-	comp->camera->lookAt( pos );
+	/*comp->camera->lookAt( pos );
 
 	Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
 	TransformEvent* me = e->createEventData<TransformEvent>();
@@ -48,7 +48,7 @@ void CameraManager::lookAt(CameraComponent* comp, float3 pos)
 	me->mQuaternion = comp->camera->getDerivedOrientation();
 
 	EventSystem::getSingletonPtr()->dispatchEvent(e);
-
+	*/
 }
 
 void CameraManager::handle(Event* e)

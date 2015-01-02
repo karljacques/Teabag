@@ -39,6 +39,9 @@ public:
 	// Puts an event back in the inactive pool.
 	void releaseEvent( Event* e );
 
+	// Debugging methods
+	int d_getEventsToBeProcessed();
+
 private:
 
 	// Global Events

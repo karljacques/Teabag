@@ -37,13 +37,16 @@ void InputSystem::update()
 
 			case SDL_KEYDOWN:
 			{
-				// Key down, create and dispatch event
-				Event*	e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_KEY_PRESS );
-				KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
-				ke->mPressed = true;
-				ke->mReleased =false;
-				ke->mKeycode = m_inputEvent.key.keysym.scancode;
-				EventSystem::getSingletonPtr()->dispatchEvent( e );
+				if( m_inputEvent.key.repeat == false )
+				{
+					// Key down, create and dispatch event
+					Event*	e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_KEY_PRESS );
+					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
+					ke->mPressed = true;
+					ke->mReleased =false;
+					ke->mKeycode = m_inputEvent.key.keysym.scancode;
+					EventSystem::getSingletonPtr()->dispatchEvent( e );
+				}
 				
 			}
 			break;
@@ -124,5 +127,6 @@ void InputSystem::update()
 		
 		SDL_WarpMouseInWindow(  mWindow, x, y );
 	}
+
 	
 }

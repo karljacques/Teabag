@@ -13,6 +13,7 @@ public:
 	SpectatorManager( EntityManager* ent );
 
 	void handle( Event* e );
+	void update();
 private:
 
 	EntityManager* mEntityManager;

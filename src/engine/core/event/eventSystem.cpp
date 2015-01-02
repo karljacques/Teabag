@@ -27,18 +27,9 @@ void EventSystem::dispatchEvent( Event* e )
 	/* Prevent Null Events */
 	if( e->getEventType() == EV_NULL )
 		return;
-
-	/* Prevent duplicates */
-	if( std::find( mEventList.begin(), mEventList.end(), e ) == mEventList.end() && std::find( mEventQueue.begin(), mEventQueue.end(),e ) == mEventQueue.end() )
-	{
-		// Push to a queue so we don't invalid iterators when event handlers dispatch events themselves
-		mEventQueue.push_back(e);
-	}else
-	{
-		OgreConsole::getSingletonPtr()->print("Duplicate Event: " +std::to_string( e->getEventType() ));
-		releaseEvent(e);
+	// Push to a queue so we don't invalid iterators when event handlers dispatch events themselves
+	mEventQueue.push_back(e);
 		
-	}
 }
 
 /* Dispatch events to global listeners */
@@ -148,4 +139,9 @@ void EventSystem::releaseEvent(Event* e)
 	{
 		mEventPool.push_back(e);
 	}
+}
+
+int EventSystem::d_getEventsToBeProcessed()
+{
+	return mEventQueue.size();
 }

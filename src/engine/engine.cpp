@@ -37,7 +37,7 @@ Engine::Engine()
 	mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
 	mCameraManager = new CameraManager( mRenderSystem );
 
-	SpectatorManager* mSpectatorManager = new SpectatorManager( mEntityManager );
+	mSpectatorManager = new SpectatorManager( mEntityManager );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
@@ -57,16 +57,16 @@ Engine::Engine()
 	mCameraManager->createNewCamera( comp );
 	ent->addComponent(comp);
 
+	SpectatorComponent* spec = mSpectatorManager->createComponent(ent->LUID);
+	ent->addComponent(spec);
+
 	PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
 	mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(0,0,0), Quat(0,0,0,1) );
 	phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 	ent->addComponent(phys);
 	phys->body->setDamping( 0.9f, 1.0f );
 
-	SpectatorComponent* spec = mSpectatorManager->createComponent(ent->LUID);
-	ent->addComponent(spec);
-
-	mCameraManager->lookAt( comp, float3( 0,0,0 ));
+	//mCameraManager->lookAt( comp, float3( 0,0,0 ));
 
 	// Create a static box
 	Entity* box = mEntityManager->createEntity();
@@ -103,13 +103,18 @@ void Engine::update()
     Ogre::WindowEventUtilities::messagePump();
 
 	// Calculate timestep
-	double dt = mTimeSinceLastUpdate.getMilliseconds()/1000.0;
+	double dt = mTimeSinceLastUpdate.getMillisecondsCPU();
+	OgreConsole::getSingletonPtr()->print(std::to_string(dt));
 	mTimeSinceLastUpdate.reset();
 
 	// Update systems and managers
     mInputSystem->update();
+
+	// profile event system
 	EventSystem::getSingletonPtr()->handleEvents();
+
 	mPhysicsManager->update( dt );
+	mSpectatorManager->update();
 
 	mNetworkSystem->receive();
 

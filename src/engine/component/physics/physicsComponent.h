@@ -6,7 +6,10 @@
 class PhysicsComponent :public Component
 {
 public:
-	PhysicsComponent( ){};
+	PhysicsComponent( ){
+		position = float3(0,0,0);
+		orientation = Quat(0,0,0,1);
+	};
 	~PhysicsComponent(){};
 
 	btRigidBody* body;

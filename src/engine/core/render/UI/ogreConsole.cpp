@@ -233,6 +233,12 @@ void OgreConsole::print(const Ogre::String &text)
       if(str[c]!='\n')
          line+=str[c];
    }
+
+   if( lines.size() > 20 )
+   {
+	   lines.pop_front();
+   }
+
    if(line.length())
       lines.push_back(line);
    if(lines.size()>CONSOLE_LINE_COUNT)

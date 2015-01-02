@@ -32,15 +32,16 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 {
 	/* Physics Setup */
 	btVector3 nullVector(0,0,0);
-	shape->calculateLocalInertia( 1, nullVector);
+	shape->calculateLocalInertia( mass, nullVector);
 
 	/* Construct in correct position */
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass, new btDefaultMotionState( btTransform( rot, pos)) , shape, nullVector);
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass, new btDefaultMotionState( btTransform(rot,pos) ) , shape, nullVector);
 	comp->body = new btRigidBody(fallRigidBodyCI);
 	mWorld->addRigidBody(comp->body);
 
 	/* Send out event to tell new position to components */
 	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
+	e->LUID = comp->LUID;
 	TransformEvent* te = e->createEventData<TransformEvent>();
 	te->mFloat3_1 = pos;
 	te->mQuaternion = rot;
@@ -50,7 +51,7 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( 1.0/60.0f ,8 );
+	mWorld->stepSimulation( 1.0f/60.0 ,8 );
 
 	/*	Process all of the positional components and check if they have moved - if so send out position updates.
 		This will also be where you send out events for collisions etc */
@@ -68,6 +69,7 @@ void PhysicsManager::update( double dt )
 
 			/* Create event */
 			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE );
+			e->LUID = comp->LUID;
 			TransformEvent* me = e->createEventData<TransformEvent>();
 
 			me->mQuaternion =comp->orientation;
@@ -96,13 +98,6 @@ void PhysicsManager::handle( Event* e )
 				btTransform trans( me->mQuaternion, me->mFloat3_1 );
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
-				break;
-			}
-
-		case EV_CORE_APPLY_FORCE:
-			{
-				TransformEvent* te = e->getData<TransformEvent>();
-				comp->body->applyCentralForce(  Quat(comp->body->getWorldTransform().getRotation()).Transform( te->mFloat3_1 ) );
 				break;
 			}
 

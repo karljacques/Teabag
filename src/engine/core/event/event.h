@@ -13,6 +13,10 @@
 #include <Math/float3.h>
 #include <Math/Quat.h>
 
+#include "events/keyboardEvent.h"
+#include "events/mouseEvent.h"
+#include "events/transformEvent.h"
+
 #define EVENT_PAYLOAD_SIZE 64
 
 enum EV_EventType
@@ -89,9 +93,7 @@ T* Event::createEventData()
 	T* ptr = new(data) T;
 	return getData<T>();
 }
-#include "events/keyboardEvent.h"
-#include "events/mouseEvent.h"
-#include "events/transformEvent.h"
+
 
 
 

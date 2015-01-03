@@ -72,47 +72,85 @@ Engine::Engine()
 	}
 	
 	{
+		// Create a Tumbler
+		mTumbler[0] = mEntityManager->createEntity();
+
+		RenderComponent* rend = mRenderSystem->createComponent(mTumbler[0]->LUID);
+		mRenderSystem->initComponent( rend );
+		mRenderSystem->setAsBox(rend, float3(100,2,100));
+		mTumbler[0]->addComponent(rend);
+
+		PhysicsComponent* phys = mPhysicsManager->createComponent(mTumbler[0]->LUID);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 1.0f,50.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
+		mTumbler[0]->addComponent(phys);
+	}
+	{
 
 		// Create a static ground
-		Entity* box = mEntityManager->createEntity();
+		mTumbler[1] = mEntityManager->createEntity();
 
-		RenderComponent* rend = mRenderSystem->createComponent(box->LUID);
+		RenderComponent* rend = mRenderSystem->createComponent(mTumbler[1]->LUID);
 		mRenderSystem->initComponent( rend );
-		mRenderSystem->setAsBox(rend, float3(100,1,100));
-		box->addComponent(rend);
+		mRenderSystem->setAsBox(rend, float3(100,2,100));
+		mTumbler[1]->addComponent(rend);
 
-		PhysicsComponent* phys = mPhysicsManager->createComponent(box->LUID);
-		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 0.5f,50.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
-		box->addComponent(phys);
+		PhysicsComponent* phys = mPhysicsManager->createComponent(mTumbler[1]->LUID);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 1.0f,50.0f ) ), 0,float3(50,50,0), Quat::RotateZ(3.14/2.0f));
+		mTumbler[1]->addComponent(phys);
 
-		// Create slanted ramp
-		{
-			Entity* ramp = mEntityManager->createEntity();
 
-			RenderComponent* rend = mRenderSystem->createComponent(ramp->LUID);
-			mRenderSystem->initComponent( rend );
-			mRenderSystem->setAsBox(rend, float3(20,1,20));
-			ramp->addComponent(rend);
-
-			PhysicsComponent* phys = mPhysicsManager->createComponent(ramp->LUID);
-			mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.5f,10.0f ) ), 0.0f,float3(0,10,0), Quat::RotateX( (float)2.5f));
-			ramp->addComponent(phys);
-		}
-
-		// Create lower platform
-		{
-			Entity* plat = mEntityManager->createEntity();
-
-			RenderComponent* rend = mRenderSystem->createComponent(plat->LUID);
-			mRenderSystem->initComponent( rend );
-			mRenderSystem->setAsBox(rend, float3(40,1,40));
-			plat->addComponent(rend);
-
-			PhysicsComponent* phys = mPhysicsManager->createComponent(plat->LUID);
-			mPhysicsManager->initComponent( phys,new btBoxShape( float3(20.0f, 0.5f,20.0f ) ), 0.0f,float3(0,-10,-60), Quat::RotateX( 3.14f ));
-			plat->addComponent(phys);
-		}
 	}
+	{
+
+		// Create a static ground
+		mTumbler[2] = mEntityManager->createEntity();
+
+		RenderComponent* rend = mRenderSystem->createComponent(mTumbler[2]->LUID);
+		mRenderSystem->initComponent( rend );
+		mRenderSystem->setAsBox(rend, float3(100,2,100));
+		mTumbler[2]->addComponent(rend);
+
+		PhysicsComponent* phys = mPhysicsManager->createComponent(mTumbler[2]->LUID);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 1.0f,50.0f ) ), 0,float3(0,100,0), Quat::RotateZ(3.14f));
+		mTumbler[2]->addComponent(phys);
+
+
+	}
+	{
+
+		// Create a static ground
+		mTumbler[3] = mEntityManager->createEntity();
+
+		RenderComponent* rend = mRenderSystem->createComponent(mTumbler[3]->LUID);
+		mRenderSystem->initComponent( rend );
+		mRenderSystem->setAsBox(rend, float3(100,2,100));
+		mTumbler[3]->addComponent(rend);
+
+		PhysicsComponent* phys = mPhysicsManager->createComponent(mTumbler[3]->LUID);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 1.0f,50.0f ) ), 0,float3(-50,50,0), Quat::RotateZ(-3.14/2.0f));
+		mTumbler[3]->addComponent(phys);
+
+
+	}
+
+	{
+
+		// Create a static ground
+		mTumbler[4] = mEntityManager->createEntity();
+
+		RenderComponent* rend = mRenderSystem->createComponent(mTumbler[4]->LUID);
+		mRenderSystem->initComponent( rend );
+		mRenderSystem->setAsBox(rend, float3(100,2,100));
+		mTumbler[4]->addComponent(rend);
+
+		PhysicsComponent* phys = mPhysicsManager->createComponent(mTumbler[4]->LUID);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 1.0f,50.0f ) ), 0,float3(0,50,50), Quat::RotateX(-3.14/2.0f));
+		mTumbler[4]->addComponent(phys);
+
+
+	}
+
+
 
 	/* Create console - Singleton
 		Registers itself as an event listener */
@@ -123,6 +161,7 @@ Engine::Engine()
 
 	OgreConsole::getSingleton().addCommand( "geo.spawn", &Console_Geometry_Spawn );
 	
+	mTumblerSpeed = 0;
 }
 
 Engine::~Engine()
@@ -139,7 +178,7 @@ void Engine::update()
     Ogre::WindowEventUtilities::messagePump();
 
 	// Calculate timestep
-	double dt = mTimeSinceLastUpdate.getMillisecondsCPU();
+	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
 	mTimeSinceLastUpdate.reset();
 	OgreConsole::getSingletonPtr()->print( "Loop Time: " + std::to_string( dt ) );
 	// Update systems and managers
@@ -156,6 +195,41 @@ void Engine::update()
 
     // render after everything is updated
     mRenderSystem->renderOneFrame();
+
+	// Update tumbler
+	for( int i=0; i<4; i++ )
+	{
+		Entity* tumbler = mTumbler[i];
+
+		// Get Rotation
+		Quat rot = tumbler->getComponent<PhysicsComponent>()->orientation;
+
+		// Get position
+		float3 pos = tumbler->getComponent<PhysicsComponent>()->position;
+
+		// Increase rotation
+		rot= rot*Quat::RotateZ(mTumblerSpeed*dt*0.000001f);
+
+		// Calculate new position
+		pos = float3( 0,50,0 ) + rot*(float3(0,50,0));
+
+		// Send out event
+		Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE, tumbler->LUID );
+		TransformEvent* te = e->createEventData<TransformEvent>();
+		te->mFloat3_1 = pos;
+		te->mQuaternion = rot;
+		EventSystem::getSingletonPtr()->dispatchEvent(e);
+
+
+	}
+
+	int back = mTumbler[4]->LUID;
+	// Send out event
+	Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE, back );
+	TransformEvent* te = e->createEventData<TransformEvent>();
+	te->mFloat3_1 = float3(0,50,50);
+	te->mQuaternion = Quat::RotateZ( mTumbler[0]->getComponent<PhysicsComponent>()->orientation.ToEulerXYZ().z )*Quat::RotateX(-3.14/2.0f);
+	EventSystem::getSingletonPtr()->dispatchEvent(e);
 }
 
 bool Engine::isShuttingDown()
@@ -180,9 +254,9 @@ void Engine::handle( Event* e )
 						{
 
 							float3 size( 
-								(rand()% 50) /10.0f ,
-								(rand()% 50) /10.0f ,
-								(rand()% 50) /10.0f );
+								((rand()% 50) /10.0f ) +1,
+								((rand()% 50) /10.0f ) +1,
+								((rand()% 50) /10.0f  )+1);
 
 							float mass = ((rand()%50) / 10.0f) + 1;
 
@@ -197,7 +271,14 @@ void Engine::handle( Event* e )
 							PhysicsComponent* phys = mPhysicsManager->createComponent(box->LUID);
 							mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
 							box->addComponent(phys);
+							break;
 						}
+					case SDL_SCANCODE_LEFTBRACKET:
+						mTumblerSpeed-=0.25f;
+						break;
+					case SDL_SCANCODE_RIGHTBRACKET:
+						mTumblerSpeed+=0.25f;
+						break;
 				}
 			}
         break;

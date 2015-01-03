@@ -59,6 +59,9 @@ private:
 	SpectatorManager* mSpectatorManager;
 
     bool m_EngineShutdown;
+
+	Entity* mTumbler[5];
+	float mTumblerSpeed;
 	
 };
 

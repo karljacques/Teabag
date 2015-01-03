@@ -90,7 +90,7 @@
       <AdditionalDependencies>OgreMain.lib;SDL2.lib;MathGeoLib.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;raknetdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy media bin/$(Configuration)</Command>
+      <Command>xcopy $(SolutionDir)media $(SolutionDir)bin\$(Configuration)\media\ /s /e /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -34,6 +34,9 @@ OgreConsole::OgreConsole( Engine* eng )
 	this->init( UIScreen );
 
 	EventSystem::getSingletonPtr()->registerListener(this);
+
+	setVisible(false);
+	mKeyboardActive = false;
 }
  
 OgreConsole::~OgreConsole()
@@ -94,8 +97,15 @@ void OgreConsole::handle( Event* arg)
 		 setVisible( !mIsVisible );
 	 }
 
+	 if( e->mKeycode == SDL_SCANCODE_F2 )
+	 {
+		 mKeyboardActive = !mKeyboardActive;
+	 }
+
 	 if(!mIsVisible)
 	  return;
+
+
 
 	 if (e->mKeycode == SDL_SCANCODE_RETURN )
 	 {
@@ -149,11 +159,13 @@ void OgreConsole::handle( Event* arg)
 	 return;
  if( arg->getEventType() == EV_CORE_TEXT_INPUT )
  {
-	 KeyboardEvent* e = arg->getData<KeyboardEvent>();
-	 // TODO check legality of character
-	 prompt+=e->mKey;
-	 mUpdatePrompt = true;
-
+	 if( mKeyboardActive )
+	 {
+		 KeyboardEvent* e = arg->getData<KeyboardEvent>();
+		 // TODO check legality of character
+		 prompt+=e->mKey;
+		 mUpdatePrompt = true;
+	 }
  }
 
 }

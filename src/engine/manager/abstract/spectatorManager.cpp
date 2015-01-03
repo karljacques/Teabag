@@ -114,14 +114,18 @@ void SpectatorManager::update()
 		else
 			speed = SPECTATOR_DEFAULT_SPEED;
 
+		// Apply new rotation to physics component
+		PhysicsComponent* phys = mEntityManager->getByLUID(s->LUID)->getComponent<PhysicsComponent>();
+		phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
+
+		// If the spectator moves, apply the force
 		if( dir.Length()>0)
-		{
-			// Get physics component
-			PhysicsComponent* phys = mEntityManager->getByLUID(s->LUID)->getComponent<PhysicsComponent>();
-			phys->body->applyCentralForce( Quat(phys->body->getWorldTransform().getRotation()).Transform( dir*speed )   );
-			phys->body->activate(true);
+		{			
+			phys->body->applyCentralForce( Quat(phys->body->getWorldTransform().getRotation()).Transform( dir*speed )   );		
 		}
 		
+		// Reactivate the body
+		phys->body->activate(true);
 	
 	}
 }

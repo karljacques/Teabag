@@ -83,6 +83,8 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     
     bool                 mUpdateConsole;
     bool                 mUpdatePrompt;
+
+	bool				 mKeyboardActive;
 			
     unsigned int         mStartline;
     std::list<Ogre::String>      lines;

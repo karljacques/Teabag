@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalOptions>/Zm2000 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>MATH_OGRE_INTEROP;MATH_BULLET_INTEROP</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MATH_OGRE_INTEROP;MATH_BULLET_INTEROP;_NO_DEBUG_HEAP=1</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

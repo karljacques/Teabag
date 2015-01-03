@@ -57,7 +57,7 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( 1.0f/60.0 ,8 );
+	mWorld->stepSimulation( 1.0f/60.0f ,8 );
 
 	/*	Process all of the positional components and check if they have moved - if so send out position updates.
 		This will also be where you send out events for collisions etc */

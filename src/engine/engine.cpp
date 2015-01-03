@@ -62,8 +62,9 @@ Engine::Engine()
 		ent->addComponent(spec);
 
 		PhysicsComponent* phys = mPhysicsManager->createComponent(ent->LUID);
-		mPhysicsManager->initComponent(phys,new btBoxShape( btVector3(1,1,1) ), 1, float3(40,0,0), Quat(0,0,0,1) );
+		mPhysicsManager->initComponent(phys,new btSphereShape( 1.0f ) , 1, float3(40,20,0), Quat(0,0,0,1) );
 		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
+		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
 		ent->addComponent(phys);
 		phys->body->setDamping( 0.9f, 1.0f );
 
@@ -84,6 +85,33 @@ Engine::Engine()
 		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 0.5f,50.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
 		box->addComponent(phys);
 
+		// Create slanted ramp
+		{
+			Entity* ramp = mEntityManager->createEntity();
+
+			RenderComponent* rend = mRenderSystem->createComponent(ramp->LUID);
+			mRenderSystem->initComponent( rend );
+			mRenderSystem->setAsBox(rend, float3(20,1,20));
+			ramp->addComponent(rend);
+
+			PhysicsComponent* phys = mPhysicsManager->createComponent(ramp->LUID);
+			mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.5f,10.0f ) ), 0.0f,float3(0,10,0), Quat::RotateX( (float)2.5f));
+			ramp->addComponent(phys);
+		}
+
+		// Create lower platform
+		{
+			Entity* plat = mEntityManager->createEntity();
+
+			RenderComponent* rend = mRenderSystem->createComponent(plat->LUID);
+			mRenderSystem->initComponent( rend );
+			mRenderSystem->setAsBox(rend, float3(40,1,40));
+			plat->addComponent(rend);
+
+			PhysicsComponent* phys = mPhysicsManager->createComponent(plat->LUID);
+			mPhysicsManager->initComponent( phys,new btBoxShape( float3(20.0f, 0.5f,20.0f ) ), 0.0f,float3(0,-10,-60), Quat::RotateX( 3.14f ));
+			plat->addComponent(phys);
+		}
 	}
 
 	/* Create console - Singleton
@@ -112,15 +140,15 @@ void Engine::update()
 
 	// Calculate timestep
 	double dt = mTimeSinceLastUpdate.getMillisecondsCPU();
-	OgreConsole::getSingletonPtr()->print(std::to_string(dt));
 	mTimeSinceLastUpdate.reset();
-
+	OgreConsole::getSingletonPtr()->print( "Loop Time: " + std::to_string( dt ) );
 	// Update systems and managers
     mInputSystem->update();
 
-	// profile event system
+	static Ogre::Timer profile;
+	profile.reset();
 	EventSystem::getSingletonPtr()->handleEvents();
-
+	OgreConsole::getSingletonPtr()->print( "Event Time: " + std::to_string(profile.getMicroseconds()/1000.0f) );
 	mPhysicsManager->update( dt );
 	mSpectatorManager->update();
 
@@ -148,6 +176,28 @@ void Engine::handle( Event* e )
 					   m_EngineShutdown = true;
 					break;
 
+					case SDL_SCANCODE_X:
+						{
+
+							float3 size( 
+								(rand()% 50) /10.0f ,
+								(rand()% 50) /10.0f ,
+								(rand()% 50) /10.0f );
+
+							float mass = ((rand()%50) / 10.0f) + 1;
+
+
+							Entity* box = mEntityManager->createEntity();
+
+							RenderComponent* rend = mRenderSystem->createComponent(box->LUID);
+							mRenderSystem->initComponent( rend );
+							mRenderSystem->setAsBox(rend, size);
+							box->addComponent(rend);
+
+							PhysicsComponent* phys = mPhysicsManager->createComponent(box->LUID);
+							mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
+							box->addComponent(phys);
+						}
 				}
 			}
         break;

@@ -72,7 +72,7 @@ Engine::Engine()
 	}
 	
 	{
-		// Create a Tumbler
+		// Create the ground
 		EntID ground = mEntityManager->createEntity();
 
 		RenderComponent* rend = mRenderSystem->createComponent(ground);
@@ -114,15 +114,13 @@ void Engine::update()
 
 	// Calculate timestep
 	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
-	mTimeSinceLastUpdate.reset();
-	OgreConsole::getSingletonPtr()->print( "Loop Time: " + std::to_string( dt ) );
+
 	// Update systems and managers
     mInputSystem->update();
 
-	static Ogre::Timer profile;
-	profile.reset();
+
 	EventSystem::getSingletonPtr()->handleEvents();
-	OgreConsole::getSingletonPtr()->print( "Event Time: " + std::to_string(profile.getMicroseconds()/1000.0f) );
+
 	mPhysicsManager->update( dt );
 	mSpectatorManager->update();
 

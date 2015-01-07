@@ -92,7 +92,12 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     std::map<Ogre::String, EngineMethodPtr>  commands;
 
 	Engine* mEngine;
- 
+
+	unsigned int mConsoleWidth;
+	unsigned int mConsoleHeight;
+
+	bool mEnableKeyGuard;
+
 };
 
 // Console Commands

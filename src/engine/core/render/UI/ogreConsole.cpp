@@ -18,7 +18,7 @@ template<> OgreConsole* Ogre::Singleton<OgreConsole>::ms_Singleton=0;
 template<> OgreConsole* Ogre::Singleton<OgreConsole>::msSingleton=0;
 #endif
 
-#define CONSOLE_FONT_INDEX 14
+#define CONSOLE_FONT_INDEX 9
 
 #define CONSOLE_LINE_LENGTH 85
 #define CONSOLE_LINE_COUNT 15
@@ -58,13 +58,17 @@ void OgreConsole::init(Gorilla::Screen* screen)
    mScreen = screen;
    mLayer = mScreen->createLayer(15);
    mGlyphData = mLayer->_getGlyphData(CONSOLE_FONT_INDEX); // Font.CONSOLE_FONT_INDEX
+   mGlyphData->mLineHeight = 10;
+   
+   mConsoleWidth = 500.0f;
+   mConsoleHeight = 200.0f;
 
-   mConsoleText = mLayer->createMarkupText(CONSOLE_FONT_INDEX,  10,10, Ogre::StringUtil::BLANK);
-   mConsoleText->width(mScreen->getWidth() - 10);
-   mPromptText = mLayer->createCaption(CONSOLE_FONT_INDEX,  10,10, "> _");
-   mDecoration = mLayer->createRectangle(8,8, mScreen->getWidth() - 16, mGlyphData->mLineHeight );
-   mDecoration->background_gradient(Gorilla::Gradient_NorthSouth, Gorilla::rgb(128,128,128,128), Gorilla::rgb(64,64,64,128));
-   mDecoration->border(2, Gorilla::rgb(128,128,128,128));
+   mConsoleText = mLayer->createMarkupText(CONSOLE_FONT_INDEX,  0,0, Ogre::StringUtil::BLANK);
+   mConsoleText->width(mConsoleWidth);
+   
+   mPromptText = mLayer->createCaption(CONSOLE_FONT_INDEX,  0,0, "> _");
+   mDecoration = mLayer->createRectangle(0,0, mConsoleWidth , mGlyphData->mLineHeight );
+   mDecoration->background_gradient(Gorilla::Gradient_NorthSouth, Gorilla::rgb(0,0,0,128), Gorilla::rgb(0,0,0,128));
    
    mIsInitialised = true;
    
@@ -88,85 +92,107 @@ void OgreConsole::shutdown()
 
 void OgreConsole::handle( Event* arg)
 {
- if( arg->getEventType() == EV_CORE_KEY_PRESS )
- {
-	 KeyboardEvent* e = arg->getData<KeyboardEvent>();
-
-	 if( e->mKeycode == SDL_SCANCODE_F1 )
-	 {
-		 setVisible( !mIsVisible );
-	 }
-
-	 if( e->mKeycode == SDL_SCANCODE_F2 )
-	 {
-		 mKeyboardActive = !mKeyboardActive;
-	 }
-
-	 if(!mIsVisible)
-	  return;
-
-
-
-	 if (e->mKeycode == SDL_SCANCODE_RETURN )
-	 {
-  
-	  print("%3> " + prompt + "%R");
-  
-	  //split the parameter list
-	  Ogre::StringVector params = Ogre::StringUtil::split(prompt, " ");
-
-	  if (params.size())
-	  {
-	   std::map<Ogre::String, EngineMethodPtr>::iterator i;
-	   for(i=commands.begin();i!=commands.end();i++){
-		if((*i).first==params[0]){
-		 if((*i).second)
-		  (*i).second(params);
-		 break;
+	if( arg->getEventType() == EV_CORE_TEXT_INPUT )
+	{
+		if( mKeyboardActive )
+		{
+			KeyboardEvent* e = arg->getData<KeyboardEvent>();
+			// Check it's not the enable key guard
+			if( mEnableKeyGuard == false )
+			{
+				// TODO check legality of character
+				prompt+=e->mKey;
+				mUpdatePrompt = true;
+			}
+			mEnableKeyGuard = false;
 		}
-	   }
-	   prompt.clear();
-	   mUpdateConsole = true;
-	   mUpdatePrompt = true;
-	  }
-	 }
+	}
 
-	 else if (e->mKeycode == SDL_SCANCODE_BACKSPACE )
-	 {
-	  if (prompt.size())
-	  {
-	   prompt.erase(prompt.end() - 1); //=prompt.substr(0,prompt.length()-1);
-	   mUpdatePrompt = true;
-	  }
-	 }
-	 else if (e->mKeycode == SDL_SCANCODE_PAGEUP )
-	 {
-		if(mStartline>0)
-		   mStartline--;
-	  mUpdateConsole = true;
-	 }
-
-	 else if (e->mKeycode == SDL_SCANCODE_PAGEDOWN)
-	 {
-		if(mStartline<lines.size())
-		   mStartline++;
-	  mUpdateConsole = true;
-	 }
- 
-	 mUpdatePrompt = true;
- }
- if(!mIsVisible)
-	 return;
- if( arg->getEventType() == EV_CORE_TEXT_INPUT )
- {
-	 if( mKeyboardActive )
+	if( arg->getEventType() == EV_CORE_KEY_PRESS )
 	 {
 		 KeyboardEvent* e = arg->getData<KeyboardEvent>();
-		 // TODO check legality of character
-		 prompt+=e->mKey;
+
+		 if( e->mKeycode == SDL_SCANCODE_F1 )
+		 {
+			 setVisible( !mIsVisible );
+		 }
+
+		 if( e->mKeycode == SDL_SCANCODE_T )
+		 {
+			 if( mKeyboardActive == false )
+			 {
+				 mKeyboardActive = true;
+				 mEnableKeyGuard = true;
+			 }
+		 }
+
+		 if( e->mKeycode == SDL_SCANCODE_SLASH )
+		 {
+			 if(!mKeyboardActive)
+			 {
+				 mKeyboardActive = true;
+				 mUpdatePrompt=true;
+			 }
+		 }
+
+		 if(!mIsVisible)
+		  return;
+
+
+
+		 if (e->mKeycode == SDL_SCANCODE_RETURN )
+		 {
+  
+		  print("%3> " + prompt + "%R");
+  
+		  //split the parameter list
+		  Ogre::StringVector params = Ogre::StringUtil::split(prompt, " ");
+
+		  if (params.size())
+		  {
+		   std::map<Ogre::String, EngineMethodPtr>::iterator i;
+		   for(i=commands.begin();i!=commands.end();i++){
+			if((*i).first==params[0]){
+			 if((*i).second)
+			  (*i).second(params);
+			 break;
+			}
+		   }
+		   prompt.clear();
+		   mUpdateConsole = true;
+		   mUpdatePrompt = true;
+		  }
+
+		  mKeyboardActive = false;
+		 }
+
+		 else if (e->mKeycode == SDL_SCANCODE_BACKSPACE )
+		 {
+		  if (prompt.size())
+		  {
+		   prompt.erase(prompt.end() - 1); //=prompt.substr(0,prompt.length()-1);
+		   mUpdatePrompt = true;
+		  }
+		 }
+		 else if (e->mKeycode == SDL_SCANCODE_PAGEUP )
+		 {
+			if(mStartline>0)
+			   mStartline--;
+		  mUpdateConsole = true;
+		 }
+
+		 else if (e->mKeycode == SDL_SCANCODE_PAGEDOWN)
+		 {
+			if(mStartline<lines.size())
+			   mStartline++;
+		  mUpdateConsole = true;
+		 }
+ 
 		 mUpdatePrompt = true;
 	 }
- }
+	 if(!mIsVisible)
+		 return;
+ 
 
 }
 
@@ -198,7 +224,7 @@ void OgreConsole::updateConsole()
  for(unsigned int c=0;c<mStartline;c++)
     start++;
  end=start;
- for(unsigned int c=0;c<CONSOLE_LINE_COUNT;c++){
+ for(unsigned int c=0;c<(mConsoleHeight/18)+1;c++){
     if(end==lines.end())
        break;
     end++;
@@ -212,22 +238,30 @@ void OgreConsole::updateConsole()
  mConsoleText->text(text.str());
  
  // Move prompt downwards.
- mPromptText->top(10 + (lcount * mGlyphData->mLineHeight));
+ mPromptText->top(  std::min( ((lcount) * mGlyphData->mLineHeight), (float)mConsoleHeight ));
  
  // Change background height so it covers the text and prompt
- mDecoration->height(((lcount+1) * mGlyphData->mLineHeight) + 4);
+ mDecoration->height( std::min( ((lcount+1) * mGlyphData->mLineHeight), (float)mConsoleHeight ) + 10.0f );
  
- mConsoleText->width(mScreen->getWidth() - 20);
- mDecoration->width(mScreen->getWidth() - 16);
- mPromptText->width(mScreen->getWidth() - 20);
+ mConsoleText->width(mConsoleWidth);
+ mDecoration->width(mConsoleWidth);
+ mPromptText->width(mConsoleWidth);
  
 }
 
 void OgreConsole::updatePrompt()
 {
+	
  mUpdatePrompt = false;
  std::stringstream text;
- text << "> " << prompt << "_";
+ if( mKeyboardActive == false )
+ {
+	 text << "";
+ }else
+ {
+	  text << "> " << prompt << "_";
+ }
+
  mPromptText->text(text.str());
 }
 

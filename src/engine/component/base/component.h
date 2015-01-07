@@ -13,10 +13,10 @@ public:
 	virtual ~Component(void);
 
 	/* Global identifier, the same on every networked system */
-	unsigned int GUID;
+	EntID GUID;
 
 	/* Local identifier, used to sync components */
-	unsigned int LUID;
+	EntID ID;
 
 };
 

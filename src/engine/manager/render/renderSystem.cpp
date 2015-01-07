@@ -195,10 +195,10 @@ void RenderSystem::handle( Event* e )
 {
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		RenderComponent* comp = getComponentByLUID( e->LUID );
+		RenderComponent* comp = getComponentByID( e->ID );
 		if( comp )
 		{
-			PhysicsComponent* phys = mEntityMgr->getByLUID(e->LUID)->getComponent<PhysicsComponent>();
+			PhysicsComponent* phys = mEntityMgr->getByID(e->ID)->getComponent<PhysicsComponent>();
 			comp->mSceneNode->setPosition( phys->position );
 			comp->mSceneNode->setOrientation( phys->orientation );
 		}

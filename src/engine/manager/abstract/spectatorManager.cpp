@@ -79,7 +79,7 @@ void SpectatorManager::handle( Event* e )
 			s->yAng = s->yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f );
 
 			// Get the physics component - set new orientation
-			PhysicsComponent* phys = mEntityManager->getByLUID(s->LUID)->getComponent<PhysicsComponent>();
+			PhysicsComponent* phys = mEntityManager->getByID(s->ID)->getComponent<PhysicsComponent>();
 			phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
 			phys->body->activate((true));
 		}
@@ -115,7 +115,7 @@ void SpectatorManager::update()
 			speed = SPECTATOR_DEFAULT_SPEED;
 
 		// Apply new rotation to physics component
-		PhysicsComponent* phys = mEntityManager->getByLUID(s->LUID)->getComponent<PhysicsComponent>();
+		PhysicsComponent* phys = mEntityManager->getByID(s->ID)->getComponent<PhysicsComponent>();
 		phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
 
 		// If the spectator moves, apply the force

@@ -34,7 +34,7 @@ public:
     void deregisterListener( EventListener* e );
 
 	// Get an inactive event
-	Event* getEvent( int eventType, int LUID = 0, EventListener* sentBy = nullptr );
+	Event* getEvent( int eventType, int ID = 0, EventListener* sentBy = nullptr );
 
 	// Puts an event back in the inactive pool.
 	void releaseEvent( Event* e );

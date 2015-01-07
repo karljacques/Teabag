@@ -41,7 +41,7 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 	/* Send out event to tell new position to components */
 	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
-	e->LUID = comp->LUID;
+	e->ID = comp->ID;
 	TransformEvent* te = e->createEventData<TransformEvent>();
 	te->mFloat3_1 = pos;
 	te->mQuaternion = rot;
@@ -74,7 +74,7 @@ void PhysicsManager::update( double dt )
 			comp->orientation =  comp->body->getWorldTransform().getRotation();
 
 			/* Create event */
-			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE,comp->LUID,this );
+			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE,comp->ID,this );
 			TransformEvent* me = e->createEventData<TransformEvent>();
 
 			me->mQuaternion =comp->orientation;
@@ -91,7 +91,7 @@ void PhysicsManager::update( double dt )
 
 void PhysicsManager::handle( Event* e )
 {
-	PhysicsComponent* comp = getComponentByLUID( e->LUID );
+	PhysicsComponent* comp = getComponentByID( e->ID );
 
 	if( comp )
 	{

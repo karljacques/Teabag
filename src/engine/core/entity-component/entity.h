@@ -19,8 +19,8 @@ public:
 	template <class T>
 	bool hasComponent();
 
-	unsigned int LUID;
-	unsigned int GUID;
+	EntID ID;
+	EntID GUID;
 
 private:
 	std::vector<Component*> mComponents;

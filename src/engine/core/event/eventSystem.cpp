@@ -112,7 +112,7 @@ void EventSystem::deregisterListener(EventListener* e )
 }
 
 /* Get a new event. This must remove it from the pool of events */
-Event* EventSystem::getEvent( int eventType, int LUID, EventListener* sentBy )
+Event* EventSystem::getEvent( int eventType, int ID, EventListener* sentBy )
 {
 	Event* e;
 	/* Check there are enough events, remove it, set type and return */
@@ -130,8 +130,8 @@ Event* EventSystem::getEvent( int eventType, int LUID, EventListener* sentBy )
 		
 	}
 
-	/* Add LUID */
-	e->LUID = LUID;
+	/* Add ID */
+	e->ID = ID;
 
 	/* Add a sent by field to the event*/
 	e->sentBy = sentBy;

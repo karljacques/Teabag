@@ -60,9 +60,6 @@ private:
 
     bool m_EngineShutdown;
 
-	Entity* mTumbler[5];
-	float mTumblerSpeed;
-	
 };
 
 #endif // engine_h__

@@ -9,23 +9,23 @@ public:
 	{
 	}
 	
-	T* ComponentManager<T>::createComponent( int LUID )
+	T* ComponentManager<T>::createComponent( int ID )
 	{
 		T* comp = new T;
-		mComponents[LUID] = comp;
-		comp->LUID = LUID;
+		mComponents[ID] = comp;
+		comp->ID = ID;
 		return comp;
 	}
 
-	void ComponentManager<T>::removeComponent( int LUID )
+	void ComponentManager<T>::removeComponent( int ID )
 	{
-		mComponents.erase( LUID );
+		mComponents.erase( ID );
 	}
 
-	T* ComponentManager<T>::getComponentByLUID( int LUID )
+	T* ComponentManager<T>::getComponentByID( int ID )
 	{
 		try{
-			return mComponents.at(LUID);
+			return mComponents.at(ID);
 		}
 		catch(std::out_of_range)
 		{
@@ -33,9 +33,9 @@ public:
 		}
 	}
 
-	bool ComponentManager<T>::componentExists( int LUID )
+	bool ComponentManager<T>::componentExists( int ID )
 	{
-		return mComponents.count(LUID) > 0;
+		return mComponents.count(ID) > 0;
 	}
 
 protected:

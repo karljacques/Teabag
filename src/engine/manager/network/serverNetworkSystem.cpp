@@ -26,7 +26,7 @@ int ServerNetworkSystem::receive()
 			OgreConsole::getSingleton().print( "Connected to a new peer" );
 	} 
 
-	if( mSnapshotManager->snapshotLife > 50 )
+	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
 	{
 		mSnapshotManager->sendSnapshot();
 		mSnapshotManager->startNewSnapshot();

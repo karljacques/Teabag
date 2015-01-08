@@ -9,7 +9,7 @@ SnapshotManager::SnapshotManager( NetworkSystem* networkSystem )
 	mSnapshots.push_back(mCurrentSnapshot);
 	mSnapshotIndex = 0;
 
-	mSnapshotLife.reset();
+	snapshotLife.reset();
 }
 
 void SnapshotManager::handle(Event* e)
@@ -95,7 +95,7 @@ void SnapshotManager::updateNetworkSystem(NetworkSystem* networkSystem)
 	mNetworkSystem = networkSystem;
 }
 
-std::vector<Event*> SnapshotManager::getSnapshotEvents(int timestamp)
+void SnapshotManager::getSnapshotEvents(int timestamp)
 {
 	// For the moment, just retrieve the latest snapshot
 	Snapshot* snapshot =  mSnapshots.back();
@@ -109,7 +109,7 @@ std::vector<Event*> SnapshotManager::getSnapshotEvents(int timestamp)
 		te->mQuaternion = snapshot->data[i].rot;
 		te->mFloat3_2 = snapshot->data[i].vel;
 		te->mQuaternion2 = snapshot->data[i].angRot;
-		e->ID = mNetworkSystem->GUIDToID( snapshot->data[i].GUID );
+		e->ID = snapshot->data[i].GUID;
 		EventSystem::getSingletonPtr()->dispatchEvent(e);
 	}
 

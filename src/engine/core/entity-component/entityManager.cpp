@@ -4,7 +4,7 @@
 
 EntityManager::EntityManager(void)
 {
-	mIDCount = 0;
+	mIDCount = 1;
 }
 
 

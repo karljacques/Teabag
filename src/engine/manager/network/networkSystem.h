@@ -3,6 +3,7 @@
 
 
 #include "..\..\core\event\eventListener.h"
+#include "..\..\core\network\snapshotManager.h"
 
 
 
@@ -37,11 +38,16 @@ public:
 	
 	int pingPeer( int client );
 
+	RakNet::RakPeerInterface* getPeer() {return peer;};
+	uint32 _find_free_guid();
+
 protected:
 
 	RakNet::RakPeerInterface * peer;
 	bool mHost;
 
-	uint32 _find_free_guid();
+	EntID mGuidCount;
+
+	SnapshotManager* mSnapshotManager;
 };
 #endif // networkSystem_h__

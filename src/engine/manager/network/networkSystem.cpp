@@ -6,6 +6,8 @@ using namespace RakNet;
 NetworkSystem::NetworkSystem( )
 {
 	peer = RakNet::RakPeerInterface::GetInstance();
+	mSnapshotManager = new SnapshotManager( this );
+	mGuidCount = 0;
 }
 
 void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
@@ -59,4 +61,10 @@ int NetworkSystem::pingPeer(int client)
 	}
 
 	return -1;
+}
+
+uint32 NetworkSystem::_find_free_guid()
+{
+	mGuidCount++;
+	return mGuidCount;
 }

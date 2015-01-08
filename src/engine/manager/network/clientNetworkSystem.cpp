@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "clientNetworkSystem.h"
+#include "..\..\core\network\snapshot.h"
 
 
 using namespace RakNet;
 
-ClientNetworkSystem::ClientNetworkSystem( )
+ClientNetworkSystem::ClientNetworkSystem( ) : NetworkSystem()
 {
 	RakNet::SocketDescriptor socketDescriptors[1] = {
 		RakNet::SocketDescriptor( )
@@ -26,17 +27,27 @@ int ClientNetworkSystem::receive()
 			OgreConsole::getSingleton().print("Connection Failed");
 
 		// Is it an event? If so, we need to convert it back
-		unsigned char ev = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
+		unsigned char id = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
 
 		// Create data structure to copy RakNet's packet data into
 		// otherwise RakNet could do some house cleaning and everything will crash.
-		char* data = new char[ sizeof(Event)  ];
-		memcpy( data, &packet->data[1], sizeof(Event));
+		if( id == EV_NETWORK_NONEVENT_SNAPSHOT )
+		{
+			char* data = new char[sizeof(Snapshot)];
+			memcpy( data, &packet->data[1], sizeof(Snapshot) );
 
-		// Cast data to a transform event
-		Event* te = reinterpret_cast<Event*>(data);
+			Snapshot* snapshot = reinterpret_cast<Snapshot*>(data);
+			mSnapshotManager->importSnapshot(snapshot);
+		}else
+		{
+			char* data = new char[ sizeof(Event)  ];
+			memcpy( data, &packet->data[1], sizeof(Event));
 
-		EventSystem::getSingletonPtr()->dispatchEvent(te);
+			// Cast data to a transform event
+			Event* te = reinterpret_cast<Event*>(data);
+
+			EventSystem::getSingletonPtr()->dispatchEvent(te);
+		}
 	}
 
 	return true;

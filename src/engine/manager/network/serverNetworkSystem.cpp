@@ -4,7 +4,7 @@
 
 using namespace RakNet;
 
-ServerNetworkSystem::ServerNetworkSystem(  )
+ServerNetworkSystem::ServerNetworkSystem(  ) : NetworkSystem()
 {
 	// Initialise server
 	RakNet::SocketDescriptor socketDescriptors[1] = {
@@ -26,14 +26,26 @@ int ServerNetworkSystem::receive()
 			OgreConsole::getSingleton().print( "Connected to a new peer" );
 	} 
 
+	if( mSnapshotManager->snapshotLife > 50 )
+	{
+		mSnapshotManager->sendSnapshot();
+		mSnapshotManager->startNewSnapshot();
+		mSnapshotManager->snapshotLife.reset();
+	}
+
 	return true;
 }
 
 void ServerNetworkSystem::handle( Event* e )
 {
-	if( e->getEventType() == EV_CORE_CHAT_MESSAGE )
+	if( e->getEventType() == EV_CORE_CHAT_MESSAGE || e->getEventType() == EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX )
 	{
 		this->send( e, IMMEDIATE_PRIORITY, RELIABLE );
+	}
+
+	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
+	{
+		mSnapshotManager->handle(e);
 	}
 }
 

@@ -156,17 +156,44 @@ void Engine::handle( Event* e )
 
 					case SDL_SCANCODE_X:
 						{
+							if( mNetworkSystem->isHost() )
+							{
+								float3 size( 2,2,2 );
 
-							float3 size( 
-								((rand()% 50) /10.0f ) +1,
-								((rand()% 50) /10.0f ) +1,
-								((rand()% 50) /10.0f  )+1);
+								float mass = 2.0f;
 
-							float mass = ((rand()%50) / 10.0f) + 1;
+
+								EntID box = mEntityManager->createEntity();
+
+								RenderComponent* rend = mRenderSystem->createComponent(box);
+								mRenderSystem->initComponent( rend );
+								mRenderSystem->setAsBox(rend, size);
+								mEntityManager->getByID(box)->addComponent(rend);
+
+								PhysicsComponent* phys = mPhysicsManager->createComponent(box);
+								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
+								mEntityManager->getByID(box)->addComponent(phys);
+
+								Event* dyn = EventSystem::getSingletonPtr()->getEvent(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
+								dyn->mGUID = mNetworkSystem->_find_free_guid();
+								mEntityManager->getByID(box)->GUID = dyn->mGUID;
+								EventSystem::getSingletonPtr()->dispatchEvent( dyn );
+								
+							}
+							
+
+							break;
+						}
+
+					case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
+						{
+							float3 size( 2,2,2 );
+
+							float mass = 2.0f;
 
 
 							EntID box = mEntityManager->createEntity();
-
+							mEntityManager->getByID(box)->GUID = e->mGUID;
 							RenderComponent* rend = mRenderSystem->createComponent(box);
 							mRenderSystem->initComponent( rend );
 							mRenderSystem->setAsBox(rend, size);
@@ -175,8 +202,8 @@ void Engine::handle( Event* e )
 							PhysicsComponent* phys = mPhysicsManager->createComponent(box);
 							mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
 							mEntityManager->getByID(box)->addComponent(phys);
-							break;
 						}
+						break;
 				}
 			}
         break;

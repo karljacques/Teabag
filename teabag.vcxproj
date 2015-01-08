@@ -136,6 +136,7 @@
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
+    <ClInclude Include="src\engine\core\network\snapshot.h" />
     <ClInclude Include="src\engine\core\network\snapshotManager.h" />
     <ClInclude Include="src\engine\core\render\OSXUtils.h" />
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h" />

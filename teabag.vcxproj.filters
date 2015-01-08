@@ -154,6 +154,9 @@
     <ClInclude Include="src\engine\core\event\events\messageEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\network\snapshot.h">
+      <Filter>engine\core\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

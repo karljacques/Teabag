@@ -91,10 +91,11 @@ void PhysicsManager::update( double dt )
 
 void PhysicsManager::handle( Event* e )
 {
-	PhysicsComponent* comp = getComponentByID( e->ID );
+	
 
-	if( comp )
+	if( componentExists(e->ID) )
 	{
+		PhysicsComponent* comp = getComponentByID( e->ID );
 		switch( e->getEventType() )
 		{
 		case EV_CORE_TRANSFORM_UPDATE:

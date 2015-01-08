@@ -31,16 +31,20 @@ void SnapshotManager::handle(Event* e)
 			}
 		}
 
-		TransformEvent* te = e->getData<TransformEvent>();
-		Transform* trans = &mCurrentSnapshot->data[mSnapshotIndex];
-		trans->pos = te->mFloat3_1;
-		trans->rot = te->mQuaternion;
-		trans->vel = te->mFloat3_2;
-		trans->angRot = te->mQuaternion2;
-		trans->GUID = e->mGUID;
+		if( index < SNAPSHOT_SIZE )
+		{
+			TransformEvent* te = e->getData<TransformEvent>();
+			Transform* trans = &mCurrentSnapshot->data[index];
+			trans->pos = te->mFloat3_1;
+			trans->rot = te->mQuaternion;
+			trans->vel = te->mFloat3_2;
+			trans->angRot = te->mQuaternion2;
+			trans->GUID = e->ID;
 
+		}
 		// Increase snapshot index
-		mSnapshotIndex++;
+		if( index == mSnapshotIndex )
+			mSnapshotIndex++;
 	}
 }
 
@@ -77,17 +81,17 @@ void SnapshotManager::sendSnapshot()
 	mCurrentSnapshot->maxindex = mSnapshotIndex;
 
 	// Calculate payload size
-	unsigned int size =  (sizeof(Transform)*(mSnapshotIndex+1) +2); //+1 for timestamp, +1 for index
+	unsigned int size =  sizeof(Snapshot); //+1 for timestamp, +1 for index
 
 	// Cast the snapshot to char*
-	char* payload = new char[ size + 3 ]; // +1 for ID, +1 for timestamp, +1 for index
+	char* payload = new char[ size + 1 ]; // +1 for ID,
 	memcpy( &payload[1], reinterpret_cast<char*>(mCurrentSnapshot), size );
 
 	// Set packet ID
 	payload[0] = (unsigned char)(EV_NETWORK_NONEVENT_SNAPSHOT + ID_USER_PACKET_ENUM);
 
 	// Send the packet!!
-	mNetworkSystem->getPeer()->Send( payload,size, MEDIUM_PRIORITY, UNRELIABLE, char(2),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 0 );
+	mNetworkSystem->getPeer()->Send( payload,size, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
 }
 
 void SnapshotManager::updateNetworkSystem(NetworkSystem* networkSystem)

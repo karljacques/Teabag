@@ -38,6 +38,7 @@ int ClientNetworkSystem::receive()
 
 			Snapshot* snapshot = reinterpret_cast<Snapshot*>(data);
 			mSnapshotManager->importSnapshot(snapshot);
+			mSnapshotManager->getSnapshotEvents(0);
 		}else
 		{
 			char* data = new char[ sizeof(Event)  ];
@@ -48,6 +49,8 @@ int ClientNetworkSystem::receive()
 
 			EventSystem::getSingletonPtr()->dispatchEvent(te);
 		}
+
+		
 	}
 
 	return true;

@@ -48,14 +48,17 @@
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp">
       <Filter>engine\core\render\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\render\UI\ogreConsole.cpp">
-      <Filter>engine\core\render\UI</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\network\snapshotManager.cpp">
       <Filter>engine\core\network</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp">
       <Filter>engine\manager\abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\user-interface\debugDisplaySystem.cpp">
+      <Filter>engine\core\user-interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\user-interface\ogreConsole.cpp">
+      <Filter>engine\core\user-interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,9 +136,6 @@
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h">
       <Filter>engine\core\render\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\render\UI\ogreConsole.h">
-      <Filter>engine\core\render\UI</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\network\snapshotManager.h">
       <Filter>engine\core\network</Filter>
     </ClInclude>
@@ -144,6 +144,15 @@
     </ClInclude>
     <ClInclude Include="src\engine\component\abstract\spectatorComponent.h">
       <Filter>engine\component\abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\user-interface\debugDisplaySystem.h">
+      <Filter>engine\core\user-interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\user-interface\ogreConsole.h">
+      <Filter>engine\core\user-interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\messageEvent.h">
+      <Filter>engine\core\event\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +212,9 @@
     </Filter>
     <Filter Include="engine\component\abstract">
       <UniqueIdentifier>{1b3da9f1-ff50-45cc-bd5f-8b8911ac19e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\user-interface">
+      <UniqueIdentifier>{e677b7a0-e4bb-46da-92ef-761847bb3bbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

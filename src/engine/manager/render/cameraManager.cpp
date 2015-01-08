@@ -1,6 +1,6 @@
 #include "pch.h"
+#include "cameraManager.h"
 #include "..\..\core\event\eventSystem.h"
-
 
 CameraManager::CameraManager(RenderSystem* rend)
 {
@@ -52,10 +52,9 @@ void CameraManager::lookAt(CameraComponent* comp, float3 pos)
 void CameraManager::handle(Event* e)
 {
 	// Get Component
-	CameraComponent* comp = getComponentByID(e->ID);
-
-	if( comp )
+	if( this->componentExists(e->ID) )
 	{
+		CameraComponent* comp = getComponentByID(e->ID);
 		if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 		{
 			TransformEvent* me = e->getData<TransformEvent>();
@@ -63,6 +62,7 @@ void CameraManager::handle(Event* e)
 			comp->camera->setOrientation( me->mQuaternion );
 		}
 	}
+	
 }
 
 Ogre::Viewport* CameraManager::getViewport()

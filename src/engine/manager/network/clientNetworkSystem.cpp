@@ -19,7 +19,6 @@ int ClientNetworkSystem::receive()
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		OgreConsole::getSingleton().print( std::to_string( getPacketIdentifier(packet) - ID_USER_PACKET_ENUM ) );
 		if( getPacketIdentifier(packet)  == ID_CONNECTION_REQUEST_ACCEPTED )
 			OgreConsole::getSingleton().print("Connection Success");
 
@@ -50,6 +49,9 @@ void ClientNetworkSystem::connect( const char* ip )
 
 void ClientNetworkSystem::handle( Event* e )
 {
-
+	if( e->getEventType() == EV_CORE_CHAT_MESSAGE )
+	{
+		this->send( e, IMMEDIATE_PRIORITY, RELIABLE );
+	}
 }
 

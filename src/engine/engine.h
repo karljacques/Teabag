@@ -17,8 +17,11 @@
 #include "manager\render\cameraManager.h"
 #include "core\input\inputSystem.h"
 
-#include "core\render\UI\ogreConsole.h"
+#include "core\user-interface\ogreConsole.h"
 #include "manager\abstract\spectatorManager.h"
+#include "core\user-interface\debugDisplaySystem.h"
+
+
 
 class InputSystem;
 
@@ -57,6 +60,9 @@ private:
 	CameraManager* mCameraManager;
 
 	SpectatorManager* mSpectatorManager;
+
+	DebugDisplaySystem* mDebugDisplaySystem;
+
 
     bool m_EngineShutdown;
 

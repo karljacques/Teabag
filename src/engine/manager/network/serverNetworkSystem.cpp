@@ -31,6 +31,9 @@ int ServerNetworkSystem::receive()
 
 void ServerNetworkSystem::handle( Event* e )
 {
-
+	if( e->getEventType() == EV_CORE_CHAT_MESSAGE )
+	{
+		this->send( e, IMMEDIATE_PRIORITY, RELIABLE );
+	}
 }
 

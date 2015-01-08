@@ -39,6 +39,7 @@ Engine::Engine()
 
 	mSpectatorManager = new SpectatorManager( mEntityManager );
 
+
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 	EventSystem::getSingletonPtr()->registerListener( this );
@@ -49,6 +50,7 @@ Engine::Engine()
 	e->registerListener(mRenderSystem);
 	e->registerListener(mCameraManager);
 	e->registerListener(mSpectatorManager);
+	e->registerListener(mNetworkSystem);
 
 	{
 		// Create a spectator
@@ -91,10 +93,12 @@ Engine::Engine()
 		Registers itself as an event listener */
 	new OgreConsole(this);
 
-	OgreConsole::getSingleton().addCommand( "net.connect", &Console_Net_Connect );
-	OgreConsole::getSingleton().addCommand( "net.status", &Console_Net_Status );
+	mDebugDisplaySystem = new DebugDisplaySystem( mCameraManager );
 
-	OgreConsole::getSingleton().addCommand( "geo.spawn", &Console_Geometry_Spawn );
+	OgreConsole::getSingleton().addCommand( "/net.connect", &Console_Net_Connect );
+	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
+
+	OgreConsole::getSingleton().addCommand( "/geo.spawn", &Console_Geometry_Spawn );
 	
 
 }
@@ -114,10 +118,10 @@ void Engine::update()
 
 	// Calculate timestep
 	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
+	mTimeSinceLastUpdate.reset();
 
 	// Update systems and managers
     mInputSystem->update();
-
 
 	EventSystem::getSingletonPtr()->handleEvents();
 
@@ -125,6 +129,7 @@ void Engine::update()
 	mSpectatorManager->update();
 
 	mNetworkSystem->receive();
+	mDebugDisplaySystem->update(dt);
 
     // render after everything is updated
     mRenderSystem->renderOneFrame();

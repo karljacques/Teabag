@@ -16,6 +16,7 @@
 #include "events/keyboardEvent.h"
 #include "events/mouseEvent.h"
 #include "events/transformEvent.h"
+#include "events/messageEvent.h"
 #include "eventListener.h"
 
 #define EVENT_PAYLOAD_SIZE 64
@@ -34,6 +35,7 @@ enum EV_EventType
     EV_CORE_KEY_RELEASE,
 	EV_CORE_MOUSE_MOVEMENT,
 	EV_CORE_TEXT_INPUT,
+	EV_CORE_CHAT_MESSAGE,
 
 	// Physics
 	EV_CORE_TRANSFORM_UPDATE,

@@ -79,15 +79,20 @@ void EventSystem::handleEvents()
 
 	/* All done - clean up time.
 		Remove deleted listeners */
-	for( auto del = mRemovedListeners.begin(); del != mRemovedListeners.end(); del++ )
+	while( mRemovedListeners.size() > 0)
 	{
+		EventListener* del = mRemovedListeners.back();
+		mRemovedListeners.pop_back();
 		for( auto lsnr = mEventListeners.begin(); lsnr != mEventListeners.end(); lsnr++ )
 		{
-			if( (*del) == (*lsnr ))
+			if( del == (*lsnr ))
+			{
 				mEventListeners.erase(lsnr);
+				break;
+			}
 		}
 	}
-	mRemovedListeners.clear();
+
 
 	/* Release all events back to event pool */
 	for( auto e = mEventList.begin(); e != mEventList.end(); e++ )
@@ -125,7 +130,6 @@ Event* EventSystem::getEvent( int eventType, int ID, EventListener* sentBy )
 	else
 	{
 		/* Not enough events in pool, create a new one. This is slower - make sure there are enough in the pool to satisfy the game */
-		OgreConsole::getSingletonPtr()->print("Insufficient Events - created a new one");
 		e  = new Event(eventType);
 		
 	}

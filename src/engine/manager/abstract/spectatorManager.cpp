@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "spectatorManager.h"
+#include "..\..\component\physics\physicsComponent.h"
 
 #define SPECTATOR_DEFAULT_SPEED 20.0f
 #define SPECTATOR_BOOST_SPEED 100.0f

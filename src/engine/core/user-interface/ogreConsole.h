@@ -24,10 +24,8 @@
    
 */
 
-#include <Ogre.h>
 #include "engine/core/event/eventListener.h"
-#include <SDL.h>
-#include "Gorilla.h"
+#include "..\render\UI\Gorilla.h"
 #include "engine/engine.h"
 
 typedef void ( *EngineMethodPtr ) (Ogre::StringVector& );
@@ -97,7 +95,7 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
 	unsigned int mConsoleHeight;
 
 	bool mEnableKeyGuard;
-
+	int mLineCount;
 };
 
 // Console Commands

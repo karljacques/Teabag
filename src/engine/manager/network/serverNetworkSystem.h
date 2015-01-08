@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "networkSystem.h"
-#include "..\..\core\render\UI\ogreConsole.h"
+#include "..\..\core\user-interface\ogreConsole.h"
 
 class ServerNetworkSystem : public NetworkSystem
 {

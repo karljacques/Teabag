@@ -12,6 +12,7 @@
 #include "pch.h"
 #include "ogreConsole.h"
 
+
 #if OGRE_VERSION < 67584 // 1.8.0
 template<> OgreConsole* Ogre::Singleton<OgreConsole>::ms_Singleton=0;
 #else
@@ -35,8 +36,8 @@ OgreConsole::OgreConsole( Engine* eng )
 
 	EventSystem::getSingletonPtr()->registerListener(this);
 
-	setVisible(false);
 	mKeyboardActive = false;
+	mEnableKeyGuard = false;
 }
  
 OgreConsole::~OgreConsole()
@@ -58,7 +59,6 @@ void OgreConsole::init(Gorilla::Screen* screen)
    mScreen = screen;
    mLayer = mScreen->createLayer(15);
    mGlyphData = mLayer->_getGlyphData(CONSOLE_FONT_INDEX); // Font.CONSOLE_FONT_INDEX
-   mGlyphData->mLineHeight = 10;
    
    mConsoleWidth = 500.0f;
    mConsoleHeight = 200.0f;
@@ -71,6 +71,8 @@ void OgreConsole::init(Gorilla::Screen* screen)
    mDecoration->background_gradient(Gorilla::Gradient_NorthSouth, Gorilla::rgb(0,0,0,128), Gorilla::rgb(0,0,0,128));
    
    mIsInitialised = true;
+
+   mLineCount = (mConsoleHeight/18);
    
    print("%5Ogre%R%6Console%0 Activated. Press F1 to show/hide.%R");
 }
@@ -92,6 +94,12 @@ void OgreConsole::shutdown()
 
 void OgreConsole::handle( Event* arg)
 {
+	if( arg->getEventType() == EV_CORE_CHAT_MESSAGE )
+	{
+		MessageEvent* me = arg->getData<MessageEvent>();
+		this->print( me->message );
+	}
+
 	if( arg->getEventType() == EV_CORE_TEXT_INPUT )
 	{
 		if( mKeyboardActive )
@@ -109,90 +117,101 @@ void OgreConsole::handle( Event* arg)
 	}
 
 	if( arg->getEventType() == EV_CORE_KEY_PRESS )
-	 {
-		 KeyboardEvent* e = arg->getData<KeyboardEvent>();
+	{
+		KeyboardEvent* e = arg->getData<KeyboardEvent>();
 
-		 if( e->mKeycode == SDL_SCANCODE_F1 )
-		 {
-			 setVisible( !mIsVisible );
-		 }
+		if( e->mKeycode == SDL_SCANCODE_F1 )
+		{
+			setVisible( !mIsVisible );
+		}
 
-		 if( e->mKeycode == SDL_SCANCODE_T )
-		 {
-			 if( mKeyboardActive == false )
-			 {
-				 mKeyboardActive = true;
-				 mEnableKeyGuard = true;
-			 }
-		 }
-
-		 if( e->mKeycode == SDL_SCANCODE_SLASH )
-		 {
-			 if(!mKeyboardActive)
-			 {
-				 mKeyboardActive = true;
-				 mUpdatePrompt=true;
-			 }
-		 }
-
-		 if(!mIsVisible)
-		  return;
-
-
-
-		 if (e->mKeycode == SDL_SCANCODE_RETURN )
-		 {
-  
-		  print("%3> " + prompt + "%R");
-  
-		  //split the parameter list
-		  Ogre::StringVector params = Ogre::StringUtil::split(prompt, " ");
-
-		  if (params.size())
-		  {
-		   std::map<Ogre::String, EngineMethodPtr>::iterator i;
-		   for(i=commands.begin();i!=commands.end();i++){
-			if((*i).first==params[0]){
-			 if((*i).second)
-			  (*i).second(params);
-			 break;
+		if( e->mKeycode == SDL_SCANCODE_T )
+		{
+			if( mKeyboardActive == false )
+			{
+				mKeyboardActive = true;
+				mEnableKeyGuard = true;
 			}
-		   }
-		   prompt.clear();
-		   mUpdateConsole = true;
-		   mUpdatePrompt = true;
-		  }
+		}
 
-		  mKeyboardActive = false;
-		 }
+		if( e->mKeycode == SDL_SCANCODE_SLASH )
+		{
+			if(!mKeyboardActive)
+			{
+				mKeyboardActive = true;
+				mUpdatePrompt=true;
+			}
+		}
 
-		 else if (e->mKeycode == SDL_SCANCODE_BACKSPACE )
-		 {
-		  if (prompt.size())
-		  {
-		   prompt.erase(prompt.end() - 1); //=prompt.substr(0,prompt.length()-1);
-		   mUpdatePrompt = true;
-		  }
-		 }
-		 else if (e->mKeycode == SDL_SCANCODE_PAGEUP )
-		 {
+		if(!mIsVisible)
+			return;
+
+
+
+		if (e->mKeycode == SDL_SCANCODE_RETURN )
+		{
+			print("%3> " + prompt + "%R");
+
+			// See if it's a command or chat
+			if( prompt[0] == ("/")[0])
+			{
+				//split the parameter list
+				Ogre::StringVector params = Ogre::StringUtil::split(prompt, " ");
+
+				if (params.size())
+				{
+					std::map<Ogre::String, EngineMethodPtr>::iterator i;
+					for(i=commands.begin();i!=commands.end();i++){
+						if((*i).first==params[0]){
+							if((*i).second)
+								(*i).second(params);
+							break;
+						}
+					}
+					
+				}
+			}else
+			{
+				// It's chat - we need to send this off!
+				Event* e = EventSystem::getSingleton().getEvent(EV_CORE_CHAT_MESSAGE, 0, this );
+				MessageEvent* me = e->createEventData<MessageEvent>();
+				me->message = prompt;
+				EventSystem::getSingleton().dispatchEvent(e);
+			}
+
+			mKeyboardActive = false;
+			prompt.clear();
+			mUpdateConsole = true;
+			mUpdatePrompt = true;
+		}
+
+		else if (e->mKeycode == SDL_SCANCODE_BACKSPACE )
+		{
+			if (prompt.size())
+			{
+				prompt.erase(prompt.end() - 1); //=prompt.substr(0,prompt.length()-1);
+				mUpdatePrompt = true;
+			}
+		}
+		else if (e->mKeycode == SDL_SCANCODE_PAGEUP )
+		{
 			if(mStartline>0)
-			   mStartline--;
-		  mUpdateConsole = true;
-		 }
+				mStartline--;
+			mUpdateConsole = true;
+		}
 
-		 else if (e->mKeycode == SDL_SCANCODE_PAGEDOWN)
-		 {
+		else if (e->mKeycode == SDL_SCANCODE_PAGEDOWN)
+		{
 			if(mStartline<lines.size())
-			   mStartline++;
-		  mUpdateConsole = true;
-		 }
- 
-		 mUpdatePrompt = true;
-	 }
-	 if(!mIsVisible)
-		 return;
- 
+				mStartline++;
+			mUpdateConsole = true;
+		}
+
+		mUpdatePrompt = true;
+	}
+	if(!mIsVisible)
+		return;
+
 
 }
 
@@ -280,15 +299,15 @@ void OgreConsole::print(const Ogre::String &text)
          line+=str[c];
    }
 
-   if( lines.size() > 20 )
+   if( lines.size() > mLineCount )
    {
 	   lines.pop_front();
    }
 
    if(line.length())
       lines.push_back(line);
-   if(lines.size()>CONSOLE_LINE_COUNT)
-      mStartline=lines.size()-CONSOLE_LINE_COUNT;
+   if(lines.size()>mLineCount)
+      mStartline=lines.size()-mLineCount;
    else
       mStartline=0;
    mUpdateConsole=true;

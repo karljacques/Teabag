@@ -103,7 +103,8 @@
     <ClCompile Include="src\engine\core\input\inputSystem.cpp" />
     <ClCompile Include="src\engine\core\network\snapshotManager.cpp" />
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp" />
-    <ClCompile Include="src\engine\core\render\UI\ogreConsole.cpp" />
+    <ClCompile Include="src\engine\core\user-interface\debugDisplaySystem.cpp" />
+    <ClCompile Include="src\engine\core\user-interface\ogreConsole.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp" />
     <ClCompile Include="src\engine\manager\network\clientNetworkSystem.cpp" />
@@ -131,13 +132,15 @@
     <ClInclude Include="src\engine\core\event\eventListener.h" />
     <ClInclude Include="src\engine\core\event\eventSystem.h" />
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\messageEvent.h" />
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
     <ClInclude Include="src\engine\core\network\snapshotManager.h" />
     <ClInclude Include="src\engine\core\render\OSXUtils.h" />
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h" />
-    <ClInclude Include="src\engine\core\render\UI\ogreConsole.h" />
+    <ClInclude Include="src\engine\core\user-interface\debugDisplaySystem.h" />
+    <ClInclude Include="src\engine\core\user-interface\ogreConsole.h" />
     <ClInclude Include="src\engine\engine.h" />
     <ClInclude Include="src\engine\manager\abstract\spectatorManager.h" />
     <ClInclude Include="src\engine\manager\network\clientNetworkSystem.h" />

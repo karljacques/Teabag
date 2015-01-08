@@ -117,6 +117,18 @@ void PhysicsManager::handle( Event* e )
 				comp->body->activate(true);
 				break;
 			}
+
+		case EV_NETWORK_TRANSFORM_UPDATE:
+			{
+				TransformEvent* me = e->getData<TransformEvent>();
+				btTransform trans(me->mQuaternion, comp->position );
+				comp->orientation = me->mQuaternion;
+				comp->body->setAngularVelocity( me->mQuaternion.ToEulerXYX());
+				comp->body->setLinearVelocity( me->mFloat3_2 );
+				comp->body->setWorldTransform( trans );
+				comp->body->activate(true);
+				break;
+			}
 		}
 	}
 }

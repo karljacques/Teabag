@@ -185,29 +185,30 @@ void Engine::handle( Event* e )
 							break;
 						}
 
-					case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
-						{
-							float3 size( 2,2,2 );
-
-							float mass = 2.0f;
-
-
-							EntID box = mEntityManager->createEntity();
-							mEntityManager->getByID(box)->GUID = e->mGUID;
-							RenderComponent* rend = mRenderSystem->createComponent(box);
-							mRenderSystem->initComponent( rend );
-							mRenderSystem->setAsBox(rend, size);
-							mEntityManager->getByID(box)->addComponent(rend);
-
-							PhysicsComponent* phys = mPhysicsManager->createComponent(box);
-							mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
-							mEntityManager->getByID(box)->addComponent(phys);
-						}
-						break;
+					
 				}
 			}
         break;
 
+		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
+			{
+				float3 size( 2,2,2 );
+
+				float mass = 2.0f;
+
+
+				EntID box = mEntityManager->createEntity();
+				mEntityManager->getByID(box)->GUID = e->mGUID;
+				RenderComponent* rend = mRenderSystem->createComponent(box);
+				mRenderSystem->initComponent( rend );
+				mRenderSystem->setAsBox(rend, size);
+				mEntityManager->getByID(box)->addComponent(rend);
+
+				PhysicsComponent* phys = mPhysicsManager->createComponent(box);
+				mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
+				mEntityManager->getByID(box)->addComponent(phys);
+			}
+			break;
     }
 }
 

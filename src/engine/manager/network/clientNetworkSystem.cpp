@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "clientNetworkSystem.h"
-#include "..\..\core\network\snapshot.h"
+#include "../../core/network/snapshot.h"
 
 
 using namespace RakNet;

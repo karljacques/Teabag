@@ -252,7 +252,7 @@ void OgreConsole::updateConsole()
  for(i=start;i!=end;i++)
  {
   lcount++;
-  text << (*i) << "\n";
+  text << (*i) << "/n";
  }
  mConsoleText->text(text.str());
  
@@ -291,11 +291,11 @@ void OgreConsole::print(const Ogre::String &text)
    int len=text.length();
    Ogre::String line;
    for(int c=0;c<len;c++){
-      if(str[c]=='\n'||line.length()>=CONSOLE_LINE_LENGTH){
+      if(str[c]=='/n'||line.length()>=CONSOLE_LINE_LENGTH){
          lines.push_back(line);
          line="";
       }
-      if(str[c]!='\n')
+      if(str[c]!='/n')
          line+=str[c];
    }
 

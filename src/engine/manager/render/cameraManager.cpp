@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "cameraManager.h"
-#include "..\..\core\event\eventSystem.h"
+#include "../../core/event/eventSystem.h"
 
 CameraManager::CameraManager(RenderSystem* rend)
 {

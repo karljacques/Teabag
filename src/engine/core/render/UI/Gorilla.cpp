@@ -319,7 +319,7 @@ namespace Gorilla
    
    if (str_values.size() < 4)
    {
-    //std::cout << "[Gorilla] Glyph #" << (*i).second << " does not have enough properties.\n";
+    //std::cout << "[Gorilla] Glyph #" << (*i).second << " does not have enough properties./n";
     continue;
    }
    
@@ -371,7 +371,7 @@ namespace Gorilla
    
    if (str_values.size() != 2)
    {
-    //std::cout << "[Gorilla] Kerning Glyph #" << left_name << " does not have enough properties\n";
+    //std::cout << "[Gorilla] Kerning Glyph #" << left_name << " does not have enough properties/n";
     continue;
    }
    
@@ -439,7 +439,7 @@ namespace Gorilla
    
    if (str_values.size() != 4)
    {
-    //std::cout << "[Gorilla] Sprite #" << sprite_name << " does not have enough properties\n" << data << "\n";
+    //std::cout << "[Gorilla] Sprite #" << sprite_name << " does not have enough properties/n" << data << "/n";
     continue;
    }
    
@@ -1003,7 +1003,7 @@ namespace Gorilla
    knownVertexCount += (*it).second->mVertices.size();
   
   _resizeVertexBuffer(knownVertexCount);
-  //std::cout << "+++ Known Vertex Count is: " << knownVertexCount << "\n";
+  //std::cout << "+++ Known Vertex Count is: " << knownVertexCount << "/n";
   Vertex* writeIterator = (Vertex*) mVertexBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
   
   size_t i = 0;
@@ -2325,7 +2325,7 @@ void  QuadList::border(Ogre::Real x, Ogre::Real y, Ogre::Real w, Ogre::Real h, O
     continue;
    }
    
-   if (thisChar == '\n')
+   if (thisChar == '/n')
    {
     lastChar = thisChar;
     cursorX = mLeft;

@@ -1,8 +1,8 @@
-#include "..\..\core\entity-component\componentManager.h"
-#include "..\..\component\abstract\spectatorComponent.h"
-#include "..\..\core\event\events\keyboardEvent.h"
-#include "..\..\core\event\eventSystem.h"
-#include "..\..\core\entity-component\entityManager.h"
+#include "../../core/entity-component/componentManager.h"
+#include "../../component/abstract/spectatorComponent.h"
+#include "../../core/event/events/keyboardEvent.h"
+#include "../../core/event/eventSystem.h"
+#include "../../core/entity-component/entityManager.h"
 
 #ifndef spectatorManager_h__
 #define spectatorManager_h__

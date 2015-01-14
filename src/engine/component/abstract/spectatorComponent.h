@@ -1,7 +1,7 @@
 #ifndef spectatorComponent_h__
 #define spectatorComponent_h__
 
-#include "..\base\component.h"
+#include "../base/component.h"
 
 class SpectatorComponent : public Component
 {

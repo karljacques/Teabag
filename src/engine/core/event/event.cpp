@@ -11,7 +11,8 @@
 Event::Event( int eventType )
 {
     mEventType = eventType;
-	mGUID = 0;
+	GUID = -1;
+	ID = -1;
 }
 
 int Event::getEventType()

@@ -198,9 +198,9 @@ void RenderSystem::handle( Event* e )
 		if( componentExists(e->ID ))
 		{
 			RenderComponent* comp = getComponentByID( e->ID );
-			PhysicsComponent* phys = mEntityMgr->getByID(e->ID)->getComponent<PhysicsComponent>();
-			comp->mSceneNode->setPosition( phys->position );
-			comp->mSceneNode->setOrientation( phys->orientation );
+			TransformEvent* te = e->getData<TransformEvent>();
+			comp->mSceneNode->setPosition( te->mFloat3_1 );
+			comp->mSceneNode->setOrientation( te->mQuaternion );
 
 		}
 

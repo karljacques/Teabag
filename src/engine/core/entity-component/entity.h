@@ -20,7 +20,6 @@ public:
 	bool hasComponent();
 
 	EntID ID;
-	EntID GUID;
 
 private:
 	std::vector<Component*> mComponents;

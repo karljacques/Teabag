@@ -1,12 +1,10 @@
 #ifndef networkSystem_h__
 #define networkSystem_h__
 
-
 #include "..\..\core\event\eventListener.h"
 #include "..\..\core\network\snapshotManager.h"
-
-
-
+#include "..\..\core\entity-component\componentManager.h"
+#include "..\..\component\network\networkComponent.h"
 
 #define MAX_CONNECTIONS 16
 #define SERVER_PORT 2343
@@ -14,11 +12,11 @@
 
 typedef unsigned int uint32;
 
-class NetworkSystem : public EventListener
+class NetworkSystem : public EventListener, public ComponentManager<NetworkComponent>
 {
 public:
 	NetworkSystem(  );
-	~NetworkSystem();
+	virtual ~NetworkSystem();
 
 	// Sends an event across the network
 	void send( Event* e, PacketPriority p, PacketReliability r );

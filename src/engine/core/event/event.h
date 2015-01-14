@@ -71,7 +71,7 @@ public:
 	// networkComponent will pick up on this event, attach the object's GUID to the event before pumping it up to the network system.
 	// The reverse is also true, when an event is coming in to create an object, the new network component will be assigned
 	// based on this GUID.
-	EntID mGUID;
+	EntID GUID;
 
 	EntID ID;
 

@@ -15,7 +15,7 @@
 InputSystem::InputSystem(  SDL_Window* window )
 {
 	mWindow = window;
-	mWindowActive = true;
+	mWindowActive = false; // start unfocused
 
 	SDL_ShowCursor( false );
 

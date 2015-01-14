@@ -45,7 +45,14 @@ void ServerNetworkSystem::handle( Event* e )
 
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		mSnapshotManager->handle(e);
+		// Assign GUID To event
+		// TODO duplicate event to make it const-correct.
+		if( componentExists( e->ID ) )
+		{
+			e->GUID = mComponents[e->ID]->GUID;
+			mSnapshotManager->handle(e);
+		}
+		
 	}
 }
 

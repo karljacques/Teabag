@@ -20,31 +20,36 @@ void SnapshotManager::handle(Event* e)
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
 		int index = mSnapshotIndex;
+		// Make the Transform
+		TransformEvent* te = e->getData<TransformEvent>();
+		Transform* trans = new Transform();
+		trans->pos = te->mFloat3_1;
+		trans->rot = te->mQuaternion;
+		trans->vel = te->mFloat3_2;
+		trans->angRot = te->mQuaternion2;
+		trans->GUID = e->GUID;
 
+		bool isInSnapshot = false;
 		// See if this object is already in the snapshot
-		for( int i=0; i<SNAPSHOT_SIZE;i++)
+		for( auto i = mCurrentSnapshot->data.begin();  i!=mCurrentSnapshot->data.end(); i++ )
 		{
-			if( mCurrentSnapshot->data[i].GUID == e->mGUID )
+			if( (*i).GUID == e->GUID )
 			{
-				index = i;
+				/// It's already in the snapshot, update it with new data
+				(*i) = *trans; // This should be a copy?
+				isInSnapshot = true;
 				break;
 			}
 		}
 
-		if( index < SNAPSHOT_SIZE )
+		// Wasn't already in snapshot, add it
+		if( isInSnapshot == false )
 		{
-			TransformEvent* te = e->getData<TransformEvent>();
-			Transform* trans = &mCurrentSnapshot->data[index];
-			trans->pos = te->mFloat3_1;
-			trans->rot = te->mQuaternion;
-			trans->vel = te->mFloat3_2;
-			trans->angRot = te->mQuaternion2;
-			trans->GUID = e->ID;
-
+			mCurrentSnapshot->data.push_back(*trans); // < - This is the most likely thing to crash, if you're searching! I'm not sure if it will copy or what. For future reference.
 		}
-		// Increase snapshot index
-		if( index == mSnapshotIndex )
-			mSnapshotIndex++;
+
+		// Cleanup
+		delete trans;
 	}
 }
 
@@ -75,23 +80,30 @@ void SnapshotManager::startNewSnapshot()
 
 void SnapshotManager::sendSnapshot()
 {
-	// Make it into an event we can send
-	// Assign timestamp and max index
-	mCurrentSnapshot->timestamp = RakNet::GetTime();
-	mCurrentSnapshot->maxindex = mSnapshotIndex;
+	if( mCurrentSnapshot->data.size() > 0 )
+	{
+		// Calculate payload size
+		unsigned int size =  mCurrentSnapshot->data.size()*sizeof(Transform) ; //Size of transforms
 
-	// Calculate payload size
-	unsigned int size =  sizeof(Snapshot); //+1 for timestamp, +1 for index
+		// Create data packet
+		char* payload = new char[ size + sizeof(RakNet::Time) +1 ]; // +1 for ID, +1 int for timestamp
 
-	// Cast the snapshot to char*
-	char* payload = new char[ size + 1 ]; // +1 for ID,
-	memcpy( &payload[1], reinterpret_cast<char*>(mCurrentSnapshot), size );
+		// Set packet ID
+		payload[0] = (unsigned char)(EV_NETWORK_NONEVENT_SNAPSHOT + ID_USER_PACKET_ENUM);
+		unsigned int offset = 1;
 
-	// Set packet ID
-	payload[0] = (unsigned char)(EV_NETWORK_NONEVENT_SNAPSHOT + ID_USER_PACKET_ENUM);
+		// Set timestamp
+		RakNet::Time time = RakNet::GetTime();
+		memcpy( &payload[offset], &time, sizeof(RakNet::Time));
+		offset+= sizeof(RakNet::Time);
+		
+		// Copy data to payload
+		memcpy( &payload[offset], reinterpret_cast<char*>( mCurrentSnapshot->data.data() ), size );
+		offset+=size;
 
-	// Send the packet!!
-	mNetworkSystem->getPeer()->Send( payload,size, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+		// Send the packet!!
+		mNetworkSystem->getPeer()->Send( payload,size, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+	}
 }
 
 void SnapshotManager::updateNetworkSystem(NetworkSystem* networkSystem)
@@ -99,23 +111,28 @@ void SnapshotManager::updateNetworkSystem(NetworkSystem* networkSystem)
 	mNetworkSystem = networkSystem;
 }
 
-void SnapshotManager::getSnapshotEvents(int timestamp)
+std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 {
+	// Create the vector
+	std::vector<Event*>* vect = new std::vector<Event*>;
+
 	// For the moment, just retrieve the latest snapshot
 	Snapshot* snapshot =  mSnapshots.back();
 
 	// Dispatch network transform updates
-	for( int i=0; i<snapshot->maxindex; i++ )
+	for( auto i=snapshot->data.begin(); i!=snapshot->data.end(); i++ )
 	{
 		Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_TRANSFORM_UPDATE);
 		TransformEvent* te = e->createEventData<TransformEvent>();
-		te->mFloat3_1 = snapshot->data[i].pos;
-		te->mQuaternion = snapshot->data[i].rot;
-		te->mFloat3_2 = snapshot->data[i].vel;
-		te->mQuaternion2 = snapshot->data[i].angRot;
-		e->ID = snapshot->data[i].GUID;
-		EventSystem::getSingletonPtr()->dispatchEvent(e);
+		te->mFloat3_1 = (*i).pos;
+		te->mQuaternion = Quat(0,0,0,1);//(*i).rot;
+		te->mFloat3_2 = (*i).vel;
+		te->mQuaternion2 =Quat(0,0,0,1);//( *i).angRot;
+		e->GUID = (*i).GUID;
+		vect->push_back(e);
 	}
+
+	return vect;
 
 }
 

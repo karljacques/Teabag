@@ -28,7 +28,7 @@ public:
 	void importSnapshot( Snapshot* s );
 
 	// Get events from snapshot closest to timestamp. The latest snapshot will be taken. E.g. Snapshot at 4ms and Snapshot at 9ms, if you request 8ms snapshot you will get 9ms
-	void getSnapshotEvents( int timestamp );
+	std::vector<Event*>* getSnapshotEvents( int timestamp );
 
 	// As the network system can be changed, this will need to be updated if the network system is changed from client to host, or vice versa
 	void updateNetworkSystem( NetworkSystem* networkSystem );

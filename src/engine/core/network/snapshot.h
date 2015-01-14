@@ -4,12 +4,18 @@
 #define SNAPSHOT_SIZE 25 // 32kb of objects.
 
 #include "common.h"
+#include <vector>
+#include <RakNetTime.h>
 
 struct Transform
 {
 	Transform()
 	{
 		GUID = 0;
+		rot = Quat(0,0,0,1);
+		angRot = Quat(0,0,0,1);
+		pos = float3(0,0,0);
+		vel = float3(0,0,0);
 	}
 
 	EntID GUID;
@@ -23,13 +29,7 @@ struct Transform
 
 struct Snapshot
 {
-	Snapshot()
-	{
-		maxindex = 0;
-	}
-	unsigned int timestamp;
-	unsigned int maxindex;
-
-	Transform data[SNAPSHOT_SIZE];
+	RakNet::Time timestamp;
+	std::vector<Transform> data;
 };
 #endif // snapshot_h__

@@ -122,6 +122,7 @@
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\engine\component\abstract\spectatorComponent.h" />
     <ClInclude Include="src\engine\component\base\component.h" />
+    <ClInclude Include="src\engine\component\network\networkComponent.h" />
     <ClInclude Include="src\engine\component\physics\physicsComponent.h" />
     <ClInclude Include="src\engine\component\render\cameraComponent.h" />
     <ClInclude Include="src\engine\component\render\renderComponent.h" />

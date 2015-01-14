@@ -174,9 +174,11 @@ void Engine::handle( Event* e )
 								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
 								mEntityManager->getByID(box)->addComponent(phys);
 
+								NetworkComponent* net = mNetworkSystem->createComponent(box);
+								net->GUID = mNetworkSystem->_find_free_guid();
+								mEntityManager->getByID(box)->addComponent(net);
+
 								Event* dyn = EventSystem::getSingletonPtr()->getEvent(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
-								dyn->mGUID = mNetworkSystem->_find_free_guid();
-								mEntityManager->getByID(box)->GUID = dyn->mGUID;
 								EventSystem::getSingletonPtr()->dispatchEvent( dyn );
 								
 							}
@@ -198,7 +200,10 @@ void Engine::handle( Event* e )
 
 
 				EntID box = mEntityManager->createEntity();
-				mEntityManager->getByID(box)->GUID = e->mGUID;
+
+				NetworkComponent* net = mNetworkSystem->createComponent(box);
+				net->GUID = e->GUID;
+
 				RenderComponent* rend = mRenderSystem->createComponent(box);
 				mRenderSystem->initComponent( rend );
 				mRenderSystem->setAsBox(rend, size);

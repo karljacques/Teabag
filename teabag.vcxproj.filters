@@ -157,6 +157,9 @@
     <ClInclude Include="src\engine\core\network\snapshot.h">
       <Filter>engine\core\network</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\component\network\networkComponent.h">
+      <Filter>engine\component\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -218,6 +221,9 @@
     </Filter>
     <Filter Include="engine\core\user-interface">
       <UniqueIdentifier>{e677b7a0-e4bb-46da-92ef-761847bb3bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\component\network">
+      <UniqueIdentifier>{25f929e2-3b0d-4ca7-873a-347601083025}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

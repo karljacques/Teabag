@@ -10,6 +10,12 @@ NetworkSystem::NetworkSystem( )
 	mGuidCount = 0;
 }
 
+NetworkSystem::~NetworkSystem()
+{
+	delete mSnapshotManager;
+	RakNet::RakPeerInterface::DestroyInstance(peer);
+}
+
 void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
 {
 	// Cast event to char*, make room for the packet ID
@@ -35,11 +41,6 @@ unsigned char NetworkSystem::getPacketIdentifier(Packet *p)
 	else
 		return (unsigned char) p->data[0];
 }
-
-NetworkSystem::~NetworkSystem()
-{
-	RakNet::RakPeerInterface::DestroyInstance( peer );
-};
 
 
 bool NetworkSystem::isHost()

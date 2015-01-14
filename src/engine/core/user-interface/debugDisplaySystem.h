@@ -1,9 +1,9 @@
 #ifndef debugDisplaySystem_h__
 #define debugDisplaySystem_h__
 
-#include "../event/eventListener.h"
-#include "../render/UI/Gorilla.h"
-#include "../../manager/render/cameraManager.h"
+#include "..\event\eventListener.h"
+#include "..\render\UI\Gorilla.h"
+#include "..\..\manager\render\cameraManager.h"
 
 class DebugDisplaySystem : public EventListener
 {

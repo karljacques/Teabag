@@ -8,9 +8,9 @@
 
 #include "pch.h"
 #include "engine.h"
-#include "manager/network/clientNetworkSystem.h"
-#include "manager/network/serverNetworkSystem.h"
-#include "manager/abstract/spectatorManager.h"
+#include "manager\network\clientNetworkSystem.h"
+#include "manager\network\serverNetworkSystem.h"
+#include "manager\abstract\spectatorManager.h"
 
 Engine::Engine()
 {

@@ -1,7 +1,7 @@
 #ifndef physicsComponent_h__
 #define physicsComponent_h__
 
-#include "../base/component.h"
+#include "..\base\component.h"
 
 class PhysicsComponent :public Component
 {

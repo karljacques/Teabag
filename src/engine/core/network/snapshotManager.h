@@ -1,5 +1,5 @@
-#include "../event/eventListener.h"
-#include "../../manager/network/networkSystem.h"
+#include "..\event\eventListener.h"
+#include "..\..\manager\network\networkSystem.h"
 #include "snapshot.h"
 
 #ifndef snapshotManager_h__

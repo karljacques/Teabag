@@ -2,7 +2,7 @@
 #define cameraManager_h__
 
 #include "renderSystem.h"
-#include "../../component/render/cameraComponent.h"
+#include "..\..\component\render\cameraComponent.h"
 
 class CameraManager: public ComponentManager<CameraComponent>, public EventListener
 {

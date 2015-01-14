@@ -2,9 +2,9 @@
 #define physicsManager_h__
 
 #include "pch.h"
-#include "../../component/physics/physicsComponent.h"
-#include "../../core/event/eventListener.h"
-#include "../../core/entity-component/componentManager.h"
+#include "..\..\component\physics\physicsComponent.h"
+#include "..\..\core\event\eventListener.h"
+#include "..\..\core\entity-component\componentManager.h"
 
 class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>
 {

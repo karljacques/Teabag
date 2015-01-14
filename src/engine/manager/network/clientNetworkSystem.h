@@ -2,7 +2,7 @@
 #define clientNetworkSystem_h__
 
 #include "networkSystem.h"
-#include "../../core/user-interface/ogreConsole.h"
+#include "..\..\core\user-interface\ogreConsole.h"
 
 class ClientNetworkSystem : public NetworkSystem
 {

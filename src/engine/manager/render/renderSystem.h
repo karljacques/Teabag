@@ -10,10 +10,10 @@
 #define __Teabag__Rendersystem__
 
 #include "pch.h"
-#include "../../core/entity-component/componentManager.h"
-#include "../../component/render/renderComponent.h"
-#include "../../core/entity-component/entityManager.h"
-#include "../../component/physics/physicsComponent.h"
+#include "..\..\core\entity-component\componentManager.h"
+#include "..\..\component\render\renderComponent.h"
+#include "..\..\core\entity-component\entityManager.h"
+#include "..\..\component\physics\physicsComponent.h"
 
 class RenderSystem : public ComponentManager<RenderComponent>, public EventListener
 {

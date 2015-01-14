@@ -1,4 +1,4 @@
-#include "../base/component.h"
+#include "..\base\component.h"
 
 typedef unsigned int EntID;
 

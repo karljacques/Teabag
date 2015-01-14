@@ -13,7 +13,7 @@ struct Transform
 	{
 		GUID = 0;
 		rot = Quat(0,0,0,1);
-		angRot = Quat(0,0,0,1);
+		angRot = float3(0,0,0);
 		pos = float3(0,0,0);
 		vel = float3(0,0,0);
 	}
@@ -21,10 +21,10 @@ struct Transform
 	EntID GUID;
 
 	Quat rot;
-	Quat angRot;
-
+	
 	float3 pos;
 	float3 vel;
+	float3 angRot;
 };
 
 struct Snapshot

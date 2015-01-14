@@ -33,29 +33,33 @@ int ClientNetworkSystem::receive()
 		// otherwise RakNet could do some house cleaning and everything will crash.
 		if( id == EV_NETWORK_NONEVENT_SNAPSHOT )
 		{
-			unsigned int packetSize = packet->length;
+			unsigned int packetSize = packet->length -1;
 
-			char* data = new char[ packetSize -1];
-			memcpy( data, &packet->data[1], packetSize - 1 );
+			char* data = new char[ packetSize];
+			memcpy( data, &packet->data[1], packetSize );
 
 			Snapshot* snapshot = new Snapshot();
+			unsigned int offset = 0;
 
 			// Copy in timestamp
 			char* timestamp = new char[sizeof(RakNet::Time)];
-			memcpy( timestamp, &data[0], sizeof(RakNet::Time ));
+			memcpy( timestamp, &data[offset], sizeof(RakNet::Time ));
 			snapshot->timestamp = *reinterpret_cast<RakNet::Time*>(timestamp);
+			offset+=sizeof(RakNet::Time);
 			delete timestamp;
-			if( packetSize > 100 )
-			{
-				int hello =0;
-				hello++;
 
-			}
-			for( int i=sizeof(RakNet::Time); i < packetSize -1; i+=sizeof(Transform)) 
+			// Get length
+			char* length_char = new char[sizeof(int)];
+			memcpy( length_char, &data[offset], sizeof(int));
+			int length = *reinterpret_cast<int*>(length_char);
+			offset+=sizeof(int);
+
+			for( int i=0; i < length; i++) 
 			{
 				char* trans = new char[ sizeof(Transform) ];
-				memcpy( trans, &data[i], sizeof(Transform) );
+				memcpy( trans, &data[offset], sizeof(Transform) );
 				snapshot->data.push_back( *reinterpret_cast<Transform*>(trans) );
+				offset+=sizeof(Transform);
 			}
 
 			mSnapshotManager->importSnapshot(snapshot);

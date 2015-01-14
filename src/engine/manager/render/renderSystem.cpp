@@ -199,8 +199,8 @@ void RenderSystem::handle( Event* e )
 		{
 			RenderComponent* comp = getComponentByID( e->ID );
 			TransformEvent* te = e->getData<TransformEvent>();
-			comp->mSceneNode->setPosition( te->mFloat3_1 );
-			comp->mSceneNode->setOrientation( te->mQuaternion );
+			comp->mSceneNode->setPosition( te->position );
+			comp->mSceneNode->setOrientation( te->orientation );
 
 		}
 

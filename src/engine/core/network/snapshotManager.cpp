@@ -23,10 +23,10 @@ void SnapshotManager::handle(Event* e)
 		// Make the Transform
 		TransformEvent* te = e->getData<TransformEvent>();
 		Transform* trans = new Transform();
-		trans->pos = te->mFloat3_1;
-		trans->rot = te->mQuaternion;
-		trans->vel = te->mFloat3_2;
-		trans->angRot = te->mQuaternion2;
+		trans->pos = te->position;
+		trans->rot = te->orientation;
+		trans->vel = te->velocity;
+		trans->angRot = te->angularVelocity;
 		trans->GUID = e->GUID;
 
 		bool isInSnapshot = false;
@@ -86,7 +86,7 @@ void SnapshotManager::sendSnapshot()
 		unsigned int size =  mCurrentSnapshot->data.size()*sizeof(Transform) ; //Size of transforms
 
 		// Create data packet
-		char* payload = new char[ size + sizeof(RakNet::Time) +1 ]; // +1 for ID, +1 int for timestamp
+		char* payload = new char[ size + sizeof(RakNet::Time) + sizeof(int) +1 ]; // +1 for ID, +1 RakNetTime for timestamp, and +1 int # of transforms
 
 		// Set packet ID
 		payload[0] = (unsigned char)(EV_NETWORK_NONEVENT_SNAPSHOT + ID_USER_PACKET_ENUM);
@@ -97,6 +97,11 @@ void SnapshotManager::sendSnapshot()
 		memcpy( &payload[offset], &time, sizeof(RakNet::Time));
 		offset+= sizeof(RakNet::Time);
 		
+		// Set number of transforms
+		int transforms = mCurrentSnapshot->data.size();
+		memcpy( &payload[offset], &transforms, sizeof(int));
+		offset+=sizeof(int);
+
 		// Copy data to payload
 		memcpy( &payload[offset], reinterpret_cast<char*>( mCurrentSnapshot->data.data() ), size );
 		offset+=size;
@@ -124,10 +129,10 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 	{
 		Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_TRANSFORM_UPDATE);
 		TransformEvent* te = e->createEventData<TransformEvent>();
-		te->mFloat3_1 = (*i).pos;
-		te->mQuaternion = Quat(0,0,0,1);//(*i).rot;
-		te->mFloat3_2 = (*i).vel;
-		te->mQuaternion2 =Quat(0,0,0,1);//( *i).angRot;
+		te->position = (*i).pos;
+		te->orientation = (*i).rot;
+		te->velocity = (*i).vel;
+		te->angularVelocity = (*i).angRot;
 		e->GUID = (*i).GUID;
 		vect->push_back(e);
 	}

@@ -43,8 +43,8 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
 	e->ID = comp->ID;
 	TransformEvent* te = e->createEventData<TransformEvent>();
-	te->mFloat3_1 = pos;
-	te->mQuaternion = rot;
+	te->position = pos;
+	te->orientation = rot;
 	EventSystem::getSingletonPtr()->dispatchEvent(e);
 
 	comp->position = pos;
@@ -77,12 +77,12 @@ void PhysicsManager::update( double dt )
 			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE,comp->ID,this );
 			TransformEvent* me = e->createEventData<TransformEvent>();
 
-			me->mQuaternion =comp->orientation;
-			me->mFloat3_1 = comp->position;
+			me->orientation =comp->orientation;
+			me->position = comp->position;
 
 			/* Velocities for dead reckoning on networked games */
-			me->mFloat3_2 = comp->body->getLinearVelocity();
-			me->mFloat3_3= comp->body->getAngularVelocity();
+			me->velocity = comp->body->getLinearVelocity();
+			me->angularVelocity = comp->body->getAngularVelocity();
 
 			EventSystem::getSingletonPtr()->dispatchEvent(e);
 		}
@@ -101,7 +101,7 @@ void PhysicsManager::handle( Event* e )
 		case EV_CORE_TRANSFORM_UPDATE:
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
-				btTransform trans( me->mQuaternion, me->mFloat3_1 );
+				btTransform trans( me->orientation, me->position );
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
 
@@ -112,8 +112,8 @@ void PhysicsManager::handle( Event* e )
 		case EV_CORE_TRANSFORM_UPDATE_ORIENTATION:
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
-				btTransform trans(me->mQuaternion, comp->position );
-				comp->orientation = me->mQuaternion;
+				btTransform trans(me->orientation, comp->position );
+				comp->orientation = me->orientation;
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
 				break;
@@ -122,10 +122,9 @@ void PhysicsManager::handle( Event* e )
 		case EV_NETWORK_TRANSFORM_UPDATE:
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
-				btTransform trans(me->mQuaternion, comp->position );
-				comp->orientation = me->mQuaternion;
-				comp->body->setAngularVelocity( me->mQuaternion.ToEulerXYX());
-				comp->body->setLinearVelocity( me->mFloat3_2 );
+				btTransform trans( me->orientation, me->position );
+				//comp->body->setAngularVelocity( me->angularVelocity );
+				//comp->body->setLinearVelocity( me->velocity );
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
 				break;

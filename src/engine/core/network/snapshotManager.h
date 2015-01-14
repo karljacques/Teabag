@@ -40,8 +40,6 @@ private:
 	std::deque<Snapshot*> mSnapshots;
 	NetworkSystem* mNetworkSystem;
 	Snapshot* mCurrentSnapshot;
-	int mSnapshotIndex;
-	
 
 };
 #endif // snapshotManager_h__

@@ -11,8 +11,9 @@
 Event::Event( int eventType )
 {
     mEventType = eventType;
-	GUID = -1;
-	ID = -1;
+	GUID = 0;
+	ID = 0;
+	sentBy = nullptr;
 }
 
 int Event::getEventType()

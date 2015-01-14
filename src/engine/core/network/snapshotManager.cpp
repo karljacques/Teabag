@@ -7,7 +7,6 @@ SnapshotManager::SnapshotManager( NetworkSystem* networkSystem )
 	mNetworkSystem = networkSystem;
 	mCurrentSnapshot = new Snapshot();
 	mSnapshots.push_back(mCurrentSnapshot);
-	mSnapshotIndex = 0;
 
 	snapshotLife.reset();
 }
@@ -19,7 +18,6 @@ void SnapshotManager::handle(Event* e)
 	// Put it on the snapshot - but first find if we already have this GUID there
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		int index = mSnapshotIndex;
 		// Make the Transform
 		TransformEvent* te = e->getData<TransformEvent>();
 		Transform* trans = new Transform();
@@ -74,8 +72,7 @@ void SnapshotManager::startNewSnapshot()
 		delete mSnapshots.front();
 		mSnapshots.pop_front();
 	}
-	// reset index
-	mSnapshotIndex = 0;
+
 }
 
 void SnapshotManager::sendSnapshot()
@@ -107,7 +104,9 @@ void SnapshotManager::sendSnapshot()
 		offset+=size;
 
 		// Send the packet!!
-		mNetworkSystem->getPeer()->Send( payload,size, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+		mNetworkSystem->getPeer()->Send( payload,offset, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+
+		delete payload;
 	}
 }
 

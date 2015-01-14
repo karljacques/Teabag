@@ -6,7 +6,7 @@ using namespace RakNet;
 NetworkSystem::NetworkSystem( )
 {
 	peer = RakNet::RakPeerInterface::GetInstance();
-	mSnapshotManager = new SnapshotManager( this );
+	//mSnapshotManager = new SnapshotManager( this );
 	mGuidCount = 0;
 }
 

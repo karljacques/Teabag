@@ -2325,7 +2325,7 @@ void  QuadList::border(Ogre::Real x, Ogre::Real y, Ogre::Real w, Ogre::Real h, O
     continue;
    }
    
-   if (thisChar == '/n')
+   if (thisChar == '\n')
    {
     lastChar = thisChar;
     cursorX = mLeft;

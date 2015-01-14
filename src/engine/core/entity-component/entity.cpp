@@ -4,7 +4,7 @@
 
 Entity::Entity(void)
 {
-
+	ID = 0;
 }
 
 

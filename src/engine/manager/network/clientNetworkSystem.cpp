@@ -33,6 +33,7 @@ int ClientNetworkSystem::receive()
 		// otherwise RakNet could do some house cleaning and everything will crash.
 		if( id == EV_NETWORK_NONEVENT_SNAPSHOT )
 		{
+			/*
 			unsigned int packetSize = packet->length -1;
 
 			char* data = new char[ packetSize];
@@ -79,16 +80,20 @@ int ClientNetworkSystem::receive()
 				EventSystem::getSingletonPtr()->dispatchEvent(*i);
 			}
 			
-			
+			*/
 		}else
 		{
-			char* data = new char[ sizeof(Event)  ];
-			memcpy( data, &packet->data[1], sizeof(Event));
+			if(id==EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX)
+			{
+				char* data = new char[ sizeof(Event)  ];
+				memcpy( data, &packet->data[1], sizeof(Event));
 
-			// Cast data to a transform event
-			Event* te = reinterpret_cast<Event*>(data);
+				// Cast data to a transform event
+				Event* te = reinterpret_cast<Event*>(data);
 
-			EventSystem::getSingletonPtr()->dispatchEvent(te);
+				EventSystem::getSingletonPtr()->dispatchEvent(te);
+			}
+			
 		}
 
 		

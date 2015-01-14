@@ -8,6 +8,11 @@ typedef unsigned int EntID;
 class NetworkComponent : public Component
 {
 public:
+	NetworkComponent()
+	{
+		GUID = 0;
+	}
+
 	EntID GUID;
 };
 #endif // networkComponent_h__

@@ -29,6 +29,11 @@ struct Transform
 
 struct Snapshot
 {
+	Snapshot()
+	{
+		timestamp = 0;
+	}
+
 	RakNet::Time timestamp;
 	std::vector<Transform> data;
 };

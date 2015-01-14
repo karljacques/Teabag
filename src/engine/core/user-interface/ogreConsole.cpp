@@ -295,7 +295,7 @@ void OgreConsole::print(const Ogre::String &text)
          lines.push_back(line);
          line="";
       }
-      if(str[c]!='/n')
+      if(str[c]!='\n')
          line+=str[c];
    }
 

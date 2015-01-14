@@ -39,36 +39,36 @@ template<> Gorilla::Silverback* Ogre::Singleton<Gorilla::Silverback>::ms_Singlet
 template<> Gorilla::Silverback* Ogre::Singleton<Gorilla::Silverback>::msSingleton = 0;
 #endif
 
-#define PUSH_VERTEX(VERTICES, VERTEX, X, Y, UV, COLOUR)   \
-  VERTEX.position.x = X;                                           \
-  VERTEX.position.y = Y;                                           \
-  VERTEX.position.z = 0;                                           \
-  VERTEX.uv.x = UV.x;                                              \
-  VERTEX.uv.y = UV.y;                                              \
-  VERTEX.colour = COLOUR;                                          \
+#define PUSH_VERTEX(VERTICES, VERTEX, X, Y, UV, COLOUR)   /
+  VERTEX.position.x = X;                                           /
+  VERTEX.position.y = Y;                                           /
+  VERTEX.position.z = 0;                                           /
+  VERTEX.uv.x = UV.x;                                              /
+  VERTEX.uv.y = UV.y;                                              /
+  VERTEX.colour = COLOUR;                                          /
   VERTICES.push_back(VERTEX);                                       
 
-#define PUSH_TRIANGLE(VERTICES, VERTEX, A, B, C, UV, COLOUR)       \
-  PUSH_VERTEX(VERTICES, VERTEX, A.x, A.y, UV, COLOUR) \
-  PUSH_VERTEX(VERTICES, VERTEX, B.x, B.y, UV, COLOUR) \
+#define PUSH_TRIANGLE(VERTICES, VERTEX, A, B, C, UV, COLOUR)       /
+  PUSH_VERTEX(VERTICES, VERTEX, A.x, A.y, UV, COLOUR) /
+  PUSH_VERTEX(VERTICES, VERTEX, B.x, B.y, UV, COLOUR) /
   PUSH_VERTEX(VERTICES, VERTEX, C.x, C.y, UV, COLOUR) 
 
-#define PUSH_QUAD(VERTICES, VERTEX, POSITIONS, COLOURS, UV)   \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOURS[3]) \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[1].x, POSITIONS[1].y, UV[1], COLOURS[1]) \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[0].x, POSITIONS[0].y, UV[0], COLOURS[0]) \
-     \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOURS[3]) \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[2].x, POSITIONS[2].y, UV[2], COLOURS[2]) \
+#define PUSH_QUAD(VERTICES, VERTEX, POSITIONS, COLOURS, UV)   /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOURS[3]) /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[1].x, POSITIONS[1].y, UV[1], COLOURS[1]) /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[0].x, POSITIONS[0].y, UV[0], COLOURS[0]) /
+     /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOURS[3]) /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[2].x, POSITIONS[2].y, UV[2], COLOURS[2]) /
   PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[1].x, POSITIONS[1].y, UV[1], COLOURS[1])  
 
-#define PUSH_QUAD2(VERTICES, VERTEX, POSITIONS, COLOUR, UV)   \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOUR) \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[1].x, POSITIONS[1].y, UV[1], COLOUR) \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[0].x, POSITIONS[0].y, UV[0], COLOUR) \
-     \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOUR) \
-  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[2].x, POSITIONS[2].y, UV[2], COLOUR) \
+#define PUSH_QUAD2(VERTICES, VERTEX, POSITIONS, COLOUR, UV)   /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOUR) /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[1].x, POSITIONS[1].y, UV[1], COLOUR) /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[0].x, POSITIONS[0].y, UV[0], COLOUR) /
+     /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[3].x, POSITIONS[3].y, UV[3], COLOUR) /
+  PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[2].x, POSITIONS[2].y, UV[2], COLOUR) /
   PUSH_VERTEX(VERTICES, VERTEX, POSITIONS[1].x, POSITIONS[1].y, UV[1], COLOUR)  
 
 
@@ -319,7 +319,7 @@ namespace Gorilla
    
    if (str_values.size() < 4)
    {
-    //std::cout << "[Gorilla] Glyph #" << (*i).second << " does not have enough properties.\n";
+    //std::cout << "[Gorilla] Glyph #" << (*i).second << " does not have enough properties./n";
     continue;
    }
    
@@ -371,7 +371,7 @@ namespace Gorilla
    
    if (str_values.size() != 2)
    {
-    //std::cout << "[Gorilla] Kerning Glyph #" << left_name << " does not have enough properties\n";
+    //std::cout << "[Gorilla] Kerning Glyph #" << left_name << " does not have enough properties/n";
     continue;
    }
    
@@ -439,7 +439,7 @@ namespace Gorilla
    
    if (str_values.size() != 4)
    {
-    //std::cout << "[Gorilla] Sprite #" << sprite_name << " does not have enough properties\n" << data << "\n";
+    //std::cout << "[Gorilla] Sprite #" << sprite_name << " does not have enough properties/n" << data << "/n";
     continue;
    }
    
@@ -1003,7 +1003,7 @@ namespace Gorilla
    knownVertexCount += (*it).second->mVertices.size();
   
   _resizeVertexBuffer(knownVertexCount);
-  //std::cout << "+++ Known Vertex Count is: " << knownVertexCount << "\n";
+  //std::cout << "+++ Known Vertex Count is: " << knownVertexCount << "/n";
   Vertex* writeIterator = (Vertex*) mVertexBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
   
   size_t i = 0;
@@ -2325,7 +2325,7 @@ void  QuadList::border(Ogre::Real x, Ogre::Real y, Ogre::Real w, Ogre::Real h, O
     continue;
    }
    
-   if (thisChar == '\n')
+   if (thisChar == '/n')
    {
     lastChar = thisChar;
     cursorX = mLeft;

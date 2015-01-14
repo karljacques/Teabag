@@ -23,7 +23,7 @@ template<> OgreConsole* Ogre::Singleton<OgreConsole>::msSingleton=0;
 
 #define CONSOLE_LINE_LENGTH 85
 #define CONSOLE_LINE_COUNT 15
-static const unsigned char legalchars[]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890+!\"'#%&/()=?[]\\*-_.:,; ";
+static const unsigned char legalchars[]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890+!/"'#%&/()=?[]//*-_.:,; ";
 
 OgreConsole::OgreConsole( Engine* eng )
 : mIsVisible(true), mIsInitialised(false), mScreen(0), mUpdateConsole(false), mUpdatePrompt(false), mStartline(0), mEngine( eng )
@@ -252,7 +252,7 @@ void OgreConsole::updateConsole()
  for(i=start;i!=end;i++)
  {
   lcount++;
-  text << (*i) << "\n";
+  text << (*i) << "/n";
  }
  mConsoleText->text(text.str());
  
@@ -291,11 +291,11 @@ void OgreConsole::print(const Ogre::String &text)
    int len=text.length();
    Ogre::String line;
    for(int c=0;c<len;c++){
-      if(str[c]=='\n'||line.length()>=CONSOLE_LINE_LENGTH){
+      if(str[c]=='/n'||line.length()>=CONSOLE_LINE_LENGTH){
          lines.push_back(line);
          line="";
       }
-      if(str[c]!='\n')
+      if(str[c]!='/n')
          line+=str[c];
    }
 

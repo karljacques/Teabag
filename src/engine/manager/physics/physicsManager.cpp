@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "physicsManager.h"
-#include "..\..\core\event\eventSystem.h"
+#include "../../core/event/eventSystem.h"
 
 #define MOVE_TOLERANCE 0.0025
 #define GRAVITY_ACCELERATION -9.81f
@@ -10,7 +10,7 @@ PhysicsManager::PhysicsManager( )
 		
 		// Build the broadphase
 		btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-
+		
 		// Set up the collision configuration and dispatcher
 		btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
 		btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
@@ -123,8 +123,8 @@ void PhysicsManager::handle( Event* e )
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
 				btTransform trans( me->orientation, me->position );
-				//comp->body->setAngularVelocity( me->angularVelocity );
-				//comp->body->setLinearVelocity( me->velocity );
+				comp->body->setAngularVelocity( me->angularVelocity );
+				comp->body->setLinearVelocity( me->velocity );
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
 				break;

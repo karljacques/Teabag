@@ -25,7 +25,7 @@
 */
 
 #include "engine/core/event/eventListener.h"
-#include "..\render\UI\Gorilla.h"
+#include "../render/UI/Gorilla.h"
 #include "engine/engine.h"
 
 typedef void ( *EngineMethodPtr ) (Ogre::StringVector& );

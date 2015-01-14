@@ -10,16 +10,16 @@
 //
 */
 
-#include "manager\render\renderSystem.h"
-#include "manager\physics\physicsManager.h"
-#include "core\entity-component\entityManager.h"
-#include "manager\network\networkSystem.h"
-#include "manager\render\cameraManager.h"
-#include "core\input\inputSystem.h"
+#include "manager/render/renderSystem.h"
+#include "manager/physics/physicsManager.h"
+#include "core/entity-component/entityManager.h"
+#include "manager/network/networkSystem.h"
+#include "manager/render/cameraManager.h"
+#include "core/input/inputSystem.h"
 
-#include "core\user-interface\ogreConsole.h"
-#include "manager\abstract\spectatorManager.h"
-#include "core\user-interface\debugDisplaySystem.h"
+#include "core/user-interface/ogreConsole.h"
+#include "manager/abstract/spectatorManager.h"
+#include "core/user-interface/debugDisplaySystem.h"
 
 
 

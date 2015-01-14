@@ -252,7 +252,7 @@ void OgreConsole::updateConsole()
  for(i=start;i!=end;i++)
  {
   lcount++;
-  text << (*i) << "/n";
+  text << (*i) << "\n";
  }
  mConsoleText->text(text.str());
  

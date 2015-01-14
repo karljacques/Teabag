@@ -9,7 +9,7 @@ public:
 	{
 	}
 	
-	T* ComponentManager<T>::createComponent( int ID )
+	T* createComponent( int ID )
 	{
 		T* comp = new T;
 		mComponents[ID] = comp;
@@ -17,12 +17,12 @@ public:
 		return comp;
 	}
 
-	void ComponentManager<T>::removeComponent( int ID )
+	void removeComponent( int ID )
 	{
 		mComponents.erase( ID );
 	}
 
-	T* ComponentManager<T>::getComponentByID( int ID )
+	T* getComponentByID( int ID )
 	{
 		try{
 			return mComponents.at(ID);
@@ -33,7 +33,7 @@ public:
 		}
 	}
 
-	bool ComponentManager<T>::componentExists( int ID )
+	bool componentExists( int ID )
 	{
 		return mComponents.count(ID) > 0;
 	}

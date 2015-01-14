@@ -45,7 +45,7 @@ bool Entity::hasComponent()
 {
 	for( auto i = mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		if typeid( (**i) == typeid(T) )
+		if( typeid(**i) == typeid(T) )
 		{
 			return true;
 		}

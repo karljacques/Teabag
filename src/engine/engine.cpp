@@ -181,8 +181,8 @@ void Engine::handle( Event* e )
 								Event* dyn = EventSystem::getSingletonPtr()->getEvent(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
 								dyn->GUID = net->GUID;
 								EventSystem::getSingletonPtr()->dispatchEvent( dyn );
-								
 							}
+							
 							
 
 							break;

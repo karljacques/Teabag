@@ -19,7 +19,7 @@
 #include "events/messageEvent.h"
 #include "eventListener.h"
 
-#define EVENT_PAYLOAD_SIZE 64
+#define EVENT_PAYLOAD_SIZE sizeof(TransformEvent) // Largest Event
 
 typedef unsigned int EntID;
 
@@ -100,6 +100,7 @@ T* Event::getData()
 template <class T>
 T* Event::createEventData()
 {
+	assert( sizeof(T) <= EVENT_PAYLOAD_SIZE );
 	T* ptr = new(data) T;
 	return getData<T>();
 }

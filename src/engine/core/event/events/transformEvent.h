@@ -13,7 +13,6 @@ struct TransformEvent
 		angularVelocity = float3(0,0,0);
 
 		orientation = Quat(0,0,0,1);
-		mQuaternion2 = Quat(0,0,0,1);
 	}
 
 	float3 position; // Used to indicate position in a transform event
@@ -21,7 +20,6 @@ struct TransformEvent
 	float3 angularVelocity; // used to specify angular velocity when used as a transform event extension
 
 	Quat orientation; // Specifies a rotation
-	Quat mQuaternion2; // Secondary rotation
 };
 
 #endif // transformEvent_h__

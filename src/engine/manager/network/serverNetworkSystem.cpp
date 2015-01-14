@@ -26,14 +26,14 @@ int ServerNetworkSystem::receive()
 			OgreConsole::getSingleton().print( "Connected to a new peer" );
 	} 
 
-	/*
+	
 	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
 	{
 		mSnapshotManager->sendSnapshot();
 		mSnapshotManager->startNewSnapshot();
 		mSnapshotManager->snapshotLife.reset();
 	}
-	*/
+	
 	return true;
 }
 
@@ -51,7 +51,7 @@ void ServerNetworkSystem::handle( Event* e )
 		if( componentExists( e->ID ) )
 		{
 			e->GUID = mComponents[e->ID]->GUID;
-			//mSnapshotManager->handle(e);
+			mSnapshotManager->handle(e);
 		}
 		
 	}

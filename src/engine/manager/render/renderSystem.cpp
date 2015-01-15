@@ -39,7 +39,7 @@ RenderSystem::RenderSystem( EntityManager* ent )
 		SDL_WINDOWPOS_CENTERED,
 		windowWidth,
 		windowHeight,
-		SDL_WINDOWPOS_CENTERED|SDL_WINDOW_RESIZABLE // TODO Add window resize support
+		SDL_WINDOWPOS_CENTERED // TODO Add window resize support
 	);
 
     // Prepare Ogre render window parameters

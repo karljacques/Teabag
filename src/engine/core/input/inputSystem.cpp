@@ -9,9 +9,6 @@
 
 #include "inputSystem.h"
 
-
-
-
 InputSystem::InputSystem(  SDL_Window* window )
 {
 	mWindow = window;
@@ -27,17 +24,9 @@ void InputSystem::update()
 	{
 		switch(m_inputEvent.type )
 		{
-			case SDL_WINDOWEVENT_FOCUS_GAINED:
-				mWindowActive = true;
-				break;
-
-			case SDL_WINDOWEVENT_HIDDEN:
-				mWindowActive = false;
-				break;
-
 			case SDL_KEYDOWN:
 			{
-				if( m_inputEvent.key.repeat == false )
+				if( m_inputEvent.key.repeat == false || m_inputEvent.key.keysym.scancode == SDL_SCANCODE_BACKSPACE ) // Allow backspace to have repeat strokes
 				{
 					// Key down, create and dispatch event
 					Event*	e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_KEY_PRESS );
@@ -100,8 +89,8 @@ void InputSystem::update()
 	}
 
 	// Get half window height and width
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 	SDL_GetWindowSize (mWindow,&x,&y);
 
 	x/=2;
@@ -109,7 +98,7 @@ void InputSystem::update()
 
 	
 	// If Window is focused, center the mouse
-	if( mWindowActive)
+	if( mWindowActive )
 	{
 		int MouseX,MouseY;
 		SDL_GetMouseState(&MouseX,&MouseY);

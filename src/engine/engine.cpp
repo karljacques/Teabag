@@ -28,22 +28,19 @@ Engine::Engine()
 
 	// Create Systems
     new EventSystem();
-    mEntityManager.reset(new EntityManager());
+    mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
 
-	mPhysicsManager.reset( new PhysicsManager() );
-	mNetworkSystem.reset( new ServerNetworkSystem( ) );
+	mPhysicsManager = shared_ptr<PhysicsManager>( new PhysicsManager() );
+	mNetworkSystem = shared_ptr<ServerNetworkSystem>( new ServerNetworkSystem() );
 	
-	mRenderSystem.reset( new RenderSystem( mEntityManager.get() ) );
-	mInputSystem.reset( new InputSystem(  mRenderSystem->getSDLWindow() ) );
-	mCameraManager.reset( new CameraManager( mRenderSystem.get() ) );
+	mRenderSystem = shared_ptr<RenderSystem>( new RenderSystem( mEntityManager.get() ) );
+	mInputSystem = shared_ptr<InputSystem>( new InputSystem(  mRenderSystem->getSDLWindow() ) );
+	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );
 
-	mSpectatorManager.reset( new SpectatorManager( mEntityManager.get() ) );
-
-	mSelf.reset( this );
+	mSpectatorManager = shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
-	EventSystem::getSingletonPtr()->registerListener( mSelf );
 
 	// Register all the listening managers as listeners
 	EventSystem* e = EventSystem::getSingletonPtr();
@@ -66,6 +63,7 @@ Engine::Engine()
 
 		PhysicsComponent* phys = mPhysicsManager->createComponent(ent);
 		mPhysicsManager->initComponent(phys,new btSphereShape( 1.0f ) , 1, float3(40,20,0), Quat(0,0,0,1) );
+		phys->body->setFriction(0);
 		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
 		mEntityManager->getByID(ent)->addComponent(phys);
@@ -96,6 +94,9 @@ Engine::Engine()
 
 	mConsole = std::shared_ptr<OgreConsole>(OgreConsole::getSingletonPtr(),  [=](OgreConsole*){});
 	EventSystem::getSingletonPtr()->registerListener( mConsole );
+
+	mSelf = std::shared_ptr<Engine>(this,  [=](Engine*){});
+	EventSystem::getSingletonPtr()->registerListener(mSelf);
 
 	//mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
 

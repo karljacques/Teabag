@@ -45,7 +45,7 @@ RenderSystem::RenderSystem( EntityManager* ent )
     // Prepare Ogre render window parameters
     Ogre::NameValuePairList lParams;
     lParams["FSAA"] = "0";
-    lParams["vsync"] = "false";
+    lParams["vsync"] = "true";
 
     // Get SDL window handle and insert into parameter list so ogre knows which
     // external window to use.

@@ -19,7 +19,7 @@ PhysicsManager::PhysicsManager( )
 		mSolver = unique_ptr<btSequentialImpulseConstraintSolver>(new btSequentialImpulseConstraintSolver);
 
 		// The world.
-		mWorld =  unique_ptr<btDiscreteDynamicsWorld>(new btDiscreteDynamicsWorld(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get()));
+		mWorld = unique_ptr<btDiscreteDynamicsWorld>(new btDiscreteDynamicsWorld(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get()));
 
 		mWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
 }

@@ -18,16 +18,16 @@ public:
 	void handle( Event* e );
 
 	// Getters
-	btDiscreteDynamicsWorld* getDiscreteDynamicsWorld(){ return mWorld.get(); };
+	//btDiscreteDynamicsWorld* getDiscreteDynamicsWorld(){ return mWorld.get(); };
 
 	void initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass, float3 pos, Quat rot);
 private:
-	unique_ptr<btDiscreteDynamicsWorld> mWorld;
+	
 	unique_ptr<btBroadphaseInterface> mBroadphase;
 	unique_ptr<btCollisionDispatcher> mDispatcher;
 	unique_ptr<btDefaultCollisionConfiguration> mCollisionConfiguration;
 	unique_ptr<btSequentialImpulseConstraintSolver> mSolver;
 
-
+	unique_ptr<btDiscreteDynamicsWorld> mWorld;
 };
 #endif // physicsManager_h__

@@ -21,9 +21,10 @@
 #include "manager/abstract/spectatorManager.h"
 #include "core/user-interface/debugDisplaySystem.h"
 
-
-
 class InputSystem;
+class OgreConsole;
+
+using namespace std;
 
 class Engine : public EventListener
 {
@@ -38,11 +39,11 @@ public:
     bool isShuttingDown();
 
 	// Systems getters
-	RenderSystem*		getRenderSystem(){ return this->mRenderSystem; };
-	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager; };
-	EntityManager*		getEntityManager(){return mEntityManager; };
-	NetworkSystem*		getNetworkSystem(){return mNetworkSystem; };
-	CameraManager*		getCameraManager(){return mCameraManager; };
+	RenderSystem*		getRenderSystem(){ return mRenderSystem.get(); };
+	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
+	EntityManager*		getEntityManager(){return mEntityManager.get(); };
+	NetworkSystem*		getNetworkSystem(){return mNetworkSystem.get(); };
+	CameraManager*		getCameraManager(){return mCameraManager.get(); };
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
 
@@ -51,17 +52,20 @@ public:
 
 private:
 
-    RenderSystem* mRenderSystem;
-    InputSystem* mInputSystem;
-	NetworkSystem* mNetworkSystem;
+    shared_ptr<RenderSystem> mRenderSystem;
+    shared_ptr<InputSystem> mInputSystem;
+	shared_ptr<NetworkSystem> mNetworkSystem;
     
-	EntityManager* mEntityManager;
-	PhysicsManager* mPhysicsManager;
-	CameraManager* mCameraManager;
+	shared_ptr<EntityManager> mEntityManager;
+	shared_ptr<PhysicsManager> mPhysicsManager;
+	shared_ptr<CameraManager> mCameraManager;
 
-	SpectatorManager* mSpectatorManager;
+	shared_ptr<SpectatorManager> mSpectatorManager;
 
-	DebugDisplaySystem* mDebugDisplaySystem;
+	//shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
+
+	shared_ptr<Engine> mSelf;
+	shared_ptr<OgreConsole> mConsole;
 
 
     bool m_EngineShutdown;

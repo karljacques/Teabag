@@ -8,7 +8,7 @@
 #include "pch.h"
 #include "eventSystem.h"
 
-
+using namespace std;
 
 template<> EventSystem* Ogre::Singleton<EventSystem>::msSingleton = 0;
 
@@ -49,69 +49,54 @@ void EventSystem::handleEvents()
 		mNewEventListeners.pop();
 	}
 
-	/* Loop through all listeners, first check if the listener has been added to the list of listeners to be removed
-	    It's possible that the listener could already have been deleted and we will crash if we dereference it */
-	for( auto lsnr = mEventListeners.begin(); lsnr != mEventListeners.end(); lsnr++ )
+	/* loop through events and loop through listeners, dispatch events to listeners*/
+	while( mEventList.size() > 0 )
 	{
-		bool iterValid = true;
-		for( auto del = mRemovedListeners.begin(); del != mRemovedListeners.end(); del++ )
+		Event* e = mEventList.front();
+
+		for( auto i = mEventListeners.begin(); i != mEventListeners.end(); i++ )
 		{
-			/* Check if they point to the same thing */
-			if( (*del) == (*lsnr ) )
+			shared_ptr<EventListener> listener = (*i).lock();
+
+			if( listener )
 			{
-				/* don't try to dereference the listener */
-				iterValid = false;
+				listener->handle(e);
 			}
+
 		}
 
-		/* Do a check to see if the iterator is valid or not. 
-		  If it is, loop through the events and dispatch them to it.
-		  If it is not, do nothing, iterator will be increased and the listener will be removed at a later point */
-		if( iterValid )
-		{
-			for( auto e = mEventList.begin(); e != mEventList.end(); e++ )
-			{
-				if( (*e)->sentBy != (*lsnr))
-					(*lsnr)->handle(*e);			
-			}
-		}
+		mEventList.pop_front();
+		releaseEvent(e);
 	}
 
 	/* All done - clean up time.
 		Remove deleted listeners */
 	while( mRemovedListeners.size() > 0)
 	{
-		EventListener* del = mRemovedListeners.back();
-		mRemovedListeners.pop_back();
-		for( auto lsnr = mEventListeners.begin(); lsnr != mEventListeners.end(); lsnr++ )
-		{
-			if( del == (*lsnr ))
+		std::weak_ptr<EventListener> del = mRemovedListeners.back();
+		mEventListeners.remove_if( [del](std::weak_ptr<EventListener> p )
 			{
-				mEventListeners.erase(lsnr);
-				break;
-			}
-		}
-	}
+				std::shared_ptr<EventListener> swp = del.lock();
+				std::shared_ptr<EventListener> sp = p.lock();
 
-
-	/* Release all events back to event pool */
-	for( auto e = mEventList.begin(); e != mEventList.end(); e++ )
-	{
-		releaseEvent(*e);
+				if( swp && sp )
+					return swp == sp;
+				return false;
+			}); // Don't quite understand lambda syntax. Stolen from here: http://stackoverflow.com/questions/10120623/removing-item-from-list-of-weak-ptrs
+		mRemovedListeners.pop_back();
 	}
-	mEventList.clear();
 
 }
 
 /*	Add a new event listener.
 	It is the user's responsibility to check that there are no duplicates */
-void EventSystem::registerListener(EventListener* e)
+void EventSystem::registerListener( weak_ptr<EventListener> e )
 {
 	mNewEventListeners.push(e);
 }
 
 /* Remove an event listener */
-void EventSystem::deregisterListener(EventListener* e )
+void EventSystem::deregisterListener( weak_ptr<EventListener> e )
 {
 	mRemovedListeners.push_back(e);
 }

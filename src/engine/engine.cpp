@@ -28,21 +28,22 @@ Engine::Engine()
 
 	// Create Systems
     new EventSystem();
-    mEntityManager = new EntityManager();
+    mEntityManager.reset(new EntityManager());
 
-	mPhysicsManager = new PhysicsManager();
-	mNetworkSystem = new ServerNetworkSystem( );
+	mPhysicsManager.reset( new PhysicsManager() );
+	mNetworkSystem.reset( new ServerNetworkSystem( ) );
 	
-	mRenderSystem = new RenderSystem( mEntityManager );
-	mInputSystem = new InputSystem(  mRenderSystem->getSDLWindow() );
-	mCameraManager = new CameraManager( mRenderSystem );
+	mRenderSystem.reset( new RenderSystem( mEntityManager.get() ) );
+	mInputSystem.reset( new InputSystem(  mRenderSystem->getSDLWindow() ) );
+	mCameraManager.reset( new CameraManager( mRenderSystem.get() ) );
 
-	mSpectatorManager = new SpectatorManager( mEntityManager );
+	mSpectatorManager.reset( new SpectatorManager( mEntityManager.get() ) );
 
+	mSelf.reset( this );
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
-	EventSystem::getSingletonPtr()->registerListener( this );
+	EventSystem::getSingletonPtr()->registerListener( mSelf );
 
 	// Register all the listening managers as listeners
 	EventSystem* e = EventSystem::getSingletonPtr();
@@ -93,7 +94,10 @@ Engine::Engine()
 		Registers itself as an event listener */
 	new OgreConsole(this);
 
-	mDebugDisplaySystem = new DebugDisplaySystem( mCameraManager );
+	mConsole = std::shared_ptr<OgreConsole>(OgreConsole::getSingletonPtr(),  [=](OgreConsole*){});
+	EventSystem::getSingletonPtr()->registerListener( mConsole );
+
+	//mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
 
 	OgreConsole::getSingleton().addCommand( "/net.connect", &Console_Net_Connect );
 	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
@@ -106,9 +110,6 @@ Engine::Engine()
 Engine::~Engine()
 {
 	SDL_Quit();
-
-    delete mInputSystem;
-	delete mRenderSystem;
 }
 
 void Engine::update()
@@ -129,7 +130,7 @@ void Engine::update()
 	mSpectatorManager->update();
 
 	mNetworkSystem->receive();
-	mDebugDisplaySystem->update(dt);
+	//mDebugDisplaySystem->update(dt);
 
     // render after everything is updated
     mRenderSystem->renderOneFrame();
@@ -222,11 +223,10 @@ void Engine::handle( Event* e )
 void Engine::SetAsClient(const char* ip)
 {
 	EventSystem::getSingletonPtr()->deregisterListener(mNetworkSystem);
-	delete mNetworkSystem;
 
-	this->mNetworkSystem = new ClientNetworkSystem( );
+	this->mNetworkSystem.reset( new ClientNetworkSystem( ) );
 	EventSystem::getSingletonPtr()->registerListener(this->mNetworkSystem);
-	static_cast<ClientNetworkSystem*>(mNetworkSystem)->connect( ip );
+	static_cast<ClientNetworkSystem*>(mNetworkSystem.get())->connect( ip );
 
 	
 }

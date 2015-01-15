@@ -34,7 +34,6 @@ OgreConsole::OgreConsole( Engine* eng )
 
 	this->init( UIScreen );
 
-	EventSystem::getSingletonPtr()->registerListener(this);
 
 	mKeyboardActive = false;
 	mEnableKeyGuard = false;

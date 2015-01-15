@@ -9,7 +9,7 @@ class DebugDisplaySystem : public EventListener
 {
 public:
 	DebugDisplaySystem(CameraManager* mCameraManager );
-
+	~DebugDisplaySystem(){};
 	void handle(  Event* e  );
 	void update( double dt );
 private:

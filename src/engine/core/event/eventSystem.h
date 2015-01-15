@@ -16,6 +16,8 @@
 
 #define MAX_EVENT_POOL 150
 
+using namespace std;
+
 class EventSystem : public Ogre::Singleton<EventSystem>
 {
 public:
@@ -29,8 +31,8 @@ public:
     void handleEvents();
 
 	// Event listeners
-    void registerListener( EventListener* e );
-    void deregisterListener( EventListener* e );
+    void registerListener( weak_ptr<EventListener> e );
+    void deregisterListener( weak_ptr<EventListener> e );
 
 	// Get an inactive event
 	Event* getEvent( int eventType, int ID = 0, EventListener* sentBy = nullptr );
@@ -53,11 +55,11 @@ private:
 	std::vector<Event*> mEventPool;
 
 	// Event Listeners
-    std::vector<EventListener*> mEventListeners;
+    std::list<weak_ptr<EventListener>> mEventListeners;
 
 	// Makes system safer when adding and removing listeners
-	std::queue<EventListener*> mNewEventListeners;
-	std::vector<EventListener*> mRemovedListeners;
+	std::queue<weak_ptr<EventListener>> mNewEventListeners;
+	std::vector<weak_ptr<EventListener>> mRemovedListeners;
 
 	// Debugging variables
 	int d_eventDrift;

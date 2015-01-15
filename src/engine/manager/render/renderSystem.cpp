@@ -27,7 +27,7 @@ RenderSystem::RenderSystem( EntityManager* ent )
     // SDL created.
 
     // Need an Ogre root (may want to log stuff from this point on, too)
-    m_Root = new Ogre::Root("","","Ogre.log");
+    m_Root = std::unique_ptr<Ogre::Root>(new Ogre::Root("","","Ogre.log"));
 
     // TODO get window width and height from somewhere (config file?)
     unsigned int windowWidth = 1440;
@@ -45,7 +45,7 @@ RenderSystem::RenderSystem( EntityManager* ent )
     // Prepare Ogre render window parameters
     Ogre::NameValuePairList lParams;
     lParams["FSAA"] = "0";
-    lParams["vsync"] = "true";
+    lParams["vsync"] = "false";
 
     // Get SDL window handle and insert into parameter list so ogre knows which
     // external window to use.
@@ -100,14 +100,11 @@ RenderSystem::~RenderSystem()
 	// Shut down ogre
 	m_SceneMgr->clearScene();
 	m_Root->destroySceneManager( m_SceneMgr );
-
-    delete m_Root;
-
 }
 
 Ogre::Root* RenderSystem::getOgreRoot()
 {
-    return m_Root;
+    return m_Root.get();
 }
 
 Ogre::SceneManager* RenderSystem::getSceneMgr()

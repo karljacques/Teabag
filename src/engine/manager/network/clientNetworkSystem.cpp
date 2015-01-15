@@ -13,6 +13,8 @@ ClientNetworkSystem::ClientNetworkSystem( ) : NetworkSystem()
 	peer->Startup( 2, socketDescriptors, 1 );
 
 	mHost = false;
+
+	peer->ApplyNetworkSimulator( 56*1024, 200, 50 );
 }
 
 int ClientNetworkSystem::receive()

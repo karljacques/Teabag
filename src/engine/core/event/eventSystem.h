@@ -28,7 +28,7 @@ public:
     void dispatchEvent( Event* e );
 
 	// Loop through events and dispatch to handlers (occurs at end of loop)
-    void handleEvents();
+    void update();
 
 	// Event listeners
     void registerListener( weak_ptr<EventListener> e );
@@ -38,18 +38,13 @@ public:
 	Event* getEvent( int eventType, int ID = 0, EventListener* sentBy = nullptr );
 
 	// Puts an event back in the inactive pool.
-	void releaseEvent( Event* e );
+	void release( Event* e );
 
-	// Debugging methods
-	int d_getEventsToBeProcessed();
 
 private:
 
 	// Global Events
-    std::deque<Event*> mEventList;
-
-	// Events to be processed next loop
-	std::deque<Event*> mEventQueue;
+    std::queue<Event*> mEventList;
 
 	// Pooled Inactive Events
 	std::vector<Event*> mEventPool;
@@ -61,7 +56,5 @@ private:
 	std::queue<weak_ptr<EventListener>> mNewEventListeners;
 	std::vector<weak_ptr<EventListener>> mRemovedListeners;
 
-	// Debugging variables
-	int d_eventDrift;
 };
 #endif /* defined(__YorkshireTea__eventSystem__) */

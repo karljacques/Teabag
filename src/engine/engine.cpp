@@ -98,7 +98,7 @@ Engine::Engine()
 	mSelf = std::shared_ptr<Engine>(this,  [=](Engine*){});
 	EventSystem::getSingletonPtr()->registerListener(mSelf);
 
-	//mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
+	mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
 
 	OgreConsole::getSingleton().addCommand( "/net.connect", &Console_Net_Connect );
 	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
@@ -125,13 +125,13 @@ void Engine::update()
 	// Update systems and managers
     mInputSystem->update();
 
-	EventSystem::getSingletonPtr()->handleEvents();
+	EventSystem::getSingletonPtr()->update();
 
 	mPhysicsManager->update( dt );
 	mSpectatorManager->update();
 
 	mNetworkSystem->receive();
-	//mDebugDisplaySystem->update(dt);
+	mDebugDisplaySystem->update(dt);
 
     // render after everything is updated
     mRenderSystem->renderOneFrame();

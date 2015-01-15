@@ -7,6 +7,7 @@
 //
 #include "pch.h"
 #include "eventSystem.h"
+#include "../user-interface/ogreConsole.h"
 
 using namespace std;
 
@@ -28,20 +29,13 @@ void EventSystem::dispatchEvent( Event* e )
 	if( e->getEventType() == EV_NULL )
 		return;
 	// Push to a queue so we don't invalid iterators when event handlers dispatch events themselves
-	mEventQueue.push_back(e);
+	mEventList.push(e);
 		
 }
 
 /* Dispatch events to global listeners */
-void EventSystem::handleEvents()
+void EventSystem::update()
 {
-	/* Add any pending events */
-	while( mEventQueue.size() > 0 )
-	{
-		mEventList.push_back( mEventQueue.front() );
-		mEventQueue.pop_front();
-	}
-
 	/* Add any pending listeners */
 	while( mNewEventListeners.size() > 0 )
 	{
@@ -60,13 +54,15 @@ void EventSystem::handleEvents()
 
 			if( listener )
 			{
-				listener->handle(e);
+				// Don't dispatch event back to it dispatcher
+				if( listener.get() != e->sentBy )
+					listener->handle(e);
 			}
 
 		}
 
-		mEventList.pop_front();
-		releaseEvent(e);
+		mEventList.pop();
+		this->release(e);
 	}
 
 	/* All done - clean up time.
@@ -128,18 +124,16 @@ Event* EventSystem::getEvent( int eventType, int ID, EventListener* sentBy )
 }
 
 /* This should add the event back to the pool of events */
-void EventSystem::releaseEvent(Event* e)
+void EventSystem::release(Event* e)
 {
 	e->changeEventType(EV_NULL); // Help identify rogue events
 
 	/* Prevent duplicates in the pool */
-	if( std::find( mEventPool.begin(), mEventPool.end(), e ) == mEventPool.end() )
-	{
+	//if( std::find( mEventPool.begin(), mEventPool.end(), e ) == mEventPool.end() )
+	//{
 		mEventPool.push_back(e);
-	}
+	//}
+	//else
+	//	OgreConsole::getSingletonPtr()->print("duplicate");
 }
 
-int EventSystem::d_getEventsToBeProcessed()
-{
-	return mEventQueue.size();
-}

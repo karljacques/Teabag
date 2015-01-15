@@ -46,10 +46,10 @@ public:
 private:
         
     // Core
-    Ogre::Root*           m_Root;
-    Ogre::SceneManager*   m_SceneMgr;
-    Ogre::RenderWindow*   m_RenderWindow;
-    Ogre::SceneNode*      m_RootSceneNode;
+    std::unique_ptr<Ogre::Root>		m_Root;
+    Ogre::SceneManager*				m_SceneMgr;
+    Ogre::RenderWindow*				m_RenderWindow;
+    Ogre::SceneNode*				m_RootSceneNode;
         
     // Window
     size_t          m_WindowHandle;

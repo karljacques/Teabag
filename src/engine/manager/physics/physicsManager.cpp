@@ -9,23 +9,24 @@ PhysicsManager::PhysicsManager( )
 {
 		
 		// Build the broadphase
-		btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+		mBroadphase = unique_ptr<btBroadphaseInterface>(new btDbvtBroadphase());
 		
 		// Set up the collision configuration and dispatcher
-		btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-		btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+		mCollisionConfiguration = unique_ptr<btDefaultCollisionConfiguration>( new btDefaultCollisionConfiguration() );
+		mDispatcher = unique_ptr<btCollisionDispatcher>(new btCollisionDispatcher(mCollisionConfiguration.get()) );
 
 		// The actual physics solver
-		btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+		mSolver = unique_ptr<btSequentialImpulseConstraintSolver>(new btSequentialImpulseConstraintSolver);
 
 		// The world.
-		mWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+		mWorld =  unique_ptr<btDiscreteDynamicsWorld>(new btDiscreteDynamicsWorld(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get()));
+
 		mWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
 }
 
 PhysicsManager::~PhysicsManager()
 {
-	delete mWorld;
+
 }
 
 void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass, float3 pos, Quat rot)
@@ -57,7 +58,7 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( dt*0.000001f ,8 );
+	mWorld->stepSimulation( dt*0.000001f ,4 );
 
 	/*	Process all of the positional components and check if they have moved - if so send out position updates.
 		This will also be where you send out events for collisions etc */

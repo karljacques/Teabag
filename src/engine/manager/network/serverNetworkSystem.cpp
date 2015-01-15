@@ -15,6 +15,8 @@ ServerNetworkSystem::ServerNetworkSystem(  ) : NetworkSystem()
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
 	mHost = true;
+
+	peer->ApplyNetworkSimulator( 56*1024, 200, 50 );
 }
 
 int ServerNetworkSystem::receive()

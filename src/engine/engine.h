@@ -62,7 +62,7 @@ private:
 
 	shared_ptr<SpectatorManager> mSpectatorManager;
 
-	//shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
+	shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
 
 	shared_ptr<Engine> mSelf;
 	shared_ptr<OgreConsole> mConsole;

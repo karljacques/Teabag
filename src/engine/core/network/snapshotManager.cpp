@@ -78,21 +78,27 @@ void SnapshotManager::startNewSnapshot()
 void SnapshotManager::sendSnapshot()
 {
 	if( mCurrentSnapshot->data.size() > 0 )
-	{
-		// Calculate payload size
-		unsigned int size =  mCurrentSnapshot->data.size()*sizeof(Transform) ; //Size of transforms
+	{	
+		// Calculate payload size - i.e. the size of the actual snapshot
+		unsigned int snapshot_size =  mCurrentSnapshot->data.size()*sizeof(Transform) ; //Size of transforms
+
+		// Total packet size - including timestamp, number of transforms and packet ID
+		unsigned int packet_size = snapshot_size + sizeof(RakNet::Time) + sizeof(int) + 1; 
 
 		// Create data packet
-		char* payload = new char[ size + sizeof(RakNet::Time) + sizeof(int) +1 ]; // +1 for ID, +1 RakNetTime for timestamp, and +1 int # of transforms
+		char* payload = new char[ packet_size ];
 
-		// Set packet ID
-		payload[0] = (unsigned char)(EV_NETWORK_NONEVENT_SNAPSHOT + ID_USER_PACKET_ENUM);
-		unsigned int offset = 1;
+		unsigned int offset = 0;
+		payload[offset] = (unsigned char)(ID_TIMESTAMP); // First byte indicates timestamp
 
 		// Set timestamp
 		RakNet::Time time = RakNet::GetTime();
 		memcpy( &payload[offset], &time, sizeof(RakNet::Time));
 		offset+= sizeof(RakNet::Time);
+
+		// Set packet ID
+		payload[offset] = (unsigned char)DPT_Snapshot;
+		offset+=1;
 		
 		// Set number of transforms
 		int transforms = mCurrentSnapshot->data.size();
@@ -100,14 +106,56 @@ void SnapshotManager::sendSnapshot()
 		offset+=sizeof(int);
 
 		// Copy data to payload
-		memcpy( &payload[offset], reinterpret_cast<char*>( mCurrentSnapshot->data.data() ), size );
-		offset+=size;
+		memcpy( &payload[offset], reinterpret_cast<char*>( mCurrentSnapshot->data.data() ), snapshot_size );
+		offset+=snapshot_size;
 
 		// Send the packet!!
 		mNetworkSystem->getPeer()->Send( payload,offset, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
 
 		delete payload;
 	}
+}
+
+void SnapshotManager::decodeSnapshot(char* data, unsigned int packet_size )
+{
+	// Create a snapshot we can put data into.
+	Snapshot* snapshot = new Snapshot();
+
+	// This has a timestamp, offset should be set to 1
+	unsigned int offset = 1;
+
+	// Get Timestamp
+	char* ts_char = new char[ sizeof(RakNet::Time) ];
+	memcpy( ts_char, &data[offset], sizeof( RakNet::Time));
+	snapshot->timestamp = *reinterpret_cast<RakNet::Time*>(ts_char); // Copy into snapshot.
+	offset+=sizeof(RakNet::Time);
+	delete ts_char;
+
+	// Check packet ID
+	if( data[offset] != DPT_Snapshot )
+		return;
+	offset+=1;
+
+	// Get number of Transforms inside the snapshot
+	char* length_char = new char[sizeof(int)];
+	memcpy( length_char, &data[offset], sizeof(int));
+	int snapshot_length = *reinterpret_cast<int*>(length_char);
+	offset+=sizeof(int);
+	delete length_char;
+
+	// For how many ever Transforms in the snapshot, cast the next sizeof(Transform) bytes into a snapshot, and add it to the snapshot object.
+	for( int i=0; i<snapshot_length; i++ )
+	{
+		char* trans = new char[sizeof(Transform)];
+		memcpy( trans, &data[offset], sizeof(Transform));
+		snapshot->data.push_back( *reinterpret_cast<Transform*>(trans) );
+		offset+=sizeof(Transform);
+		delete trans;
+	}
+
+	// Import the new snapshot to the snapshot manager.
+	this->importSnapshot(snapshot);
+
 }
 
 void SnapshotManager::updateNetworkSystem(NetworkSystem* networkSystem)

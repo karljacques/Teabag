@@ -26,33 +26,36 @@ public:
 	NetworkSystem(  );
 	virtual ~NetworkSystem();
 
-	// Sends an event across the network
+	// Send and receives an event across the network
 	void send( Event* e, PacketPriority p, PacketReliability r );
-
-	// Send data across network
-	void send( char* d, DataPacketType type, PacketPriority p, PacketReliability r );
+	void receive( Event* e );
 
 	// Takes a packet and gives you its identifier, handles the fact
 	// that it may have a timestamp
 	unsigned char getPacketIdentifier( RakNet::Packet* p );
 
-	// Is the system host?
 	bool isHost();
-
 	int getConnectedClients();
 	
 	int pingPeer( int client );
+	EntID getIDByGUID( EntID GUID );
+
+	uint32 _find_free_guid();
 
 	RakNet::RakPeerInterface* getPeer() {return peer;};
-	uint32 _find_free_guid();
 
 protected:
 
+	char* _encode_event( Event* e, int &offset );
+	Event* _decode_event( char* data );
+	
 	RakNet::RakPeerInterface * peer;
 	bool mHost;
 
 	EntID mGuidCount;
 
 	SnapshotManager* mSnapshotManager;
+
+
 };
 #endif // networkSystem_h__

@@ -24,6 +24,9 @@ public:
 	// Send the current snapshot
 	void sendSnapshot();
 
+	// Receive and decode a snapshot
+	void decodeSnapshot( char* data, unsigned int packet_size );
+
 	// When a snapshot comes down the pipe, push it into this manager class
 	void importSnapshot( Snapshot* s );
 
@@ -33,6 +36,7 @@ public:
 	// As the network system can be changed, this will need to be updated if the network system is changed from client to host, or vice versa
 	void updateNetworkSystem( NetworkSystem* networkSystem );
 	
+
 	Ogre::Timer snapshotLife;
 
 private:

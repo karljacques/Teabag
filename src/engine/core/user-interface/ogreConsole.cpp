@@ -290,7 +290,7 @@ void OgreConsole::print(const Ogre::String &text)
    int len=text.length();
    Ogre::String line;
    for(int c=0;c<len;c++){
-      if(str[c]=='/n'||line.length()>=CONSOLE_LINE_LENGTH){
+      if(str[c]=='\n'||line.length()>=CONSOLE_LINE_LENGTH){
          lines.push_back(line);
          line="";
       }

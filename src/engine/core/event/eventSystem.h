@@ -13,12 +13,13 @@
 
 #include "event.h"
 #include "eventListener.h"
+#include "..\..\manager\manager.h"
 
 #define MAX_EVENT_POOL 150
 
 using namespace std;
 
-class EventSystem : public Ogre::Singleton<EventSystem>
+class EventSystem : public Ogre::Singleton<EventSystem>, Manager
 {
 public:
 
@@ -28,7 +29,7 @@ public:
     void dispatchEvent( Event* e );
 
 	// Loop through events and dispatch to handlers (occurs at end of loop)
-    void update();
+    void update( double dt );
 
 	// Event listeners
     void registerListener( weak_ptr<EventListener> e );

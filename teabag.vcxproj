@@ -107,6 +107,7 @@
     <ClCompile Include="src\engine\core\user-interface\debugDisplaySystem.cpp" />
     <ClCompile Include="src\engine\core\user-interface\ogreConsole.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
+    <ClCompile Include="src\engine\manager\abstract\playerManager.cpp" />
     <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp" />
     <ClCompile Include="src\engine\manager\network\clientNetworkSystem.cpp" />
     <ClCompile Include="src\engine\manager\network\networkSystem.cpp" />
@@ -121,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\engine\component\abstract\playerComponent.h" />
     <ClInclude Include="src\engine\component\abstract\spectatorComponent.h" />
     <ClInclude Include="src\engine\component\base\component.h" />
     <ClInclude Include="src\engine\component\network\networkComponent.h" />
@@ -145,7 +147,9 @@
     <ClInclude Include="src\engine\core\user-interface\debugDisplaySystem.h" />
     <ClInclude Include="src\engine\core\user-interface\ogreConsole.h" />
     <ClInclude Include="src\engine\engine.h" />
+    <ClInclude Include="src\engine\manager\abstract\playerManager.h" />
     <ClInclude Include="src\engine\manager\abstract\spectatorManager.h" />
+    <ClInclude Include="src\engine\manager\manager.h" />
     <ClInclude Include="src\engine\manager\network\clientNetworkSystem.h" />
     <ClInclude Include="src\engine\manager\network\networkSystem.h" />
     <ClInclude Include="src\engine\manager\network\serverNetworkSystem.h" />

@@ -13,11 +13,9 @@ ClientNetworkSystem::ClientNetworkSystem( ) : NetworkSystem()
 	peer->Startup( 2, socketDescriptors, 1 );
 
 	mHost = false;
-
-	peer->ApplyNetworkSimulator( 56*1024, 200, 50 );
 }
 
-int ClientNetworkSystem::receive()
+void ClientNetworkSystem::update( double dt )
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
@@ -26,7 +24,10 @@ int ClientNetworkSystem::receive()
 			OgreConsole::getSingleton().print("Connection Success");
 
 		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
-			OgreConsole::getSingleton().print("Connection Failed");
+			OgreConsole::getSingleton().print("Connection to host failed");
+
+		if( getPacketIdentifier(packet) == ID_CONNECTION_LOST )
+			OgreConsole::getSingleton().print("Connect to host lost");
 
 		// Is it an event? If so, we need to convert it back
 		unsigned char id = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
@@ -104,7 +105,6 @@ int ClientNetworkSystem::receive()
 		
 	}
 
-	return true;
 }
 
 void ClientNetworkSystem::connect( const char* ip )

@@ -34,7 +34,7 @@ void EventSystem::dispatchEvent( Event* e )
 }
 
 /* Dispatch events to global listeners */
-void EventSystem::update()
+void EventSystem::update( double dt )
 {
 	/* Add any pending listeners */
 	while( mNewEventListeners.size() > 0 )

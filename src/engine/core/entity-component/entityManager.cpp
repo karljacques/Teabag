@@ -50,3 +50,8 @@ bool EntityManager::entityExists(EntID ID)
 		}
 	return false;
 }
+
+void EntityManager::update(double dt)
+{
+
+}

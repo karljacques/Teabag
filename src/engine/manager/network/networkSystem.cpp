@@ -32,6 +32,11 @@ void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
 
 }
 
+void NetworkSystem::send(char* d, DataPacketType type, PacketPriority p, PacketReliability r)
+{
+
+}
+
 unsigned char NetworkSystem::getPacketIdentifier(Packet *p)
 {
 	if ((unsigned char)p->data[0] == ID_TIMESTAMP )

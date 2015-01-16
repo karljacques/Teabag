@@ -38,6 +38,10 @@ public:
         
     bool isShuttingDown();
 
+	// Manager methods
+	void registerManager( weak_ptr<Manager> mgr );
+	void removeManager( weak_ptr<Manager> mgr );
+
 	// Systems getters
 	RenderSystem*		getRenderSystem(){ return mRenderSystem.get(); };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
@@ -69,6 +73,8 @@ private:
 
 
     bool m_EngineShutdown;
+
+	std::list<weak_ptr<Manager>> mManagers;
 
 };
 

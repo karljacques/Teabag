@@ -5,6 +5,7 @@
 #include "../../core/network/snapshotManager.h"
 #include "../../core/entity-component/componentManager.h"
 #include "../../component/network/networkComponent.h"
+#include "../manager.h"
 
 #define MAX_CONNECTIONS 16
 #define SERVER_PORT 2343
@@ -12,7 +13,14 @@
 
 typedef unsigned int uint32;
 
-class NetworkSystem : public EventListener, public ComponentManager<NetworkComponent>
+enum DataPacketType
+{
+	DPT_Event,
+	DPT_Snapshot,
+	DPT_PlayerInfo
+};
+
+class NetworkSystem : public EventListener, public ComponentManager<NetworkComponent>, public Manager
 {
 public:
 	NetworkSystem(  );
@@ -21,9 +29,8 @@ public:
 	// Sends an event across the network
 	void send( Event* e, PacketPriority p, PacketReliability r );
 
-	//receive packets, receive is implemented separately due to it
-	// being specific to who is the authority. 
-	virtual int receive() = 0;
+	// Send data across network
+	void send( char* d, DataPacketType type, PacketPriority p, PacketReliability r );
 
 	// Takes a packet and gives you its identifier, handles the fact
 	// that it may have a timestamp

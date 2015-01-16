@@ -4,8 +4,9 @@
 #include "../event/eventListener.h"
 #include "../render/UI/Gorilla.h"
 #include "../../manager/render/cameraManager.h"
+#include "../../manager/manager.h"
 
-class DebugDisplaySystem : public EventListener
+class DebugDisplaySystem : public EventListener, public Manager
 {
 public:
 	DebugDisplaySystem(CameraManager* mCameraManager );

@@ -14,8 +14,9 @@
 #include "../../component/render/renderComponent.h"
 #include "../../core/entity-component/entityManager.h"
 #include "../../component/physics/physicsComponent.h"
+#include "../manager.h"
 
-class RenderSystem : public ComponentManager<RenderComponent>, public EventListener
+class RenderSystem : public ComponentManager<RenderComponent>, public EventListener, public Manager
 {
 public:
         
@@ -42,6 +43,7 @@ public:
 	void setAsBox( RenderComponent* comp, float3 dim );
 
 	void handle( Event* e );
+	void update( double dt );
 
 private:
         

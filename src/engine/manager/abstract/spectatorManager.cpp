@@ -93,7 +93,7 @@ SpectatorManager::SpectatorManager(EntityManager* ent)
 	mEntityManager = ent;
 }
 
-void SpectatorManager::update()
+void SpectatorManager::update( double dt )
 {
 	for( auto i = mComponents.begin(); i!=mComponents.end(); i++ )
 	{

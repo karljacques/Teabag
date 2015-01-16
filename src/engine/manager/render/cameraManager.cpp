@@ -69,3 +69,9 @@ Ogre::Viewport* CameraManager::getViewport()
 {
 	return m_CameraMap.begin()->second;
 }
+
+
+void CameraManager::update( double dt )
+{
+
+}

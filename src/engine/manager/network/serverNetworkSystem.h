@@ -10,7 +10,7 @@ class ServerNetworkSystem : public NetworkSystem
 public:
 	ServerNetworkSystem(  );
 
-	int receive();
+	void update( double dt );
 	void handle( Event* e );
 
 private:

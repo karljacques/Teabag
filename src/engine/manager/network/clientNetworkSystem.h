@@ -9,11 +9,9 @@ class ClientNetworkSystem : public NetworkSystem
 public:
 	ClientNetworkSystem( );
 
-	int receive();
+	void update( double dt );
 	void connect( const char* ip );
 	void handle( Event* e );
-
-	
 
 private:
 

@@ -18,7 +18,7 @@ InputSystem::InputSystem(  SDL_Window* window )
 
 }
 
-void InputSystem::update()
+void InputSystem::update( double dt )
 {
 	while( SDL_PollEvent( &m_inputEvent ) )
 	{

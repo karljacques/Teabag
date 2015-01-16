@@ -29,7 +29,7 @@ Engine::Engine()
 	// Create Systems
     new EventSystem();
     mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
-
+	
 	mPhysicsManager = shared_ptr<PhysicsManager>( new PhysicsManager() );
 	mNetworkSystem = shared_ptr<ServerNetworkSystem>( new ServerNetworkSystem() );
 	
@@ -38,6 +38,15 @@ Engine::Engine()
 	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );
 
 	mSpectatorManager = shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) );
+	
+	// Register managers to be updated
+	registerManager(mEntityManager);
+	registerManager(mPhysicsManager);
+	registerManager(mNetworkSystem);
+	registerManager(mRenderSystem);
+	registerManager(mInputSystem);
+	registerManager(mCameraManager);
+	registerManager(mSpectatorManager);
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
@@ -99,7 +108,7 @@ Engine::Engine()
 	EventSystem::getSingletonPtr()->registerListener(mSelf);
 
 	mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
-
+	registerManager(mDebugDisplaySystem);
 	OgreConsole::getSingleton().addCommand( "/net.connect", &Console_Net_Connect );
 	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
 
@@ -115,24 +124,19 @@ Engine::~Engine()
 
 void Engine::update()
 {
-    // Make sure to pump messages in all render windows
-    Ogre::WindowEventUtilities::messagePump();
-
 	// Calculate timestep
 	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
 	mTimeSinceLastUpdate.reset();
 
+	EventSystem::getSingletonPtr()->update(dt);
+
 	// Update systems and managers
-    mInputSystem->update();
-
-	EventSystem::getSingletonPtr()->update();
-
-	mPhysicsManager->update( dt );
-	mSpectatorManager->update();
-
-	mNetworkSystem->receive();
-	mDebugDisplaySystem->update(dt);
-
+    for( auto i=mManagers.begin(); i!=mManagers.end(); i++ )
+	{
+		shared_ptr<Manager> ptr = i->lock();
+		if( ptr )
+			ptr->update(dt);
+	}
     // render after everything is updated
     mRenderSystem->renderOneFrame();
 
@@ -224,10 +228,29 @@ void Engine::handle( Event* e )
 void Engine::SetAsClient(const char* ip)
 {
 	EventSystem::getSingletonPtr()->deregisterListener(mNetworkSystem);
-
+	removeManager( mNetworkSystem );  
 	this->mNetworkSystem.reset( new ClientNetworkSystem( ) );
+	registerManager(mNetworkSystem);
 	EventSystem::getSingletonPtr()->registerListener(this->mNetworkSystem);
 	static_cast<ClientNetworkSystem*>(mNetworkSystem.get())->connect( ip );
 
 	
 }
+
+void Engine::registerManager(weak_ptr<Manager> mgr)
+{
+	mManagers.push_back(mgr);
+}
+
+void Engine::removeManager(weak_ptr<Manager> mgr)
+{
+	mManagers.remove_if([mgr](weak_ptr<Manager> p){
+			shared_ptr<Manager> p1 = p.lock();
+			shared_ptr<Manager> p2 = mgr.lock();
+
+			if( p1 && p2 )
+				return p1 == p2;
+			return false;
+	});
+}
+

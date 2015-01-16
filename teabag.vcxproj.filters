@@ -60,6 +60,9 @@
     <ClCompile Include="src\engine\core\user-interface\ogreConsole.cpp">
       <Filter>engine\core\user-interface</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\manager\abstract\playerManager.cpp">
+      <Filter>engine\manager\abstract</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -159,6 +162,15 @@
     </ClInclude>
     <ClInclude Include="src\engine\component\network\networkComponent.h">
       <Filter>engine\component\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\manager.h">
+      <Filter>engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\abstract\playerComponent.h">
+      <Filter>engine\component\abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\abstract\playerManager.h">
+      <Filter>engine\manager\abstract</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

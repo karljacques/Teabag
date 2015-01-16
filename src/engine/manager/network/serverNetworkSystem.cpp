@@ -15,17 +15,18 @@ ServerNetworkSystem::ServerNetworkSystem(  ) : NetworkSystem()
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
 	mHost = true;
-
-	peer->ApplyNetworkSimulator( 56*1024, 200, 50 );
 }
 
-int ServerNetworkSystem::receive()
+void ServerNetworkSystem::update( double dt )
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
 		if( getPacketIdentifier(packet) == ID_NEW_INCOMING_CONNECTION )
 			OgreConsole::getSingleton().print( "Connected to a new peer" );
+
+		if( getPacketIdentifier(packet) == ID_CONNECTION_REQUEST )
+			OgreConsole::getSingleton().print( "Connection incoming..." );
 	} 
 
 	
@@ -36,7 +37,6 @@ int ServerNetworkSystem::receive()
 		mSnapshotManager->snapshotLife.reset();
 	}
 	
-	return true;
 }
 
 void ServerNetworkSystem::handle( Event* e )

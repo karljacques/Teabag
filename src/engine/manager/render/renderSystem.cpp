@@ -203,3 +203,11 @@ void RenderSystem::handle( Event* e )
 
 	}
 }
+
+void RenderSystem::update( double dt )
+{
+	// Make sure to pump messages in all render windows
+	Ogre::WindowEventUtilities::messagePump();
+
+
+}

@@ -4,7 +4,7 @@
 #include "renderSystem.h"
 #include "../../component/render/cameraComponent.h"
 
-class CameraManager: public ComponentManager<CameraComponent>, public EventListener
+class CameraManager: public ComponentManager<CameraComponent>, public EventListener, public Manager
 {
 public:
 	CameraManager( RenderSystem* rend );
@@ -17,6 +17,7 @@ public:
 	Ogre::Viewport* getViewport();
 
 	void handle(Event* e);
+	void update( double dt );
 private:
 
 	RenderSystem* mRenderSystem;

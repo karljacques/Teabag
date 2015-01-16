@@ -1,10 +1,11 @@
 #pragma once
 
 #include "entity.h"
+#include "..\..\manager\manager.h"
 
 typedef unsigned int EntID;
 
-class EntityManager
+class EntityManager: public Manager
 {
 public:
 	EntityManager(void);

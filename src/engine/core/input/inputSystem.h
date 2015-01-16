@@ -11,14 +11,15 @@
 
 #include <iostream>
 #include "../event/eventSystem.h"
+#include "../../manager/manager.h"
 
-class InputSystem
+class InputSystem: public Manager
 {
 public:
         
     InputSystem(  SDL_Window* window );
         
-    void update();
+    void update( double dt );
 private:
         
 	SDL_Event		m_inputEvent;

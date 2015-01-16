@@ -5,10 +5,11 @@
 #include "../../component/physics/physicsComponent.h"
 #include "../../core/event/eventListener.h"
 #include "../../core/entity-component/componentManager.h"
+#include "../manager.h"
 
 using namespace std;
 
-class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>
+class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>, public Manager
 {
 public:
 	PhysicsManager( );

@@ -36,11 +36,14 @@ void ClientNetworkSystem::update( double dt )
 		{
 		case DPT_Snapshot:
 			// Pass packet on to the snapshot manager, which will deal with it
-
+			mSnapshotManager->decodeSnapshot(packet->data, packet->length );
 			break;
 		case DPT_Event:
+			// Decode the event
+			Event* e = this->_decode_event(packet->data);
 			break;
 		}
+	}
 		
 
 }

@@ -116,7 +116,7 @@ void SnapshotManager::sendSnapshot()
 	}
 }
 
-void SnapshotManager::decodeSnapshot(char* data, unsigned int packet_size )
+void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_size )
 {
 	// Create a snapshot we can put data into.
 	Snapshot* snapshot = new Snapshot();

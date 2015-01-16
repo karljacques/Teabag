@@ -72,10 +72,11 @@ EntID NetworkSystem::getIDByGUID( EntID GUID )
 
 	return 0;
 }
-char* NetworkSystem::_encode_event(Event* e, int &offset )
+
+unsigned char* NetworkSystem::_encode_event(Event* e, int &offset )
 {
 	// Cast event to char*, make room for the packet ID and timestamp
-	char* payload = new char[ sizeof(Event) + 10 ];
+	unsigned char* payload = new unsigned char[ sizeof(Event) + 10 ];
 
 	offset = 0;
 
@@ -104,7 +105,7 @@ char* NetworkSystem::_encode_event(Event* e, int &offset )
 	return payload;
 }
 
-Event* NetworkSystem::_decode_event(char* data)
+Event* NetworkSystem::_decode_event( unsigned char* data)
 {
 	// Where to read from - has a timestamp so first byte is just ID_TIMESTAMP
 	int offset = 1;

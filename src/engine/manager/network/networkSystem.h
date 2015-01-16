@@ -46,8 +46,8 @@ public:
 
 protected:
 
-	char* _encode_event( Event* e, int &offset );
-	Event* _decode_event( char* data );
+	unsigned char* _encode_event( Event* e, int &offset );
+	Event* _decode_event( unsigned char* data );
 	
 	RakNet::RakPeerInterface * peer;
 	bool mHost;

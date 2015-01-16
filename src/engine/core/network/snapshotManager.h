@@ -25,7 +25,7 @@ public:
 	void sendSnapshot();
 
 	// Receive and decode a snapshot
-	void decodeSnapshot( char* data, unsigned int packet_size );
+	void decodeSnapshot( unsigned char* data, unsigned int packet_size );
 
 	// When a snapshot comes down the pipe, push it into this manager class
 	void importSnapshot( Snapshot* s );

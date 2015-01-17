@@ -6,7 +6,7 @@ class MessageEvent
 public:
 	MessageEvent()
 	{
-		message = "";
+		message = "NO_MESSAGE";
 		from = 0;
 	}
 	std::string message;

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "serverNetworkSystem.h"
-
+#include <RakNetVersion.h>
 
 using namespace RakNet;
 
@@ -15,6 +15,8 @@ ServerNetworkSystem::ServerNetworkSystem(  ) : NetworkSystem()
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
 	mHost = true;
+
+	
 }
 
 void ServerNetworkSystem::update( double dt )

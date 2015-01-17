@@ -171,11 +171,15 @@ void OgreConsole::handle( Event* arg)
 				}
 			}else
 			{
-				// It's chat - we need to send this off!
-				Event* e = EventSystem::getSingleton().getEvent(EV_CORE_CHAT_MESSAGE, 0, this );
-				MessageEvent* me = e->createEventData<MessageEvent>();
-				me->message = prompt;
-				EventSystem::getSingleton().dispatchEvent(e);
+				if( prompt.length() > 0 )
+				{
+					// It's chat - we need to send this off!
+					Event* e = EventSystem::getSingleton().getEvent(EV_CORE_CHAT_MESSAGE, 0, this );
+					MessageEvent* me = e->createEventData<MessageEvent>();
+					me->message = prompt;
+					EventSystem::getSingleton().dispatchEvent(e);
+				}
+				
 			}
 
 			mKeyboardActive = false;
@@ -285,31 +289,34 @@ void OgreConsole::updatePrompt()
 
 void OgreConsole::print(const Ogre::String &text)
 {
-   //subdivide it into lines
-   const char *str=text.c_str();
-   int len=text.length();
-   Ogre::String line;
-   for(int c=0;c<len;c++){
-      if(str[c]=='\n'||line.length()>=CONSOLE_LINE_LENGTH){
-         lines.push_back(line);
-         line="";
-      }
-      if(str[c]!='\n')
-         line+=str[c];
-   }
+	if( text.length()>0 )
+	{
+	   //subdivide it into lines
+	   const char *str=text.c_str();
+	   int len=text.length();
+	   Ogre::String line;
+	   for(int c=0;c<len;c++){
+		  if(str[c]=='\n'||line.length()>=CONSOLE_LINE_LENGTH){
+			 lines.push_back(line);
+			 line="";
+		  }
+		  if(str[c]!='\n')
+			 line+=str[c];
+	   }
 
-   if( lines.size() > mLineCount )
-   {
-	   lines.pop_front();
-   }
+	   if( lines.size() > mLineCount )
+	   {
+		   lines.pop_front();
+	   }
 
-   if(line.length())
-      lines.push_back(line);
-   if(lines.size()>mLineCount)
-      mStartline=lines.size()-mLineCount;
-   else
-      mStartline=0;
-   mUpdateConsole=true;
+	   if(line.length())
+		  lines.push_back(line);
+	   if(lines.size()>mLineCount)
+		  mStartline=lines.size()-mLineCount;
+	   else
+		  mStartline=0;
+	   mUpdateConsole=true;
+	}
 }
 
 bool OgreConsole::frameEnded(const Ogre::FrameEvent &evt)

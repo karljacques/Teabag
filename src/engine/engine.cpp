@@ -11,6 +11,7 @@
 #include "manager/network/clientNetworkSystem.h"
 #include "manager/network/serverNetworkSystem.h"
 #include "manager/abstract/spectatorManager.h"
+#include <RakNetVersion.h>
 
 Engine::Engine()
 {
@@ -113,7 +114,7 @@ Engine::Engine()
 	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
 
 	OgreConsole::getSingleton().addCommand( "/geo.spawn", &Console_Geometry_Spawn );
-	
+	OgreConsole::getSingletonPtr()->print("RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( RAKNET_PROTOCOL_VERSION ));
 
 }
 

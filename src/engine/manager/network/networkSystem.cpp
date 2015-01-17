@@ -21,7 +21,7 @@ void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
 	int offset;
 	char* payload = _encode_event(e,offset);
 	peer->Send( payload, offset, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
-	delete payload;
+	delete[] payload;
 }
 
 void NetworkSystem::receive( Event* e )
@@ -73,10 +73,10 @@ EntID NetworkSystem::getIDByGUID( EntID GUID )
 	return 0;
 }
 
-unsigned char* NetworkSystem::_encode_event(Event* e, int &offset )
+char* NetworkSystem::_encode_event(Event* e, int &offset )
 {
-	// Cast event to char*, make room for the packet ID and timestamp
-	unsigned char* payload = new unsigned char[ sizeof(Event) + 10 ];
+	// Cast event to char*, make room for the packet ID and timestamp, and TIMESTAMP_ID
+	char* payload = new char[ sizeof(Event) + 11 ];
 
 	offset = 0;
 
@@ -90,11 +90,11 @@ unsigned char* NetworkSystem::_encode_event(Event* e, int &offset )
 	offset+= sizeof(RakNet::Time);
 
 	// Set packet ID
-	payload[offset] = (unsigned char)(DPT_Event);
+	payload[offset] = (unsigned char)(DPT_Event + ID_USER_PACKET_ENUM);
 	offset+=1;
 
 	// Set event type
-	payload[offset] = (unsigned char)(e->getEventType() + ID_USER_PACKET_ENUM);
+	payload[offset] = (unsigned char)(e->getEventType() );
 	offset+=1;
 
 	// Copy in casted event to the payload, offset by 1 byte
@@ -105,7 +105,7 @@ unsigned char* NetworkSystem::_encode_event(Event* e, int &offset )
 	return payload;
 }
 
-Event* NetworkSystem::_decode_event( unsigned char* data)
+Event* NetworkSystem::_decode_event( char* data )
 {
 	// Where to read from - has a timestamp so first byte is just ID_TIMESTAMP
 	int offset = 1;
@@ -120,9 +120,9 @@ Event* NetworkSystem::_decode_event( unsigned char* data)
 	offset+=sizeof(RakNet::Time);
 
 	// Get packet ID - This needs to be DPT_Event
-	unsigned char id = data[offset];
+	unsigned char id = data[offset] - ID_USER_PACKET_ENUM;
 
-	if( id!= (unsigned char)DPT_Event )
+	if( id!= DPT_Event )
 		return nullptr;
 
 	offset+=2; // Add the packet ID, and we can safely skip the event type as it's duplicated inside the event itself.

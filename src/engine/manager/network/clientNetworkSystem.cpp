@@ -30,20 +30,29 @@ void ClientNetworkSystem::update( double dt )
 			OgreConsole::getSingleton().print("Connect to host lost");
 
 		// Get type of packet
-		unsigned char id = getPacketIdentifier(packet) - ID_USER_PACKET_ENUM;
+		int id = (int)getPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
 
 		switch(id)
 		{
 		case DPT_Snapshot:
 			// Pass packet on to the snapshot manager, which will deal with it
-			mSnapshotManager->decodeSnapshot(packet->data, packet->length );
+			mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
+			mSnapshotManager->update(dt);
 			break;
 		case DPT_Event:
 			// Decode the event
-			Event* e = this->_decode_event(packet->data);
+			Event* tmp = this->_decode_event((char*)packet->data);
+			assert( tmp != nullptr );
+			Event* e = EventSystem::getSingletonPtr()->getEvent( tmp->getEventType(), 0, this );
+			e->clone(tmp);
+			EventSystem::getSingletonPtr()->dispatchEvent(e);
+			delete tmp;
+
 			break;
 		}
 	}
+
+
 		
 
 }

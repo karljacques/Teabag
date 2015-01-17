@@ -15,9 +15,9 @@ typedef unsigned int uint32;
 
 enum DataPacketType
 {
-	DPT_Event,
-	DPT_Snapshot,
-	DPT_PlayerInfo
+	DPT_Event = 1,
+	DPT_Snapshot = 2,
+	DPT_PlayerInfo = 4
 };
 
 class NetworkSystem : public EventListener, public ComponentManager<NetworkComponent>, public Manager
@@ -46,8 +46,8 @@ public:
 
 protected:
 
-	unsigned char* _encode_event( Event* e, int &offset );
-	Event* _decode_event( unsigned char* data );
+	char* _encode_event( Event* e, int &offset );
+	Event* _decode_event( char* data );
 	
 	RakNet::RakPeerInterface * peer;
 	bool mHost;

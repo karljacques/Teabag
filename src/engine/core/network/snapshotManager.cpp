@@ -82,14 +82,15 @@ void SnapshotManager::sendSnapshot()
 		// Calculate payload size - i.e. the size of the actual snapshot
 		unsigned int snapshot_size =  mCurrentSnapshot->data.size()*sizeof(Transform) ; //Size of transforms
 
-		// Total packet size - including timestamp, number of transforms and packet ID
-		unsigned int packet_size = snapshot_size + sizeof(RakNet::Time) + sizeof(int) + 1; 
+		// Total packet size - including timestamp, number of transforms and packet ID, TIMESTAMP ID
+		unsigned int packet_size = snapshot_size + sizeof(RakNet::Time) + sizeof(int) + 2; 
 
 		// Create data packet
 		char* payload = new char[ packet_size ];
 
 		unsigned int offset = 0;
 		payload[offset] = (unsigned char)(ID_TIMESTAMP); // First byte indicates timestamp
+		offset+=1;
 
 		// Set timestamp
 		RakNet::Time time = RakNet::GetTime();
@@ -97,7 +98,7 @@ void SnapshotManager::sendSnapshot()
 		offset+= sizeof(RakNet::Time);
 
 		// Set packet ID
-		payload[offset] = (unsigned char)DPT_Snapshot;
+		payload[offset] = (unsigned char)(DPT_Snapshot + ID_USER_PACKET_ENUM);
 		offset+=1;
 		
 		// Set number of transforms
@@ -116,7 +117,7 @@ void SnapshotManager::sendSnapshot()
 	}
 }
 
-void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_size )
+void SnapshotManager::decodeSnapshot( char* data, unsigned int packet_size )
 {
 	// Create a snapshot we can put data into.
 	Snapshot* snapshot = new Snapshot();
@@ -129,11 +130,13 @@ void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_s
 	memcpy( ts_char, &data[offset], sizeof( RakNet::Time));
 	snapshot->timestamp = *reinterpret_cast<RakNet::Time*>(ts_char); // Copy into snapshot.
 	offset+=sizeof(RakNet::Time);
-	delete ts_char;
+	delete[] ts_char;
 
+	unsigned char id = data[offset] - ID_USER_PACKET_ENUM;
 	// Check packet ID
-	if( data[offset] != DPT_Snapshot )
-		return;
+	if( id != DPT_Snapshot  )
+		assert( false );
+
 	offset+=1;
 
 	// Get number of Transforms inside the snapshot
@@ -141,7 +144,7 @@ void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_s
 	memcpy( length_char, &data[offset], sizeof(int));
 	int snapshot_length = *reinterpret_cast<int*>(length_char);
 	offset+=sizeof(int);
-	delete length_char;
+	delete[] length_char;
 
 	// For how many ever Transforms in the snapshot, cast the next sizeof(Transform) bytes into a snapshot, and add it to the snapshot object.
 	for( int i=0; i<snapshot_length; i++ )
@@ -150,7 +153,7 @@ void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_s
 		memcpy( trans, &data[offset], sizeof(Transform));
 		snapshot->data.push_back( *reinterpret_cast<Transform*>(trans) );
 		offset+=sizeof(Transform);
-		delete trans;
+		delete[] trans;
 	}
 
 	// Import the new snapshot to the snapshot manager.
@@ -191,4 +194,16 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 void SnapshotManager::importSnapshot(Snapshot* s)
 {
 	mSnapshots.push_back(s);
+}
+
+void SnapshotManager::update(double dt)
+{
+	std::vector<Event*>* vect = getSnapshotEvents(0);
+
+	for( auto i=vect->begin(); i!=vect->end(); i++ )
+	{
+		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->GUID);
+		EventSystem::getSingletonPtr()->dispatchEvent(*i);
+	}
+
 }

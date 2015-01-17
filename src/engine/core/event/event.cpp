@@ -27,6 +27,21 @@ void Event::changeEventType(int ev)
 	mEventType = ev;
 }
 
+void Event::clone( Event* e )
+{
+	// Only to be used in conjunction with EventSystem.
+	// EventType and sentBy to be set by EventSystem
+	this->GUID = e->GUID;
+	this->ID = e->ID;
+	char* data_ptr = e->getRawData();
+
+	memcpy( this->data, &data_ptr, EVENT_PAYLOAD_SIZE );
+}
+
+char* Event::getRawData()
+{
+	return data;
+}
 
 
 

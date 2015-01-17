@@ -1,6 +1,7 @@
 #include "../event/eventListener.h"
 #include "../../manager/network/networkSystem.h"
 #include "snapshot.h"
+#include "../../manager/manager.h"
 
 #ifndef snapshotManager_h__
 #define snapshotManager_h__
@@ -9,11 +10,13 @@
 
 class NetworkSystem;
 
-class SnapshotManager
+class SnapshotManager : public Manager 
 {
 public:
 	SnapshotManager( NetworkSystem* networkSystem );
 	~SnapshotManager();
+
+	void update( double dt );
 
 	void handle( Event* e ); /* This is not inherited from EventListener, it is not an event listener like the others, but NetworkSystem will pass on the event to it.
 							Maybe it will be changed if this sort of behavior becomes common.  */
@@ -25,7 +28,7 @@ public:
 	void sendSnapshot();
 
 	// Receive and decode a snapshot
-	void decodeSnapshot( unsigned char* data, unsigned int packet_size );
+	void decodeSnapshot( char* data, unsigned int packet_size );
 
 	// When a snapshot comes down the pipe, push it into this manager class
 	void importSnapshot( Snapshot* s );

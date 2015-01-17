@@ -83,6 +83,8 @@ public:
 
 	EventListener* sentBy;
 
+	void clone( Event* e );
+	char* getRawData();
 
 private:
 

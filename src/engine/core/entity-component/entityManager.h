@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entity.h"
-#include "..\..\manager\manager.h"
+#include "../../manager/manager.h"
 
 typedef unsigned int EntID;
 

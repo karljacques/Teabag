@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "clientNetworkSystem.h"
 #include "../../core/network/snapshot.h"
-
+#include <RakNetVersion.h>
 
 using namespace RakNet;
 
@@ -35,26 +35,34 @@ void ClientNetworkSystem::update( double dt )
 		switch(id)
 		{
 		case DPT_Snapshot:
-			// Pass packet on to the snapshot manager, which will deal with it
-			mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
-			mSnapshotManager->update(dt);
-			break;
+			{
+				// Pass packet on to the snapshot manager, which will deal with it
+				mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
+				mSnapshotManager->update(dt);
+				break;
+			}
 		case DPT_Event:
-			// Decode the event
-			Event* tmp = this->_decode_event((char*)packet->data);
-			assert( tmp != nullptr );
-			Event* e = EventSystem::getSingletonPtr()->getEvent( tmp->getEventType(), 0, this );
-			e->clone(tmp);
-			EventSystem::getSingletonPtr()->dispatchEvent(e);
-			delete tmp;
+			{
+				// Decode the event
+				Event* tmp = this->_decode_event((char*)packet->data);
+				assert( tmp != nullptr );
+				Event* e = EventSystem::getSingletonPtr()->getEvent( tmp->getEventType(), 0, this );
+				e->clone(tmp);
+				EventSystem::getSingletonPtr()->dispatchEvent(e);
+				delete tmp;
 
-			break;
+				break;
+			}
+		default:
+			{
+				// Print the code of the packet recieved, since it matches nothing
+				OgreConsole::getSingleton().print( "Error - packet ID:" + std::to_string( getPacketIdentifier(packet) ) );
+				OgreConsole::getSingleton().print( "RAKNET_PROTOCOL_VERSION_REMOTE:" + std::to_string( (int)packet->data[1] ));
+				OgreConsole::getSingleton().print( "RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( (int)( RAKNET_PROTOCOL_VERSION ) ) );
+				break;
+			}
 		}
 	}
-
-
-		
-
 }
 
 void ClientNetworkSystem::connect( const char* ip )

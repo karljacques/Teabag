@@ -13,7 +13,7 @@
 
 #include "event.h"
 #include "eventListener.h"
-#include "..\..\manager\manager.h"
+#include "../../manager/manager.h"
 
 #define MAX_EVENT_POOL 150
 

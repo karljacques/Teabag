@@ -1,6 +1,8 @@
 #ifndef componentManager_h__
 #define componentManager_h__
 
+#include <unordered_map>
+
 template <class T>
 class ComponentManager
 {

@@ -238,3 +238,6 @@ FakesAssemblies/
 
 #CLion
 .idea
+
+# KDevelop4
+*.kdev4

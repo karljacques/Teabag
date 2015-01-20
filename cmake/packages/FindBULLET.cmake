@@ -33,6 +33,7 @@ FIND_PATH( BULLET_INCLUDE_DIR btBulletCollisionCommon.h
 	PATH_SUFFIXES
 		/src
 		/include
+		/include/bullet
 	)
 IF( BULLET_INCLUDE_DIR )
 	SET( BULLET_EXTRAS_INCLUDE_DIR ${BULLET_INCLUDE_DIR}/../Extras )

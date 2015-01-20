@@ -1,0 +1,13 @@
+--- ../../../cmake-dep/src/SDL2_PROJECT/CMakeLists.txt	2014-03-16 03:31:41.000000000 +0100
++++ ../CMakeLists.txt	2014-11-01 02:17:39.000000000 +0100
+@@ -1290,8 +1290,8 @@
+   if(SDL_SHARED)
+     install(CODE "
+       execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
+-      \"libSDL2-2.0.so\" \"libSDL2.so\")")
+-    install(FILES ${SDL2_BINARY_DIR}/libSDL2.so DESTINATION "lib${LIB_SUFFIX}")
++      \"libSDL2-2.0${CMAKE_SHARED_LIBRARY_SUFFIX}\" \"libSDL2${CMAKE_SHARED_LIBRARY_SUFFIX}\")")
++    install(FILES ${SDL2_BINARY_DIR}/libSDL2${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION "lib${LIB_SUFFIX}")
+   endif()
+   if(FREEBSD)
+     # FreeBSD uses ${PREFIX}/libdata/pkgconfig

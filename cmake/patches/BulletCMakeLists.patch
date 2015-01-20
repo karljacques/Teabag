@@ -1,0 +1,19 @@
+--- CMakeLists.txt	2014-10-29 16:31:04.769967890 +0100
++++ ../openrump/cmake-dep/src/Bullet_PROJECT/CMakeLists.txt	2014-10-29 16:36:21.979965670 +0100
+@@ -248,6 +248,16 @@
+ 
+ #Maya Dynamica plugin is moved to http://dynamica.googlecode.com
+ 
++# enable position independent code on unix like systems
++OPTION (ENABLE_PIC "enables position independent code on unix like systems" OFF)
++IF (ENABLE_PIC)
++	IF (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
++		add_definitions (-fPIC)
++	ELSEIF (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
++		add_definitions (-fPIC)
++	ENDIF ()
++ENDIF (ENABLE_PIC)
++
+ SUBDIRS(src)
+ 
+ IF("${CMAKE_GENERATOR}" MATCHES "Unix Makefiles")

@@ -32,7 +32,6 @@ set(COMMON_CMAKE_FLAGS
 set (CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${DEPENDENCIES_DIR}/include)
 set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${DEPENDENCIES_DIR}/lib)
 
-# Mac OS X requires dependencies to use the libc++ standard library instead of
 # the default stdlibc++ when using C++11 in the main project. Additionally,
 # disable the -Wdeprecated-register warning.
 if (APPLE)
@@ -67,6 +66,7 @@ add_definitions (
     -DMATH_BULLET_INTEROP
     -DMATH_OGRE_INTEROP
 )
+
 include_directories ("${DEPENDENCIES_DIR}/include/MathGeoLib")
 target_link_libraries (teabag MathGeoLib)
 
@@ -74,7 +74,9 @@ target_link_libraries (teabag MathGeoLib)
 # RakNet
 ################################################################################
 find_package (RakNet)
-if (NOT RakNet_FOUND)
+if (RakNet_FOUND)
+    add_custom_target (RakNet_PROJECT)
+else ()
     # Build RakNet
     message (STATUS "RakNet will be downloaded automatically")
     externalproject_add (RakNet_PROJECT
@@ -91,9 +93,8 @@ if (NOT RakNet_FOUND)
     set (RAKNET_LIBRARY RakNetDLL)
 endif ()
 
-include_directories (${RAKNET_INCLUDES})
+include_directories ("${RAKNET_INCLUDES}")
 target_link_libraries (teabag ${RAKNET_LIBRARY})
-
 
 ################################################################################
 # Post Build

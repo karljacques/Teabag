@@ -27,13 +27,7 @@
     <ClCompile Include="src\engine\component\base\component.cpp">
       <Filter>engine\component\base</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\manager\network\clientNetworkSystem.cpp">
-      <Filter>engine\manager\network</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\manager\network\networkSystem.cpp">
-      <Filter>engine\manager\network</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\network\serverNetworkSystem.cpp">
       <Filter>engine\manager\network</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\manager\physics\physicsManager.cpp">
@@ -118,13 +112,7 @@
     <ClInclude Include="src\engine\component\render\renderComponent.h">
       <Filter>engine\component\render</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\manager\network\clientNetworkSystem.h">
-      <Filter>engine\manager\network</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\manager\network\networkSystem.h">
-      <Filter>engine\manager\network</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\network\serverNetworkSystem.h">
       <Filter>engine\manager\network</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\manager\physics\physicsManager.h">
@@ -171,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="src\engine\manager\abstract\playerManager.h">
       <Filter>engine\manager\abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\playerEvent.h">
+      <Filter>engine\core\event\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

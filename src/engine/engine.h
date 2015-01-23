@@ -21,6 +21,8 @@
 #include "manager/abstract/spectatorManager.h"
 #include "core/user-interface/debugDisplaySystem.h"
 
+#include "manager/abstract/playerManager.h"
+
 class InputSystem;
 class OgreConsole;
 
@@ -71,6 +73,7 @@ private:
 	shared_ptr<Engine> mSelf;
 	shared_ptr<OgreConsole> mConsole;
 
+	shared_ptr<PlayerManager> mPlayerMgr;
 
     bool m_EngineShutdown;
 

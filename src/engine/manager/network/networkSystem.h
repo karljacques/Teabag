@@ -15,16 +15,19 @@ typedef unsigned int uint32;
 
 enum DataPacketType
 {
-	DPT_Event = 1,
-	DPT_Snapshot = 2,
-	DPT_PlayerInfo = 4
+	DPT_EVENT,
+	DPT_SNAPSHOT
 };
 
 class NetworkSystem : public EventListener, public ComponentManager<NetworkComponent>, public Manager
 {
 public:
 	NetworkSystem(  );
-	virtual ~NetworkSystem();
+	~NetworkSystem();
+
+	// Set client and set host
+	void setAsServer();
+	void setAsClient();
 
 	// Send and receives an event across the network
 	void send( Event* e, PacketPriority p, PacketReliability r );
@@ -34,7 +37,13 @@ public:
 	// that it may have a timestamp
 	unsigned char getPacketIdentifier( RakNet::Packet* p );
 
+	void update( double dt );
+
+	void handle( Event* e );
 	bool isHost();
+
+	void connect( const char* ip );
+
 	int getConnectedClients();
 	
 	int pingPeer( int client );
@@ -45,6 +54,12 @@ public:
 	RakNet::RakPeerInterface* getPeer() {return peer;};
 
 protected:
+
+	void _update_host( double dt );
+	void _update_client( double dt );
+
+	void _handle_host( Event* e );
+	void _handle_client( Event* e );
 
 	char* _encode_event( Event* e, int &offset );
 	Event* _decode_event( char* data );

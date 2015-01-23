@@ -8,8 +8,6 @@
 
 #include "pch.h"
 #include "engine.h"
-#include "manager/network/clientNetworkSystem.h"
-#include "manager/network/serverNetworkSystem.h"
 #include "manager/abstract/spectatorManager.h"
 #include <RakNetVersion.h>
 
@@ -32,7 +30,7 @@ Engine::Engine()
     mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
 	
 	mPhysicsManager = shared_ptr<PhysicsManager>( new PhysicsManager() );
-	mNetworkSystem = shared_ptr<ServerNetworkSystem>( new ServerNetworkSystem() );
+	mNetworkSystem = shared_ptr<NetworkSystem>( new NetworkSystem() );
 	
 	mRenderSystem = shared_ptr<RenderSystem>( new RenderSystem( mEntityManager.get() ) );
 	mInputSystem = shared_ptr<InputSystem>( new InputSystem(  mRenderSystem->getSDLWindow() ) );
@@ -40,6 +38,7 @@ Engine::Engine()
 
 	mSpectatorManager = shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) );
 	
+	mPlayerMgr = shared_ptr<PlayerManager>( new PlayerManager( mNetworkSystem.get() ));
 	// Register managers to be updated
 	registerManager(mEntityManager);
 	registerManager(mPhysicsManager);
@@ -59,6 +58,7 @@ Engine::Engine()
 	e->registerListener(mCameraManager);
 	e->registerListener(mSpectatorManager);
 	e->registerListener(mNetworkSystem);
+	e->registerListener(mPlayerMgr);
 
 	{
 		// Create a spectator
@@ -228,14 +228,8 @@ void Engine::handle( Event* e )
 
 void Engine::SetAsClient(const char* ip)
 {
-	EventSystem::getSingletonPtr()->deregisterListener(mNetworkSystem);
-	removeManager( mNetworkSystem );  
-	this->mNetworkSystem.reset( new ClientNetworkSystem( ) );
-	registerManager(mNetworkSystem);
-	EventSystem::getSingletonPtr()->registerListener(this->mNetworkSystem);
-	static_cast<ClientNetworkSystem*>(mNetworkSystem.get())->connect( ip );
-
-	
+	mNetworkSystem->setAsClient();
+	mNetworkSystem->connect(ip);
 }
 
 void Engine::registerManager(weak_ptr<Manager> mgr)

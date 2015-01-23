@@ -98,7 +98,7 @@ void SnapshotManager::sendSnapshot()
 		offset+= sizeof(RakNet::Time);
 
 		// Set packet ID
-		payload[offset] = (unsigned char)(DPT_Snapshot + ID_USER_PACKET_ENUM);
+		payload[offset] = (unsigned char)(DPT_SNAPSHOT + ID_USER_PACKET_ENUM);
 		offset+=1;
 		
 		// Set number of transforms
@@ -134,7 +134,7 @@ void SnapshotManager::decodeSnapshot( char* data, unsigned int packet_size )
 
 	unsigned char id = data[offset] - ID_USER_PACKET_ENUM;
 	// Check packet ID
-	if( id != DPT_Snapshot  )
+	if( id != DPT_SNAPSHOT  )
 		assert( false );
 
 	offset+=1;

@@ -189,6 +189,7 @@ Event* NetworkSystem::_decode_event( char* data )
 	char* payload = new char[ sizeof(Event) ];
 	memcpy( payload, &data[offset], sizeof(Event));
 	Event* e = reinterpret_cast<Event*>(payload);
+	offset+=sizeof(Event);
 
 	// Remember to delete e
 	return e;

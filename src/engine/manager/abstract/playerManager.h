@@ -39,6 +39,13 @@ public:
 	bool	playerExists( EntID guid );
 	void	removePlayerByGUID( EntID guid );
 
+	// PlayerManager statistics
+	unsigned int getNumberOfConnectedPlayers();
+
+	// Current player manipulation
+	shared_ptr<Player>	getLocalPlayer();
+	EntID				getLocalGUID();
+
 	// EventListener handle
 	void	handle( Event* e );
 

@@ -112,8 +112,8 @@ Engine::Engine()
 	registerManager(mDebugDisplaySystem);
 	OgreConsole::getSingleton().addCommand( "/net.connect", &Console_Net_Connect );
 	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
+	OgreConsole::getSingleton().addCommand( "/player.setname", &Console_Set_Username);
 
-	OgreConsole::getSingleton().addCommand( "/geo.spawn", &Console_Geometry_Spawn );
 	OgreConsole::getSingletonPtr()->print("RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( RAKNET_PROTOCOL_VERSION ));
 
 }

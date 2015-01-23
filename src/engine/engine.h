@@ -50,6 +50,7 @@ public:
 	EntityManager*		getEntityManager(){return mEntityManager.get(); };
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
+	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
 

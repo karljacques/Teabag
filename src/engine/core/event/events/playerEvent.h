@@ -8,6 +8,10 @@ struct PlayerEvent
 {
 	PlayerEvent()
 	{
+		for( int i=0; i < USERNAME_LENGTH; i++ )
+		{
+			username[i] = 0;
+		}
 	}
 
 	char username[USERNAME_LENGTH];

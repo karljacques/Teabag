@@ -365,8 +365,14 @@ void Console_Net_Connect( Ogre::StringVector& str )
 	}
 }
 
-void Console_Geometry_Spawn( Ogre::StringVector& str )
+void Console_Set_Username( Ogre::StringVector& str )
 {
+	if( str.size() > 1 )
+	{
+		// Get player
+		Player* p = OgreConsole::getSingletonPtr()->getEnginePtr()->getPlayerManager()->getLocalPlayer().get();
+		p->username = str[1];
+	}
 
 }
 

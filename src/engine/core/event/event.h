@@ -95,6 +95,8 @@ public:
 	void clone( Event* e );
 	char* getRawData();
 
+	char data[EVENT_PAYLOAD_SIZE];
+
 #ifdef _DEBUG
 	bool d_initialised;
 #endif
@@ -102,7 +104,7 @@ public:
 private:
 
     int     mEventType;
-	char data[EVENT_PAYLOAD_SIZE];
+	
 	
 };
 
@@ -110,7 +112,7 @@ template <class T>
 T* Event::getData()
 {
 #ifdef _DEBUG
-	//assert( d_initialised == true );
+	assert( d_initialised == true );
 #endif
 	return reinterpret_cast<T*>(data);
 }

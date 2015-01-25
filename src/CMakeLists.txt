@@ -32,13 +32,15 @@ set(COMMON_CMAKE_FLAGS
 set (CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${DEPENDENCIES_DIR}/include)
 set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${DEPENDENCIES_DIR}/lib)
 
-# the default stdlibc++ when using C++11 in the main project. Additionally,
-# disable the -Wdeprecated-register warning.
+# Be sure to use the same c++ standard library as the main project. Additionally, disable the
+# -Wdeprecated-register warning. CMAKE_CXX_FLAGS needs to be fully quoted so CMake handles the
+# block as one thing in the COMMON_CMAKE_FLAGS list. Pretty horrid really.
 if (APPLE)
     set(COMMON_CMAKE_FLAGS
         ${COMMON_CMAKE_FLAGS}
-        -DCMAKE_OSX_ARCHITECTURES="x86_64"
-        -DCMAKE_C_FLAGS="-stdlib=libc++"
+        -DCMAKE_C_COMPILER=clang
+        -DCMAKE_CXX_COMPILER=clang++
+        -DCMAKE_OSX_ARCHITECTURES=x86_64
         "-DCMAKE_CXX_FLAGS='-std=c++11 -stdlib=libc++ -Wno-deprecated-register'")
 endif()
 

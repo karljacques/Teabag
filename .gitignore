@@ -190,6 +190,8 @@ publish/
 **/packages/*
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
+# HOTFIX TheComet: Don't ignore cmake/packages
+!/cmake/**
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 

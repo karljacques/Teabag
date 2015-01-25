@@ -38,7 +38,7 @@ endmacro(getenv_path)
 macro(create_search_paths PREFIX)
   foreach(dir ${${PREFIX}_PREFIX_PATH})
     set(${PREFIX}_INC_SEARCH_PATH ${${PREFIX}_INC_SEARCH_PATH}
-      ${dir}/include ${dir}/Include ${dir}/include/${PREFIX} ${dir}/Headers)
+      ${dir}/include ${dir}/Include ${dir}/include/${PREFIX} ${dir}/Headers ${dir})
     set(${PREFIX}_LIB_SEARCH_PATH ${${PREFIX}_LIB_SEARCH_PATH}
       ${dir}/lib ${dir}/Lib ${dir}/lib/${PREFIX} ${dir}/Libs)
     set(${PREFIX}_BIN_SEARCH_PATH ${${PREFIX}_BIN_SEARCH_PATH}

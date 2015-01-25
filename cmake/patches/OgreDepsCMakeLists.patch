@@ -1,0 +1,25 @@
+--- ../../../cmake-dep/src/OGREDEPS_PROJECT/CMakeLists.txt	2014-10-31 23:45:35.000000000 +0100
++++ ../CMakeLists.txt	2014-11-01 00:30:33.000000000 +0100
+@@ -4,7 +4,6 @@
+   cmake_minimum_required(VERSION 2.6)
+ endif ()
+ 
+-project(OGREDEPS)
+ set(CMAKE_MODULE_PATH "${OGREDEPS_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
+ 
+ if (WIN32)
+@@ -27,7 +26,7 @@
+   add_definitions(-DHAVE_UNISTD_H=1)
+ elseif (APPLE AND NOT OGRE_BUILD_PLATFORM_APPLE_IOS)
+   # Set 10.5 as the base SDK by default
+-  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6)
++  #set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6)
+ 
+   if (NOT CMAKE_OSX_ARCHITECTURES)
+     set(CMAKE_OSX_ARCHITECTURES ${ARCHS_STANDARD_32_64_BIT})
+@@ -46,4 +45,5 @@
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-warn-absolute-paths -Werror=implicit-function-declaration")
+ endif()
+ 
++project(OGREDEPS)
+ add_subdirectory(src)

@@ -1,6 +1,7 @@
-#include "..\event.h"
 #ifndef playerEvent_h__
 #define playerEvent_h__
+
+#include "../event.h"
 
 #define USERNAME_LENGTH 20
 

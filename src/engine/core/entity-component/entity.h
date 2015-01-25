@@ -37,7 +37,7 @@ T* Entity::getComponent()
 			return static_cast<T*>(*i);
 		}
 	}
-
+	assert( "Component doesn't exist - check it exists first" );
 	return nullptr;
 }
 template <class T>

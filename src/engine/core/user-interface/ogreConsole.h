@@ -100,8 +100,8 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
 
 // Console Commands
 void Console_Net_Connect(Ogre::StringVector& str );
-void Console_Geometry_Spawn( Ogre::StringVector& str );
 void Console_Net_Status(Ogre::StringVector& str );
+void Console_Set_Username( Ogre::StringVector& str );
 
 
 #endif // OgreConsoleForGorilla_h__

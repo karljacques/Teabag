@@ -21,6 +21,8 @@
 #include "manager/abstract/spectatorManager.h"
 #include "core/user-interface/debugDisplaySystem.h"
 
+#include "manager/abstract/playerManager.h"
+
 class InputSystem;
 class OgreConsole;
 
@@ -48,6 +50,7 @@ public:
 	EntityManager*		getEntityManager(){return mEntityManager.get(); };
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
+	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
 
@@ -71,6 +74,7 @@ private:
 	shared_ptr<Engine> mSelf;
 	shared_ptr<OgreConsole> mConsole;
 
+	shared_ptr<PlayerManager> mPlayerMgr;
 
     bool m_EngineShutdown;
 

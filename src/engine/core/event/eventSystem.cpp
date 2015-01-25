@@ -26,8 +26,8 @@ EventSystem::EventSystem()
 void EventSystem::dispatchEvent( Event* e )
 {
 	/* Prevent Null Events */
-	if( e->getEventType() == EV_NULL )
-		return;
+	assert( e->getEventType() != EV_NULL );
+
 	// Push to a queue so we don't invalid iterators when event handlers dispatch events themselves
 	mEventList.push(e);
 		
@@ -126,6 +126,10 @@ Event* EventSystem::getEvent( int eventType, int ID, EventListener* sentBy )
 /* This should add the event back to the pool of events */
 void EventSystem::release(Event* e)
 {
+#ifdef _DEBUG
+	e->d_initialised = false;
+#endif
+
 	e->changeEventType(EV_NULL); // Help identify rogue events
 
 	/* Prevent duplicates in the pool */

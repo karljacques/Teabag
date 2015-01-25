@@ -33,9 +33,12 @@ void Event::clone( Event* e )
 	// EventType and sentBy to be set by EventSystem
 	this->GUID = e->GUID;
 	this->ID = e->ID;
-	char* data_ptr = e->getRawData();
 
-	memcpy( this->data, &data_ptr, EVENT_PAYLOAD_SIZE );
+	memcpy( &this->data[0], &e->data[0], EVENT_PAYLOAD_SIZE );
+
+#ifdef _DEBUG
+	this->d_initialised = e->d_initialised;
+#endif
 }
 
 char* Event::getRawData()

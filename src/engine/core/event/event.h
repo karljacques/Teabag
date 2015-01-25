@@ -47,7 +47,16 @@ enum EV_EventType
 
 	// NETWORK
 	EV_NETWORK_TRANSFORM_UPDATE,
-	EV_NETWORK_NONEVENT_SNAPSHOT
+	EV_NETWORK_NEW_CONNECTION,
+
+	// NETWORK - PLAYER MODIFIERS
+	EV_NETWORK_PLAYER_JOINED,
+	EV_NETWORK_PLAYER_DATA,
+
+	EV_NETWORK_PLAYER_LEFT,
+	EV_NETWORK_PLAYER_DROPPED,
+	EV_NETWORK_PLAYER_KICKED
+
 };
 
 class EventListener;
@@ -86,22 +95,36 @@ public:
 	void clone( Event* e );
 	char* getRawData();
 
+	char data[EVENT_PAYLOAD_SIZE];
+
+#ifdef _DEBUG
+	bool d_initialised;
+#endif
+
 private:
 
     int     mEventType;
-	char data[EVENT_PAYLOAD_SIZE];
+	
 	
 };
 
 template <class T>
 T* Event::getData()
 {
+#ifdef _DEBUG
+	assert( d_initialised == true );
+#endif
 	return reinterpret_cast<T*>(data);
 }
 
 template <class T>
 T* Event::createEventData()
 {
+
+#ifdef _DEBUG
+	d_initialised = true;
+#endif
+
 	assert( sizeof(T) <= EVENT_PAYLOAD_SIZE );
 	T* ptr = new(data) T;
 	return getData<T>();

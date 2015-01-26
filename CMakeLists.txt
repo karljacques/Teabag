@@ -69,7 +69,7 @@ if (${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
     set (DEFINE_CMD -D)
     # using C++11
     add_definitions (-std=c++11)
-elseif (${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
+elseif (${CMAKE_C_COMPILER_ID} MATCHES "Clang")
     # Creating global #defines in clang is done with -D
     set (DEFINE_CMD -D)
     # using C++11

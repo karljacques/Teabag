@@ -36,6 +36,7 @@ macro (link_bullet TARGET_NAME INSTALL_PREFIX DEPS)
             -DBUILD_BULLET2_DEMOS=0
             -DBUILD_BULLET3=0
             -DBUILD_BULLET3_DEMOS=0
+            -DINSTALL_LIBS=ON
             -DENABLE_PIC=ON  # this option is only available through the patch applied above
         )
         set (BULLET_INCLUDE_DIR "${INSTALL_PREFIX}/include/bullet")

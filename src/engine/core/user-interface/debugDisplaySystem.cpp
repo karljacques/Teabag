@@ -26,6 +26,7 @@ void DebugDisplaySystem::update( double dt )
 	if( mFPSRecorder.size() > 60 )
 	{
 		mFPSRecorder.pop_front();
+        
 	}
 
 	// Calculate average fps

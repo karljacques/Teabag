@@ -3,8 +3,7 @@
 
 #include <Ogre.h>
 
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
+
 
 #include <SDL.h>
 
@@ -17,3 +16,6 @@
 #include <MessageIdentifiers.h>
 #include <BitStream.h>
 #include <GetTime.h>
+
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>

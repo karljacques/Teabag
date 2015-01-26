@@ -128,9 +128,9 @@ elseif (APPLE)
     add_custom_command(TARGET CopyMedia POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${FRAMEWORKS_DIR})
     add_custom_command(TARGET CopyMedia POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/Ogre.framework ${FRAMEWORKS_DIR}/Ogre.framework)
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR}/Ogre.framework ${FRAMEWORKS_DIR}/Ogre.framework)
     add_custom_command(TARGET CopyMedia POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.framework ${FRAMEWORKS_DIR}/RenderSystem_GL.framework)
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_PLUGIN_DIR}/RenderSystem_GL.framework ${FRAMEWORKS_DIR}/RenderSystem_GL.framework)
     add_custom_command(TARGET CopyMedia POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${DEPENDENCIES_DIR}/lib/libRakNetDLL.dylib ${FRAMEWORKS_DIR})
 

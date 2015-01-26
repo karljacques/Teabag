@@ -98,7 +98,7 @@ void PlayerManager::handle(Event* e)
 			// Signal from the network system that we've connected to a host, we'll need to send it our player data
 			Player* p = this->getPlayerByGUID(mLocalPlayer).get();
 			Event* ne = new Event( EV_NETWORK_PLAYER_DATA );
-			PlayerEvent* pe = e->createEventData<PlayerEvent>();
+			PlayerEvent* pe = ne->createEventData<PlayerEvent>();
 #ifdef _DEBUG
 			ne->d_initialised = true;
 			ne->GUID = 1337;

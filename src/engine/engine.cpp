@@ -34,11 +34,18 @@ Engine::Engine()
 	
 	mRenderSystem = shared_ptr<RenderSystem>( new RenderSystem( mEntityManager.get() ) );
 	mInputSystem = shared_ptr<InputSystem>( new InputSystem(  mRenderSystem->getSDLWindow() ) );
-	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );
 
-	mSpectatorManager = shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) );
-	
+	// Create the camera manager and default camera
+	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );	
+	CameraComponent* defaultCamera = mCameraManager->createComponent( 0 );
+	mCameraManager->createNewCamera( defaultCamera );
+
+	mConsole = shared_ptr<OgreConsole>( new OgreConsole( mCameraManager.get() ) );
+
+	mSpectatorManager = shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) ); 
+
 	mPlayerMgr = shared_ptr<PlayerManager>( new PlayerManager( mNetworkSystem.get() ));
+
 	// Register managers to be updated
 	registerManager(mEntityManager);
 	registerManager(mPhysicsManager);
@@ -47,6 +54,7 @@ Engine::Engine()
 	registerManager(mInputSystem);
 	registerManager(mCameraManager);
 	registerManager(mSpectatorManager);
+
 
 	// Register the engine to receive input events
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
@@ -59,13 +67,14 @@ Engine::Engine()
 	e->registerListener(mSpectatorManager);
 	e->registerListener(mNetworkSystem);
 	e->registerListener(mPlayerMgr);
+	e->registerListener(mConsole);
 
 	{
 		// Create a spectator
 		EntID ent = mEntityManager->createEntity();
 
 		CameraComponent* comp = mCameraManager->createComponent(ent);
-		mCameraManager->createNewCamera( comp );
+		mCameraManager->getCamera( comp );
 		mEntityManager->getByID(ent)->addComponent(comp);
 
 		SpectatorComponent* spec = mSpectatorManager->createComponent(ent);
@@ -96,25 +105,15 @@ Engine::Engine()
 		mEntityManager->getByID(ground)->addComponent(phys);
 	}
 
-
-
-	/* Create console - Singleton
-		Registers itself as an event listener */
-	new OgreConsole(this);
-
-	mConsole = std::shared_ptr<OgreConsole>(OgreConsole::getSingletonPtr(),  [=](OgreConsole*){});
-	EventSystem::getSingletonPtr()->registerListener( mConsole );
-
 	mSelf = std::shared_ptr<Engine>(this,  [=](Engine*){});
 	EventSystem::getSingletonPtr()->registerListener(mSelf);
 
 	mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
 	registerManager(mDebugDisplaySystem);
-	OgreConsole::getSingleton().addCommand( "/net.connect", &Console_Net_Connect );
-	OgreConsole::getSingleton().addCommand( "/net.status", &Console_Net_Status );
-	OgreConsole::getSingleton().addCommand( "/player.setname", &Console_Set_Username);
+	mConsole->addCommand( "/net.connect", &Console_Net_Connect );
+	mConsole->addCommand( "/player.setname", &Console_Set_Username);
 
-	OgreConsole::getSingletonPtr()->print("RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( RAKNET_PROTOCOL_VERSION ));
+	printm("RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( RAKNET_PROTOCOL_VERSION ));
 
 }
 

@@ -11,7 +11,7 @@
 */
 #include "pch.h"
 #include "ogreConsole.h"
-
+#include "..\event\eventSystem.h"
 
 #if OGRE_VERSION < 67584 // 1.8.0
 template<> OgreConsole* Ogre::Singleton<OgreConsole>::ms_Singleton=0;
@@ -25,29 +25,29 @@ template<> OgreConsole* Ogre::Singleton<OgreConsole>::msSingleton=0;
 #define CONSOLE_LINE_COUNT 15
 static const unsigned char legalchars[]=" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890+!\"'#%&/()=?[]\\*-_.:,; ";
 
-OgreConsole::OgreConsole( Engine* eng )
-: mIsVisible(true), mIsInitialised(false), mScreen(0), mUpdateConsole(false), mUpdatePrompt(false), mStartline(0), mEngine( eng )
+OgreConsole::OgreConsole( CameraManager* cameraManager )
 {
+	mCameraManager = cameraManager;
+	mUpdatePrompt = false;
+	mUpdateConsole = false;
+	mScreen = 0;
+	mIsInitialised= 0;
+	mIsVisible = true;
+	mStartline = 0;
+
 	Gorilla::Silverback* silverback = new Gorilla::Silverback();
 	silverback->loadAtlas("dejavu");
-	Gorilla::Screen* UIScreen = silverback->createScreen( eng->getCameraManager()->getViewport(),"dejavu" );
+	Gorilla::Screen* UIScreen = silverback->createScreen( mCameraManager->getViewport(),"dejavu" );
 
 	this->init( UIScreen );
-
 
 	mKeyboardActive = false;
 	mEnableKeyGuard = false;
 }
- 
-OgreConsole::~OgreConsole()
-{
- if (mIsInitialised)
-  shutdown();
-}
 
-void OgreConsole::init(Gorilla::Screen* screen)
+void OgreConsole::init( Gorilla::Screen* UIScreen )
 {
-   
+
    if(mIsInitialised)
     shutdown();
    
@@ -55,7 +55,7 @@ void OgreConsole::init(Gorilla::Screen* screen)
    Ogre::LogManager::getSingleton().getDefaultLog()->addListener(this);
    
    // Create gorilla things here.
-   mScreen = screen;
+   mScreen = UIScreen;
    mLayer = mScreen->createLayer(15);
    mGlyphData = mLayer->_getGlyphData(CONSOLE_FONT_INDEX); // Font.CONSOLE_FONT_INDEX
    
@@ -94,6 +94,12 @@ void OgreConsole::shutdown()
 void OgreConsole::handle( Event* arg)
 {
 	if( arg->getEventType() == EV_CORE_CHAT_MESSAGE )
+	{
+		MessageEvent* me = arg->getData<MessageEvent>();
+		this->print( "CHAT:" + me->message );
+	}
+
+	if( arg->getEventType() == EV_CORE_PRINT_CONSOLE )
 	{
 		MessageEvent* me = arg->getData<MessageEvent>();
 		this->print( me->message );
@@ -355,13 +361,17 @@ void Console_Net_Connect( Ogre::StringVector& str )
 {
 	if( str.size() > 1 )
 	{
-		const char* ip = str[1].c_str();
-		OgreConsole::getSingleton().print("Connecting to host @ " + Ogre::String(ip) );
+		// dispatch network system modifier
+		EventSystem::getSingletonPtr()->dispatchEvent( EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_MOD_CLIENT) );
 
-		OgreConsole::getSingleton().getEnginePtr()->SetAsClient( ip );
+		// Tell network system to connect to this IP:
+		Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_MOD_CONNECT);
+		MessageEvent* msg = e->createEventData<MessageEvent>();
+		msg->message = str[1];
+		EventSystem::getSingletonPtr()->dispatchEvent(e);
 	}else
 	{
-		OgreConsole::getSingleton().print( "No IP given." );
+		printm( "No IP given." );
 	}
 }
 
@@ -369,44 +379,21 @@ void Console_Set_Username( Ogre::StringVector& str )
 {
 	if( str.size() > 1 )
 	{
-		// Get player
-		Player* p = OgreConsole::getSingletonPtr()->getEnginePtr()->getPlayerManager()->getLocalPlayer().get();
-		p->username = str[1];
+		// Dispatch an event to change player name
+		Event* e = EventSystem::getSingleton().getEvent( EV_PLAYER_SET_NAME );
+		MessageEvent* msg = e->createEventData<MessageEvent>();
+		msg->message = str[1];
+		EventSystem::getSingleton().dispatchEvent( e );
 	}
 
 }
 
-void Console_Net_Status(Ogre::StringVector& str)
+void printm(std::string message)
 {
-	// Lots of printing to do, shortcut it
-	OgreConsole* c = OgreConsole::getSingletonPtr();
+	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_PRINT_CONSOLE);
+	MessageEvent* msg = e->createEventData<MessageEvent>();
 
-	// Get network system
-	NetworkSystem* net = OgreConsole::getSingleton().getEnginePtr()->getNetworkSystem();
-	int connectedClients = net->getConnectedClients();
+	msg->message = message;
 
-	c->print("NETWORK STATUS");
-	
-	if( net->isHost() )
-	{
-		c->print("Engine is in SERVER mode.");
-		c->print(std::to_string(connectedClients) + " peer(s) connected");
-
-		for( int i=0; i<connectedClients; i++ )
-			c->print("Client #"+std::to_string(i+1) + "(" + std::to_string( net->pingPeer(i) ) + "ms)");
-
-	}else
-	{
-		c->print("Engine is in CLIENT mode.");
-
-		if( connectedClients < 1 )
-		{
-			c->print("NOT connected to a server.");
-		}
-		else
-		{
-			c->print("Ping: " + std::to_string( net->pingPeer(0) ));
-		}
-	}
-	
+	EventSystem::getSingletonPtr()->dispatchEvent(e);
 }

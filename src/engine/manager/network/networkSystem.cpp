@@ -2,6 +2,8 @@
 #include "networkSystem.h"
 #include "../../core/user-interface/ogreConsole.h"
 #include <RakNetVersion.h>
+#include "../../core/event/eventSystem.h"
+#include "../../core/event/events/messageEvent.h"
 
 using namespace RakNet;
 
@@ -209,11 +211,11 @@ void NetworkSystem::_update_host(double dt)
 	{
 		if( getPacketIdentifier(packet) == ID_NEW_INCOMING_CONNECTION )
 		{
-			OgreConsole::getSingleton().print( "Connected to a new peer" );
+			printm( "Connected to a new peer" );
 		}
 
 		if( getPacketIdentifier(packet) == ID_CONNECTION_REQUEST )
-			OgreConsole::getSingleton().print( "Connection incoming..." );
+			printm( "Connection incoming..." );
 
 		unsigned int id = getPacketIdentifier( packet ) - ID_USER_PACKET_ENUM;
 
@@ -247,7 +249,7 @@ void NetworkSystem::_update_client(double dt)
 	{
 		if( getPacketIdentifier(packet)  == ID_CONNECTION_REQUEST_ACCEPTED )
 		{
-			OgreConsole::getSingleton().print("Connection Success");
+			printm("Connection Success");
 
 			// Inform engine that a connection has been established - carries no data
 			Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_NEW_CONNECTION, 0, this);
@@ -255,10 +257,10 @@ void NetworkSystem::_update_client(double dt)
 		}
 
 		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
-			OgreConsole::getSingleton().print("Connection to host failed");
+			printm("Connection to host failed");
 
 		if( getPacketIdentifier(packet) == ID_CONNECTION_LOST )
-			OgreConsole::getSingleton().print("Connect to host lost");
+			printm("Connect to host lost");
 
 		// Get type of packet
 		int id = (int)getPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
@@ -290,34 +292,52 @@ void NetworkSystem::_update_client(double dt)
 
 void NetworkSystem::_handle_host(Event* e)
 {
-	if( e->getEventType() == EV_CORE_CHAT_MESSAGE || e->getEventType() == EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX )
-	{
-		this->send( e, IMMEDIATE_PRIORITY, RELIABLE );
-	}
 
-	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
+	switch( e->getEventType() )
 	{
+	case EV_CORE_CHAT_MESSAGE:
+	case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
+		{
+			this->send(e,IMMEDIATE_PRIORITY,RELIABLE);
+			break;
+		}
+	case EV_CORE_TRANSFORM_UPDATE:
 		// Assign GUID To event
 		if( componentExists( e->ID ) )
 		{
 			e->GUID = mComponents[e->ID]->GUID;
 			mSnapshotManager->handle(e);
 		}
-
+		break;
+	case EV_NETWORK_MOD_CLIENT:
+		{
+			this->setAsClient();
+			break;
+		}
 	}
-
 }
 
 void NetworkSystem::_handle_client(Event* e)
 {
-	if( e->getEventType() == EV_CORE_CHAT_MESSAGE )
+
+	switch (e->getEventType())
 	{
-		this->send( e, IMMEDIATE_PRIORITY, RELIABLE );
+	case EV_CORE_CHAT_MESSAGE:
+		break;
+	case EV_NETWORK_MOD_CONNECT:
+		{
+			// Get the IP to connect to
+			MessageEvent* msg = e->getData<MessageEvent>();
+
+			// Connect to the IP
+			this->connect( msg->message.c_str() );
+		}
 	}
 }
 
 void NetworkSystem::connect(const char* ip)
 {
+	printm("Connecting to host @" + std::string(ip));
 	peer->Connect( ip, SERVER_PORT, 0,0 );
 }
 

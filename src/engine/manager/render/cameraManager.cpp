@@ -75,3 +75,11 @@ void CameraManager::update( double dt )
 {
 
 }
+
+void CameraManager::getCamera(CameraComponent* comp)
+{
+	comp->camera = m_CameraMap.begin()->first;
+	comp->mViewport = m_CameraMap.begin()->second;
+
+	comp->mSceneNode = m_CameraMap.begin()->first->getParentSceneNode();
+}

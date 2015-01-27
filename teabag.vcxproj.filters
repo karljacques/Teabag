@@ -163,6 +163,7 @@
     <ClInclude Include="src\engine\core\event\events\playerEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
+    <ClInclude Include="singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

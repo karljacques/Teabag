@@ -14,6 +14,12 @@ public:
 	void setCameraOffset( CameraComponent* comp, float3 offset );
 	void lookAt( CameraComponent* comp, float3 pos );
 
+	// Copies a camera rather than creating a new one.
+	// This is due to the fact that we need a default camera, which should be copied
+	// We only need to create a new camera for multiple rendering, which at this point is not required.
+	// So really, there should be one camera component - plus the default camera, which it is copied from.
+	void getCamera( CameraComponent* comp );
+
 	Ogre::Viewport* getViewport();
 
 	void handle(Event* e);

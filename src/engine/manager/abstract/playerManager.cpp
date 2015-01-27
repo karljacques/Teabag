@@ -12,6 +12,8 @@ PlayerManager::PlayerManager(NetworkSystem* networkSystem) : mNetworkSystem(netw
 	shared_ptr<Player> local = shared_ptr<Player>( new Player() );
 	local->GUID = mLocalPlayer;
 	this->addPlayer( local );
+
+	printm("Local GUID:" + std::to_string(local->GUID));
 }
 
 void PlayerManager::addPlayer(EntID guid, std::string username)
@@ -67,7 +69,7 @@ void PlayerManager::handle(Event* e)
 			PlayerEvent* p = e->getData<PlayerEvent>();
 			this->addPlayer( p->GUID, std::string( p->username ) );
 
-			OgreConsole::getSingletonPtr()->print("New Player Connecting: " + std::string( p->username ) );
+			printm("New Player Connecting: " + std::string( p->username ) );
 
 			// As I am host, inform clients of new player
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
@@ -83,13 +85,18 @@ void PlayerManager::handle(Event* e)
 		}
 	case EV_NETWORK_PLAYER_JOINED:
 		{
-			OgreConsole::getSingletonPtr()->print("EV_NETWORK_PLAYER_JOINED");
-
 			PlayerEvent* p = e->getData<PlayerEvent>();
-			this->addPlayer(p->GUID, std::string( p->username ) );
 
-			OgreConsole::getSingletonPtr()->print( "New player has joined: " + std::string( p->username ) );
-
+			// Check if this is a notification that the host has acknowledged the current player
+			if( p->GUID == getLocalPlayer()->GUID )
+			{
+				printm("Host has acknowledged your player connection.");
+			}
+			else
+			{
+				this->addPlayer(p->GUID, std::string( p->username ) );
+				printm( "New player has joined: " + std::string( p->username ) );
+			}
 			break;
 		}
 
@@ -99,10 +106,7 @@ void PlayerManager::handle(Event* e)
 			Player* p = this->getPlayerByGUID(mLocalPlayer).get();
 			Event* ne = new Event( EV_NETWORK_PLAYER_DATA );
 			PlayerEvent* pe = ne->createEventData<PlayerEvent>();
-#ifdef _DEBUG
-			ne->d_initialised = true;
-			ne->GUID = 1337;
-#endif
+
 			assert( p->username.size() < USERNAME_LENGTH );
 
 			memcpy( pe->username, p->username.c_str(), p->username.size() + 1 );

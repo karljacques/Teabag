@@ -26,21 +26,21 @@
 
 #include "engine/core/event/eventListener.h"
 #include "../render/UI/Gorilla.h"
-#include "engine/engine.h"
+#include "../../manager/render/cameraManager.h"
 
 typedef void ( *EngineMethodPtr ) (Ogre::StringVector& );
-class Engine;
 
-class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Ogre::LogListener, public EventListener
+// Creates a message event and dispatches it
+void printm( std::string message );
+
+class OgreConsole : public Ogre::FrameListener, Ogre::LogListener, public EventListener
 {
     
  public:
     
-    OgreConsole( Engine* eng );
-    
-   ~OgreConsole();
-    
-    void   init(Gorilla::Screen* screen_to_use);
+	OgreConsole( CameraManager* cameraManager );
+
+    void   init(Gorilla::Screen* UIScreen);
     void   shutdown();
     
     void   setVisible(bool mIsVisible);
@@ -56,7 +56,6 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     void addCommand(const Ogre::String &command, EngineMethodPtr func);
     void removeCommand(const Ogre::String &command);
 
-	Engine* getEnginePtr( ){ return mEngine; };
  
     //log
 #if OGRE_VERSION_MINOR < 8 && OGRE_VERSION_MAJOR < 2
@@ -89,7 +88,7 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
     Ogre::String            prompt;
     std::map<Ogre::String, EngineMethodPtr>  commands;
 
-	Engine* mEngine;
+	CameraManager* mCameraManager;
 
 	unsigned int mConsoleWidth;
 	unsigned int mConsoleHeight;
@@ -100,7 +99,6 @@ class OgreConsole : public Ogre::Singleton<OgreConsole>, Ogre::FrameListener, Og
 
 // Console Commands
 void Console_Net_Connect(Ogre::StringVector& str );
-void Console_Net_Status(Ogre::StringVector& str );
 void Console_Set_Username( Ogre::StringVector& str );
 
 

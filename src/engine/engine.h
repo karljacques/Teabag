@@ -58,28 +58,24 @@ public:
 	void SetAsClient( const char* ip );
 
 private:
+	
+	bool m_EngineShutdown;
+	
+	shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
+	shared_ptr<Engine> mSelf;
+	shared_ptr<PlayerManager> mPlayerMgr;
 
-    shared_ptr<RenderSystem> mRenderSystem;
-    shared_ptr<InputSystem> mInputSystem;
-	shared_ptr<NetworkSystem> mNetworkSystem;
-    
 	shared_ptr<EntityManager> mEntityManager;
 	shared_ptr<PhysicsManager> mPhysicsManager;
 	shared_ptr<CameraManager> mCameraManager;
-
+	shared_ptr<OgreConsole> mConsole;
 	shared_ptr<SpectatorManager> mSpectatorManager;
 
-	shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
-
-	shared_ptr<Engine> mSelf;
-	shared_ptr<OgreConsole> mConsole;
-
-	shared_ptr<PlayerManager> mPlayerMgr;
-
-    bool m_EngineShutdown;
+	shared_ptr<RenderSystem> mRenderSystem;
+	shared_ptr<InputSystem> mInputSystem;
+	shared_ptr<NetworkSystem> mNetworkSystem;
 
 	std::list<weak_ptr<Manager>> mManagers;
-
 };
 
 #endif // engine_h__

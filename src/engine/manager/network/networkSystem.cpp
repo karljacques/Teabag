@@ -19,6 +19,8 @@ NetworkSystem::NetworkSystem( )
 	};
 	peer->Startup( MAX_CONNECTIONS, socketDescriptors, 1 );
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
+
+	this->mHost = true;
 }
 
 NetworkSystem::~NetworkSystem()
@@ -209,18 +211,16 @@ void NetworkSystem::_update_host(double dt)
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		if( getPacketIdentifier(packet) == ID_NEW_INCOMING_CONNECTION )
-		{
-			printm( "Connected to a new peer" );
-		}
-
-		if( getPacketIdentifier(packet) == ID_CONNECTION_REQUEST )
-			printm( "Connection incoming..." );
-
 		unsigned int id = getPacketIdentifier( packet ) - ID_USER_PACKET_ENUM;
 
 		switch( id )
 		{
+		case ID_NEW_INCOMING_CONNECTION - ID_USER_PACKET_ENUM:
+			printm( "Connected to a new peer" );
+			break;
+		case ID_CONNECTION_REQUEST - ID_USER_PACKET_ENUM:
+			printm( "Connection incoming..." );
+			break;
 		case DPT_EVENT:
 			{
 				// Decode the event
@@ -230,7 +230,11 @@ void NetworkSystem::_update_host(double dt)
 				e->clone(tmp);
 				EventSystem::getSingletonPtr()->dispatchEvent(e);
 				delete tmp;
+				break;
 			}
+		default:
+			printm("Packet of unhandled ID" + std::to_string( id + ID_USER_PACKET_ENUM ) );
+			break;
 		}
 	} 
 
@@ -247,26 +251,30 @@ void NetworkSystem::_update_client(double dt)
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		if( getPacketIdentifier(packet)  == ID_CONNECTION_REQUEST_ACCEPTED )
-		{
-			printm("Connection Success");
-
-			// Inform engine that a connection has been established - carries no data
-			Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_NEW_CONNECTION, 0, this);
-			EventSystem::getSingleton().dispatchEvent(e);
-		}
-
-		if( getPacketIdentifier(packet) == ID_CONNECTION_ATTEMPT_FAILED )
-			printm("Connection to host failed");
-
-		if( getPacketIdentifier(packet) == ID_CONNECTION_LOST )
-			printm("Connect to host lost");
-
 		// Get type of packet
 		int id = (int)getPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
 
 		switch(id)
 		{
+		case (ID_CONNECTION_REQUEST_ACCEPTED - ID_USER_PACKET_ENUM):
+			{
+				printm("Connection Success");
+
+				// Inform engine that a connection has been established - carries no data
+				Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_NEW_CONNECTION, 0, this);
+				EventSystem::getSingleton().dispatchEvent(e);
+				break;
+			}
+
+		case (ID_CONNECTION_ATTEMPT_FAILED - ID_USER_PACKET_ENUM ):
+			printm("Connection to host failed");
+			break;
+
+		case( ID_CONNECTION_LOST - ID_USER_PACKET_ENUM ):
+			printm("Connection to host lost");
+			break;
+
+		// USER PACKETS (APPLICATION - not RakNet packets)
 		case DPT_SNAPSHOT:
 			{
 				// Pass packet on to the snapshot manager, which will deal with it
@@ -274,6 +282,7 @@ void NetworkSystem::_update_client(double dt)
 				mSnapshotManager->update(dt);
 				break;
 			}
+
 		case DPT_EVENT:
 			{
 				// Decode the event
@@ -286,6 +295,9 @@ void NetworkSystem::_update_client(double dt)
 
 				break;
 			}
+		default:
+			printm("Packet of unhandled ID" + std::to_string( id + ID_USER_PACKET_ENUM ) );
+			break;
 		}
 	}
 }
@@ -326,6 +338,7 @@ void NetworkSystem::_handle_client(Event* e)
 		break;
 	case EV_NETWORK_MOD_CONNECT:
 		{
+			printm("Switched to client mode");
 			// Get the IP to connect to
 			MessageEvent* msg = e->getData<MessageEvent>();
 

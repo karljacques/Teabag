@@ -9,6 +9,7 @@ struct PlayerEvent
 {
 	PlayerEvent()
 	{
+		GUID = 0;
 		for( int i=0; i < USERNAME_LENGTH; i++ )
 		{
 			username[i] = 0;

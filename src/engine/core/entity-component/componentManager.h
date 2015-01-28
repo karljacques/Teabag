@@ -2,8 +2,7 @@
 #define componentManager_h__
 
 #include <unordered_map>
-
-typedef unsigned int EntID;
+#include "../typedef/id.h"
 
 template <class T>
 class ComponentManager

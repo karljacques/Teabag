@@ -3,7 +3,6 @@
 #include "entity.h"
 #include "../../manager/manager.h"
 
-typedef unsigned int EntID;
 
 class EntityManager: public Manager
 {

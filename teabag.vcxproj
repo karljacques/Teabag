@@ -144,6 +144,7 @@
     <ClInclude Include="src\engine\core\network\snapshotManager.h" />
     <ClInclude Include="src\engine\core\render\OSXUtils.h" />
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h" />
+    <ClInclude Include="src\engine\core\typedef\id.h" />
     <ClInclude Include="src\engine\core\user-interface\debugDisplaySystem.h" />
     <ClInclude Include="src\engine\core\user-interface\ogreConsole.h" />
     <ClInclude Include="src\engine\engine.h" />

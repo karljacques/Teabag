@@ -164,6 +164,9 @@
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
     <ClInclude Include="singleton.h" />
+    <ClInclude Include="src\engine\core\typedef\id.h">
+      <Filter>engine\core\typedef</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -228,6 +231,9 @@
     </Filter>
     <Filter Include="engine\component\network">
       <UniqueIdentifier>{25f929e2-3b0d-4ca7-873a-347601083025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\typedef">
+      <UniqueIdentifier>{37b47662-6c34-4fed-80ad-a4e5d8aaf1c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

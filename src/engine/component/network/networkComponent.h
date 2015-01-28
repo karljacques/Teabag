@@ -1,7 +1,5 @@
 #include "../base/component.h"
 
-typedef unsigned int EntID;
-
 #ifndef networkComponent_h__
 #define networkComponent_h__
 

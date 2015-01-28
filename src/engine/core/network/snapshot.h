@@ -6,19 +6,20 @@
 #include "common.h"
 #include <vector>
 #include <RakNetTime.h>
+#include "..\typedef\id.h"
 
 struct Transform
 {
 	Transform()
 	{
-		GUID = 0;
+		GUID = unsigned int(0);
 		rot = Quat(0,0,0,1);
 		angRot = float3(0,0,0);
 		pos = float3(0,0,0);
 		vel = float3(0,0,0);
 	}
 
-	EntID GUID;
+	EntGUID GUID;
 
 	Quat rot;
 	

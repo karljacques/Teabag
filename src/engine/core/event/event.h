@@ -21,8 +21,6 @@
 
 #define EVENT_PAYLOAD_SIZE sizeof(TransformEvent) // Largest Event
 
-typedef unsigned int EntID;
-
 enum EV_EventType
 {
 	// DEFAULT

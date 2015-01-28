@@ -221,6 +221,7 @@ void Engine::handle( Event* e )
 				mEntityManager->getByID(box)->addComponent(phys);
 			}
 			break;
+
     }
 }
 

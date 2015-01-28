@@ -69,7 +69,7 @@ void PlayerManager::handle(Event* e)
 			PlayerEvent* p = e->getData<PlayerEvent>();
 			this->addPlayer( p->GUID, std::string( p->username ) );
 
-			printm("New Player Connecting: " + std::string( p->username ) );
+			printm("New Player Connecting: " + std::string( p->username ) + "  with GUID: " + std::to_string( p->GUID ) );
 
 			// As I am host, inform clients of new player
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
@@ -110,6 +110,7 @@ void PlayerManager::handle(Event* e)
 			assert( p->username.size() < USERNAME_LENGTH );
 
 			memcpy( pe->username, p->username.c_str(), p->username.size() + 1 );
+			pe->GUID = mLocalPlayer;
 
 			mNetworkSystem->send(ne, HIGH_PRIORITY,RELIABLE );
 			delete ne;

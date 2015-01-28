@@ -9,7 +9,7 @@ struct PlayerEvent
 {
 	PlayerEvent()
 	{
-		GUID = 0;
+		pGUID = 0;
 		for( int i=0; i < USERNAME_LENGTH; i++ )
 		{
 			username[i] = 0;
@@ -17,6 +17,6 @@ struct PlayerEvent
 	}
 
 	char username[USERNAME_LENGTH];
-	EntID GUID;
+	PlayerGUID pGUID;
 };
 #endif // playerEvent_h__

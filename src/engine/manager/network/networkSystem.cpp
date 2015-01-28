@@ -21,6 +21,9 @@ NetworkSystem::NetworkSystem( )
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
 	this->mHost = true;
+	this->mLocalGUID = RakNet::RakNetGUID::ToUint32( peer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS) ); /* It is possible that this GUID
+																															could change upon shutting down RakNet
+																															and restarting it. Something to bare in mind*/
 }
 
 NetworkSystem::~NetworkSystem()
@@ -50,6 +53,7 @@ void NetworkSystem::setAsClient()
 	peer->Shutdown(0);
 	peer->Startup( 2, socketDescriptors, 1 );
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
+
 	mHost = false;
 }
 
@@ -59,11 +63,6 @@ void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
 	char* payload = _encode_event(e,offset);
 	peer->Send( payload, offset, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, true );
 	delete[] payload;
-}
-
-void NetworkSystem::receive( Event* e )
-{
-
 }
 
 unsigned char NetworkSystem::getPacketIdentifier(Packet *p)
@@ -121,7 +120,7 @@ int NetworkSystem::pingPeer(int client)
 	return -1;
 }
 
-EntID NetworkSystem::getIDByGUID( EntID GUID )
+EntID NetworkSystem::getIDByGUID( EntityGUID GUID )
 {
 	for( auto j=mComponents.begin(); j!=mComponents.end(); j++ )
 	{
@@ -317,7 +316,7 @@ void NetworkSystem::_handle_host(Event* e)
 		// Assign GUID To event
 		if( componentExists( e->ID ) )
 		{
-			e->GUID = mComponents[e->ID]->GUID;
+			e->eGUID = mComponents[e->ID]->GUID;
 			mSnapshotManager->handle(e);
 		}
 		break;
@@ -352,6 +351,11 @@ void NetworkSystem::connect(const char* ip)
 {
 	printm("Connecting to host @" + std::string(ip));
 	peer->Connect( ip, SERVER_PORT, 0,0 );
+}
+
+PlayerGUID NetworkSystem::getLocalGUID()
+{
+	return this->mLocalGUID;
 }
 
 

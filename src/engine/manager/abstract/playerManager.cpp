@@ -6,7 +6,7 @@
 PlayerManager::PlayerManager(NetworkSystem* networkSystem) : mNetworkSystem(networkSystem)
 {
 	// Get my GUID
-	mLocalPlayer= RakNet::RakNetGUID::ToUint32( mNetworkSystem->getPeer()->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS) );
+	mLocalPlayer= mNetworkSystem->getLocalGUID();
 
 	// Add local player to the list
 	shared_ptr<Player> local = shared_ptr<Player>( new Player() );
@@ -56,7 +56,7 @@ void PlayerManager::removePlayerByGUID(EntID guid)
 
 void PlayerManager::constructFromData(char* data)
 {
-
+	// TODO
 }
 
 void PlayerManager::handle(Event* e)
@@ -67,9 +67,9 @@ void PlayerManager::handle(Event* e)
 		{
 			// Add new player - this will only be called when I am host
 			PlayerEvent* p = e->getData<PlayerEvent>();
-			this->addPlayer( p->GUID, std::string( p->username ) );
+			this->addPlayer( p->pGUID, std::string( p->username ) );
 
-			printm("New Player Connecting: " + std::string( p->username ) + "  with GUID: " + std::to_string( p->GUID ) );
+			printm("New Player Connecting: " + std::string( p->username ) + "  with GUID: " + std::to_string( p->pGUID ) );
 
 			// As I am host, inform clients of new player
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
@@ -88,13 +88,13 @@ void PlayerManager::handle(Event* e)
 			PlayerEvent* p = e->getData<PlayerEvent>();
 
 			// Check if this is a notification that the host has acknowledged the current player
-			if( p->GUID == getLocalPlayer()->GUID )
+			if( p->pGUID == getLocalPlayer()->GUID )
 			{
 				printm("Host has acknowledged your player connection.");
 			}
 			else
 			{
-				this->addPlayer(p->GUID, std::string( p->username ) );
+				this->addPlayer(p->pGUID, std::string( p->username ) );
 				printm( "New player has joined: " + std::string( p->username ) );
 			}
 			break;
@@ -110,7 +110,7 @@ void PlayerManager::handle(Event* e)
 			assert( p->username.size() < USERNAME_LENGTH );
 
 			memcpy( pe->username, p->username.c_str(), p->username.size() + 1 );
-			pe->GUID = mLocalPlayer;
+			pe->pGUID = mLocalPlayer;
 
 			mNetworkSystem->send(ne, HIGH_PRIORITY,RELIABLE );
 			delete ne;

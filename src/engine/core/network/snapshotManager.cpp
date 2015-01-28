@@ -25,13 +25,13 @@ void SnapshotManager::handle(Event* e)
 		trans->rot = te->orientation;
 		trans->vel = te->velocity;
 		trans->angRot = te->angularVelocity;
-		trans->GUID = e->GUID;
+		trans->GUID = e->eGUID;
 
 		bool isInSnapshot = false;
 		// See if this object is already in the snapshot
 		for( auto i = mCurrentSnapshot->data.begin();  i!=mCurrentSnapshot->data.end(); i++ )
 		{
-			if( (*i).GUID == e->GUID )
+			if( (*i).GUID == e->eGUID )
 			{
 				/// It's already in the snapshot, update it with new data
 				(*i) = *trans; // This should be a copy?
@@ -183,7 +183,7 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 		te->orientation = (*i).rot;
 		te->velocity = (*i).vel;
 		te->angularVelocity = (*i).angRot;
-		e->GUID = (*i).GUID;
+		e->eGUID = (*i).GUID;
 		vect->push_back(e);
 	}
 
@@ -202,7 +202,7 @@ void SnapshotManager::update(double dt)
 
 	for( auto i=vect->begin(); i!=vect->end(); i++ )
 	{
-		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->GUID);
+		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->eGUID);
 		EventSystem::getSingletonPtr()->dispatchEvent(*i);
 	}
 

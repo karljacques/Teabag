@@ -1,6 +1,8 @@
 #ifndef messageEvent_h__
 #define messageEvent_h__
 
+#include "..\..\..\..\common.h"
+
 class MessageEvent
 {
 public:
@@ -10,6 +12,6 @@ public:
 		from = 0;
 	}
 	std::string message;
-	unsigned int from;
+	PlayerGUID from;
 };
 #endif // messageEvent_h__

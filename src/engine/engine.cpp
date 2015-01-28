@@ -185,7 +185,7 @@ void Engine::handle( Event* e )
 								mEntityManager->getByID(box)->addComponent(net);
 
 								Event* dyn = EventSystem::getSingletonPtr()->getEvent(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
-								dyn->GUID = net->GUID;
+								dyn->eGUID = net->GUID;
 								EventSystem::getSingletonPtr()->dispatchEvent( dyn );
 							}
 							
@@ -209,7 +209,7 @@ void Engine::handle( Event* e )
 				EntID box = mEntityManager->createEntity();
 
 				NetworkComponent* net = mNetworkSystem->createComponent(box);
-				net->GUID = e->GUID;
+				net->GUID = e->eGUID;
 
 				RenderComponent* rend = mRenderSystem->createComponent(box);
 				mRenderSystem->initComponent( rend );

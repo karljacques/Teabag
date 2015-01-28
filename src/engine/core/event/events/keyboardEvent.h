@@ -3,7 +3,6 @@
 
 struct KeyboardEvent
 {
-
 	KeyboardEvent()
 	{
 		mPressed = 0;

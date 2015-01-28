@@ -11,7 +11,7 @@
 Event::Event( int eventType )
 {
     mEventType = eventType;
-	GUID = 0;
+	eGUID = 0;
 	ID = 0;
 	sentBy = nullptr;
 }
@@ -31,7 +31,7 @@ void Event::clone( Event* e )
 {
 	// Only to be used in conjunction with EventSystem.
 	// EventType and sentBy to be set by EventSystem
-	this->GUID = e->GUID;
+	this->eGUID = e->eGUID;
 	this->ID = e->ID;
 
 	memcpy( &this->data[0], &e->data[0], EVENT_PAYLOAD_SIZE );

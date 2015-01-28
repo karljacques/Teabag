@@ -164,9 +164,6 @@
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
     <ClInclude Include="singleton.h" />
-    <ClInclude Include="src\engine\core\typedef\id.h">
-      <Filter>engine\core\typedef</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

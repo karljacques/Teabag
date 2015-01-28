@@ -2,7 +2,8 @@
 #define componentManager_h__
 
 #include <unordered_map>
-#include "../typedef/id.h"
+#include "../../../common.h"
+
 
 template <class T>
 class ComponentManager

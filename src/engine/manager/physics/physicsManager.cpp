@@ -58,14 +58,14 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( 0.016,4 );
+	mWorld->stepSimulation( dt*MICROSECONDS_TO_SECONDS_FACTOR,2 );
 
 	/*	Process all of the positional components and check if they have moved - if so send out position updates.
 		This will also be where you send out events for collisions etc */
 	for( auto i=mComponents.begin(); i != mComponents.end(); i++ )
 	{
-		PhysicsComponent* comp = i->second;
-
+		PhysicsComponent* comp = dynamic_cast<PhysicsComponent*>(i->second);
+		assert(comp!=nullptr);
 		/* If the object has moved past the move tolerance since the last update, send out events and update the position data */
 		if( comp->position.DistanceSq( comp->body->getWorldTransform().getOrigin() ) > MOVE_TOLERANCE 
 			|| comp->orientation.AngleBetween( comp->body->getWorldTransform().getRotation() ) > MOVE_TOLERANCE )
@@ -96,7 +96,7 @@ void PhysicsManager::handle( Event* e )
 
 	if( componentExists(e->ID) )
 	{
-		PhysicsComponent* comp = getComponentByID( e->ID );
+		PhysicsComponent* comp = getComponentByID<PhysicsComponent>( e->ID );
 		switch( e->getEventType() )
 		{
 		case EV_CORE_TRANSFORM_UPDATE:

@@ -16,7 +16,7 @@
 #include "../../component/physics/physicsComponent.h"
 #include "../manager.h"
 
-class RenderSystem : public ComponentManager<RenderComponent>, public EventListener, public Manager
+class RenderSystem : public ComponentManager, public EventListener, public Manager
 {
 public:
         

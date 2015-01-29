@@ -8,7 +8,7 @@
 #ifndef spectatorManager_h__
 #define spectatorManager_h__
 
-class SpectatorManager : public ComponentManager<SpectatorComponent>, public EventListener, public Manager
+class SpectatorManager : public ComponentManager, public EventListener, public Manager
 {
 public:
 	SpectatorManager( EntityManager* ent );

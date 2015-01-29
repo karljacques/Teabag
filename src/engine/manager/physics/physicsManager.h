@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class PhysicsManager : public EventListener, public ComponentManager<PhysicsComponent>, public Manager
+class PhysicsManager : public EventListener, public ComponentManager, public Manager
 {
 public:
 	PhysicsManager( );

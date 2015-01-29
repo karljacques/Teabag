@@ -21,7 +21,7 @@ enum DataPacketType
 
 using namespace RakNet;
 
-class NetworkSystem : public EventListener, public ComponentManager<NetworkComponent>, public Manager
+class NetworkSystem : public EventListener, public ComponentManager, public Manager
 {
 public:
 	NetworkSystem( void );

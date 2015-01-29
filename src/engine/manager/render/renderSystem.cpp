@@ -30,8 +30,8 @@ RenderSystem::RenderSystem( EntityManager* ent )
     m_Root = std::unique_ptr<Ogre::Root>(new Ogre::Root("","","Ogre.log"));
 
     // TODO get window width and height from somewhere (config file?)
-    unsigned int windowWidth = 1440;
-    unsigned int windowHeight = 900;
+    unsigned int windowWidth = 1280;
+    unsigned int windowHeight = 720;
 
 	// Create SDL Window without OpenGL context
 	mWindow = SDL_CreateWindow( "Window",
@@ -194,7 +194,7 @@ void RenderSystem::handle( Event* e )
 	{
 		if( componentExists(e->ID ))
 		{
-			RenderComponent* comp = getComponentByID( e->ID );
+			RenderComponent* comp = getComponentByID<RenderComponent>( e->ID );
 			TransformEvent* te = e->getData<TransformEvent>();
 			comp->mSceneNode->setPosition( te->position );
 			comp->mSceneNode->setOrientation( te->orientation );

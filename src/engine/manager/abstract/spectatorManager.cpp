@@ -16,7 +16,8 @@ void SpectatorManager::handle( Event* e )
 		/* Loop through spectators and apply */
 		for( auto i=mComponents.begin(); i!=mComponents.end();i++ )
 		{
-			SpectatorComponent* s = i->second;
+			SpectatorComponent* s = dynamic_cast<SpectatorComponent*>(i->second);
+			assert( s!=nullptr);
 
 			switch( k->mKeycode )
 			{
@@ -46,7 +47,8 @@ void SpectatorManager::handle( Event* e )
 
 		for( auto i=mComponents.begin(); i!=mComponents.end();i++)
 		{
-			SpectatorComponent* s = i->second;
+			SpectatorComponent* s = dynamic_cast<SpectatorComponent*>(i->second);
+			assert( s!=nullptr );
 
 			switch( k->mKeycode )
 			{
@@ -75,7 +77,9 @@ void SpectatorManager::handle( Event* e )
 		
 		for( auto i=mComponents.begin(); i!=mComponents.end();i++ )
 		{
-			SpectatorComponent* s = i->second;
+			SpectatorComponent* s = dynamic_cast<SpectatorComponent*>(i->second);
+			assert( s!= nullptr);
+
 			s->xAng = s->xAng*Quat::RotateX( -me->mMouseMoveY/1000.0f );
 			s->yAng = s->yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f );
 
@@ -97,7 +101,8 @@ void SpectatorManager::update( double dt )
 {
 	for( auto i = mComponents.begin(); i!=mComponents.end(); i++ )
 	{
-		SpectatorComponent* s = i->second;
+		SpectatorComponent* s = dynamic_cast<SpectatorComponent*>(i->second);
+		assert(s!=nullptr);
 
 		float3 dir(0,0,0);
 		float speed;

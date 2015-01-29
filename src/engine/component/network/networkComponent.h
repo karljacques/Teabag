@@ -8,9 +8,9 @@ class NetworkComponent : public Component
 public:
 	NetworkComponent()
 	{
-		GUID = 0;
+		eGUID = 0;
 	}
 
-	EntID GUID;
+	EntID eGUID;
 };
 #endif // networkComponent_h__

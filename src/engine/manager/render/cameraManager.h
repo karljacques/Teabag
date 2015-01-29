@@ -4,7 +4,7 @@
 #include "renderSystem.h"
 #include "../../component/render/cameraComponent.h"
 
-class CameraManager: public ComponentManager<CameraComponent>, public EventListener, public Manager
+class CameraManager: public ComponentManager, public EventListener, public Manager
 {
 public:
 	CameraManager( RenderSystem* rend );

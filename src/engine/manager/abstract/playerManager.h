@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class Player : public ComponentManager<PlayerComponent>
+class Player : public ComponentManager
 {
 public:
 	Player()

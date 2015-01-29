@@ -4,7 +4,7 @@
 
 Component::Component(void)
 {
-	GUID = 0;
+	ID = 0;
 }
 
 

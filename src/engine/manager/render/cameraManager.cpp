@@ -54,7 +54,7 @@ void CameraManager::handle(Event* e)
 	// Get Component
 	if( this->componentExists(e->ID) )
 	{
-		CameraComponent* comp = getComponentByID(e->ID);
+		CameraComponent* comp = getComponentByID<CameraComponent>(e->ID);
 		if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 		{
 			TransformEvent* me = e->getData<TransformEvent>();

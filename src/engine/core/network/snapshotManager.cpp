@@ -152,6 +152,7 @@ void SnapshotManager::decodeSnapshot( char* data, unsigned int packet_size )
 		char* trans = new char[sizeof(Transform)];
 		memcpy( trans, &data[offset], sizeof(Transform));
 		snapshot->data.push_back( *reinterpret_cast<Transform*>(trans) );
+
 		offset+=sizeof(Transform);
 		delete[] trans;
 	}

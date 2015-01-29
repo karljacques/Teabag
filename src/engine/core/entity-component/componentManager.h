@@ -3,22 +3,18 @@
 
 #include <unordered_map>
 #include "../../../common.h"
+#include "../../component/base/component.h"
 
-
-template <class T>
 class ComponentManager
 {
 public:
 	ComponentManager( )
 	{
 	}
-	
-	T* createComponent( EntID ID )
+
+	void add( Component* comp )
 	{
-		T* comp = new T;
-		mComponents[ID] = comp;
-		comp->ID = ID;
-		return comp;
+		mComponents[comp->ID] = comp;
 	}
 
 	void removeComponent( EntID ID )
@@ -26,10 +22,12 @@ public:
 		mComponents.erase( ID );
 	}
 
+	template <class T>
 	T* getComponentByID( EntID ID )
 	{
 		try{
-			return mComponents.at(ID);
+			assert( typeid( *mComponents.at(ID) ) == typeid( T ) );
+			return dynamic_cast<T*>(mComponents.at(ID));
 		}
 		catch(std::out_of_range)
 		{
@@ -43,8 +41,10 @@ public:
 		return mComponents.count(ID) > 0;
 	}
 
+
+
 protected:
-	std::unordered_map<EntID, T*> mComponents;
+	std::unordered_map<EntID, Component*> mComponents;
 
 };
 #endif // componentManager_h__

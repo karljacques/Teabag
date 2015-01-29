@@ -12,9 +12,6 @@ public:
 	Component(void);
 	virtual ~Component(void);
 
-	/* Global identifier, the same on every networked system */
-	EntID GUID;
-
 	/* Local identifier, used to sync components */
 	EntID ID;
 

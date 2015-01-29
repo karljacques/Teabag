@@ -124,8 +124,9 @@ EntID NetworkSystem::getIDByGUID( EntityGUID GUID )
 {
 	for( auto j=mComponents.begin(); j!=mComponents.end(); j++ )
 	{
-		if( j->second->GUID == GUID )
+		if( dynamic_cast<NetworkComponent*>(j->second)->eGUID == GUID )
 		{
+			assert( typeid( *j->second ) == typeid( NetworkComponent ));
 			return j->second->ID;
 		}					
 	}
@@ -316,7 +317,7 @@ void NetworkSystem::_handle_host(Event* e)
 		// Assign GUID To event
 		if( componentExists( e->ID ) )
 		{
-			e->eGUID = mComponents[e->ID]->GUID;
+			e->eGUID = static_cast<NetworkComponent*>(mComponents[e->ID])->eGUID;
 			mSnapshotManager->handle(e);
 		}
 		break;

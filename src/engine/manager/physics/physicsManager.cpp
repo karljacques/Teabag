@@ -111,7 +111,7 @@ void PhysicsManager::handle( Event* e )
 				
 				break;
 			}
-
+			/*
 		case EV_CORE_TRANSFORM_UPDATE_ORIENTATION:
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
@@ -120,6 +120,7 @@ void PhysicsManager::handle( Event* e )
 				comp->body->activate(true);
 				break;
 			}
+			*/
 
 		case EV_NETWORK_TRANSFORM_UPDATE:
 			{

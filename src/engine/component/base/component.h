@@ -12,6 +12,8 @@ public:
 	Component(void);
 	virtual ~Component(void);
 
+	virtual Component* clone() = 0;
+
 	/* Local identifier, used to sync components */
 	EntID ID;
 

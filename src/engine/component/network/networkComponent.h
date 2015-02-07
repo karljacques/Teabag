@@ -10,6 +10,13 @@ public:
 	{
 		eGUID = 0;
 	}
+	
+	Component* clone()
+	{
+		// Network component generally needs to be added post-creation
+		NetworkComponent* comp = new NetworkComponent();
+		return comp;
+	}
 
 	EntID eGUID;
 };

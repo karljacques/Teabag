@@ -17,6 +17,15 @@ public:
 	float3 position;
 	Quat orientation;
 
+	Component* clone()
+	{
+		PhysicsComponent* comp = new PhysicsComponent();
+		comp->position = position;
+		comp->orientation = orientation;
+
+		// Clone the body, which belongs to bullet.
+		
+	}
 };
 
 #endif // physicsComponent_h__

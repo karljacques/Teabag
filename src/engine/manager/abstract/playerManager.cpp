@@ -151,5 +151,5 @@ shared_ptr<Player> PlayerManager::getLocalPlayer()
 
 bool Player::isOwner(EntID ID)
 {
-	return( mComponents.count[ID] > 0 );
+	return( mComponents.count(ID) > 0 );
 }

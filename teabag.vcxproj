@@ -64,6 +64,7 @@
       <AdditionalDependencies>OgreMain_d.lib;SDL2.lib;ws2_32.lib;RakNetDLL.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_debug.lib;MathGeoLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>
       </SubSystem>
+      <Profile>true</Profile>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>

@@ -208,3 +208,15 @@ void SnapshotManager::update(double dt)
 	}
 
 }
+
+void SnapshotManager::updateOrientation(double dt)
+{
+	std::vector<Event*>* vect = getSnapshotEvents(0);
+
+	for( auto i=vect->begin(); i!=vect->end(); i++ )
+	{
+		(*i)->changeEventType(EV_CORE_TRANSFORM_UPDATE_ORIENTATION);
+		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->eGUID);
+		EventSystem::getSingletonPtr()->dispatchEvent(*i);
+	}
+}

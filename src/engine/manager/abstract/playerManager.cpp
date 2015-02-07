@@ -116,6 +116,24 @@ void PlayerManager::handle(Event* e)
 			delete ne;
 			break;
 		}
+	case EV_CORE_TRANSFORM_UPDATE_ORIENTATION:
+		// This means the client has rotated their camera, thus rotating their entire orientation for movement and visuals
+		// Need to send this orientation change to the host in the form of a snapshot update.
+		// Check that the object is an object owned by the player.
+		// Get the player
+		shared_ptr<Player> local = this->getLocalPlayer();
+
+		// See if the object the event refers to is owned by this player.
+		if( local->isOwner( e->ID ) )
+		{
+			// Get the GUID of the object - fail if no network component
+			if( this->mNetworkSystem->attach_eGUID(e) )
+			{
+				// Client owns this object, it is a networked object. Update Transform system to reflect changes.
+				this->mNetworkSystem->getShapshotManager()->handle(e);
+			}
+		}
+
 	}
 }
 
@@ -130,3 +148,8 @@ shared_ptr<Player> PlayerManager::getLocalPlayer()
 }
 
 
+
+bool Player::isOwner(EntID ID)
+{
+	return( mComponents.count[ID] > 0 );
+}

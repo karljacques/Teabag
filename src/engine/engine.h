@@ -51,8 +51,10 @@ public:
 	NetworkSystem*		getNetworkSystem(){return mNetworkSystem.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
 	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
+
 	// System
 	Ogre::Timer mTimeSinceLastUpdate;
+	Ogre::Timer mTimeSinceLastRender;
 
 	// Console functions/Engine manipulation
 	void SetAsClient( const char* ip );

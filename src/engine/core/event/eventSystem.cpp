@@ -18,7 +18,7 @@ EventSystem::EventSystem()
 	/* Create a pool of events. */
 	for( int i=0; i<MAX_EVENT_POOL; i++ )
 	{
-		mEventPool.push_back(new Event(EV_NULL));
+		mEventPool.push_back( new Event(EV_NULL));
 	}
 }
 

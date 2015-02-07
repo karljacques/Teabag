@@ -232,6 +232,10 @@ void NetworkSystem::_update_host(double dt)
 				delete tmp;
 				break;
 			}
+		case DPT_SNAPSHOT:
+			// Pass packet on to the snapshot manager, which will deal with it
+			mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
+			mSnapshotManager->updateOrientation(dt);
 		default:
 			printm("Packet of unhandled ID" + std::to_string( id + ID_USER_PACKET_ENUM ) );
 			break;
@@ -256,6 +260,7 @@ void NetworkSystem::_update_client(double dt)
 
 		switch(id)
 		{
+		// RAKNET PACKETS
 		case (ID_CONNECTION_REQUEST_ACCEPTED - ID_USER_PACKET_ENUM):
 			{
 				printm("Connection Success");
@@ -300,6 +305,14 @@ void NetworkSystem::_update_client(double dt)
 			break;
 		}
 	}
+
+	// Handle only orientation updates. i.e. The player has rotated.
+	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
+	{
+		mSnapshotManager->sendSnapshot();
+		mSnapshotManager->startNewSnapshot();
+		mSnapshotManager->snapshotLife.reset();
+	}
 }
 
 void NetworkSystem::_handle_host(Event* e)
@@ -315,9 +328,8 @@ void NetworkSystem::_handle_host(Event* e)
 		}
 	case EV_CORE_TRANSFORM_UPDATE:
 		// Assign GUID To event
-		if( componentExists( e->ID ) )
+		if( this->attach_eGUID(e) )
 		{
-			e->eGUID = static_cast<NetworkComponent*>(mComponents[e->ID])->eGUID;
 			mSnapshotManager->handle(e);
 		}
 		break;
@@ -344,6 +356,7 @@ void NetworkSystem::_handle_client(Event* e)
 
 			// Connect to the IP
 			this->connect( msg->message.c_str() );
+			break;
 		}
 	}
 }
@@ -357,6 +370,19 @@ void NetworkSystem::connect(const char* ip)
 PlayerGUID NetworkSystem::getLocalGUID()
 {
 	return this->mLocalGUID;
+}
+
+bool NetworkSystem::attach_eGUID(Event* e)
+{
+	// Assign GUID To event
+	if( componentExists( e->ID ) )
+	{
+		e->eGUID = static_cast<NetworkComponent*>(mComponents[e->ID])->eGUID;
+		return true;
+	}
+
+	// fail if not network component.
+	return false;
 }
 
 

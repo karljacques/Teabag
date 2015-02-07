@@ -2,8 +2,8 @@
 #include "spectatorManager.h"
 #include "../../component/physics/physicsComponent.h"
 
-#define SPECTATOR_DEFAULT_SPEED 120.0f
-#define SPECTATOR_BOOST_SPEED 400.0f
+#define SPECTATOR_DEFAULT_SPEED 12.0f
+#define SPECTATOR_BOOST_SPEED 40.0f
 
 void SpectatorManager::handle( Event* e )
 {
@@ -87,6 +87,12 @@ void SpectatorManager::handle( Event* e )
 			PhysicsComponent* phys = mEntityManager->getByID(s->ID)->getComponent<PhysicsComponent>();
 			phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
 			phys->body->activate((true));
+
+			// Dispatch event for the network
+			Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE_ORIENTATION, s->ID, this );
+			TransformEvent* trans = e->createEventData<TransformEvent>();
+			trans->orientation = s->yAng*s->xAng;
+			EventSystem::getSingletonPtr()->dispatchEvent(e);
 		}
 		
 	}

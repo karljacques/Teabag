@@ -90,12 +90,12 @@ Engine::Engine()
 		mEntityManager->getByID(ent)->addComponent(spec);
 
 		PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(ent);
-		mPhysicsManager->initComponent(phys,new btSphereShape( 1.0f ) , 1, float3(40,20,0), Quat(0,0,0,1) );
+		mPhysicsManager->initComponent(phys,new btSphereShape( 0.25f ) , 1, float3(0,2,0), Quat(0,0,0,1) );
 		phys->body->setFriction(0);
 		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
 		mEntityManager->getByID(ent)->addComponent(phys);
-		phys->body->setDamping( 0.9f, 1.0f );
+		phys->body->setDamping( 0.95f, 1.0f );
 
 		mCameraManager->lookAt( comp, float3( 0,0,0 ));
 	}
@@ -106,11 +106,11 @@ Engine::Engine()
 
 		RenderComponent* rend = mEntityManager->createComponent<RenderComponent>(ground);
 		mRenderSystem->initComponent( rend );
-		mRenderSystem->setAsBox(rend, float3(100,2,100));
+		mRenderSystem->setAsBox(rend, float3(3.0f,0.4f,5.0f));
 		mEntityManager->getByID(ground)->addComponent(rend);
 
 		PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(ground);
-		mPhysicsManager->initComponent( phys,new btBoxShape( float3(50.0f, 1.0f,50.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(1.5f, 0.2f,2.5f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
 		mEntityManager->getByID(ground)->addComponent(phys);
 	}
 
@@ -146,8 +146,13 @@ void Engine::update()
 		if( ptr )
 			ptr->update(dt);
 	}
-    // render after everything is updated
-    mRenderSystem->renderOneFrame();
+
+	if( mTimeSinceLastRender.getMicrosecondsCPU() > 16 )
+	{
+		// render after everything is updated
+		mTimeSinceLastRender.reset();
+		mRenderSystem->renderOneFrame();
+	}
 
 }
 
@@ -173,8 +178,7 @@ void Engine::handle( Event* e )
 						{
 							if( mNetworkSystem->isHost() )
 							{
-								float3 size( 4.0f,1.0f,4.0f );
-
+								float3 size( 0.3f,0.1f,0.3f );
 								float mass = 0.5f;
 
 
@@ -186,7 +190,7 @@ void Engine::handle( Event* e )
 								mEntityManager->getByID(box)->addComponent(rend);
 
 								PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(box);
-								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
+								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,3,0), Quat::RotateX( 3.14f ));
 								mEntityManager->getByID(box)->addComponent(phys);
 
 								NetworkComponent* net = mEntityManager->createComponent<NetworkComponent>(box);
@@ -213,8 +217,7 @@ void Engine::handle( Event* e )
 
 		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
 			{
-				float3 size( 4.0f,1.0f,4.0f );
-
+				float3 size( 0.3f,0.1f,0.3f );
 				float mass = 0.5f;
 
 				EntID box = mEntityManager->createEntity();
@@ -228,7 +231,7 @@ void Engine::handle( Event* e )
 				mEntityManager->getByID(box)->addComponent(rend);
 
 				PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(box);
-				mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,50,0), Quat::RotateX( 3.14f ));
+				mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,3,0), Quat::RotateX( 3.14f ));
 				mEntityManager->getByID(box)->addComponent(phys);
 			}
 			break;

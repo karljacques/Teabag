@@ -2,7 +2,7 @@
 #include "physicsManager.h"
 #include "../../core/event/eventSystem.h"
 
-#define MOVE_TOLERANCE 0.0025
+#define MOVE_TOLERANCE 0.00001
 #define GRAVITY_ACCELERATION -9.81f
 
 PhysicsManager::PhysicsManager( )
@@ -58,7 +58,7 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( dt*MICROSECONDS_TO_SECONDS_FACTOR,2 );
+	mWorld->stepSimulation( dt*MICROSECONDS_TO_SECONDS_FACTOR,1 );
 
 	/*	Process all of the positional components and check if they have moved - if so send out position updates.
 		This will also be where you send out events for collisions etc */
@@ -99,6 +99,8 @@ void PhysicsManager::handle( Event* e )
 		PhysicsComponent* comp = getComponentByID<PhysicsComponent>( e->ID );
 		switch( e->getEventType() )
 		{
+
+
 		case EV_CORE_TRANSFORM_UPDATE:
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
@@ -114,7 +116,6 @@ void PhysicsManager::handle( Event* e )
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
 				btTransform trans(me->orientation, comp->position );
-				comp->orientation = me->orientation;
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
 				break;
@@ -124,8 +125,7 @@ void PhysicsManager::handle( Event* e )
 			{
 				TransformEvent* me = e->getData<TransformEvent>();
 				btTransform trans( me->orientation, me->position );
-				comp->body->setAngularVelocity( me->angularVelocity );
-				comp->body->setLinearVelocity( me->velocity );
+
 				comp->body->setWorldTransform( trans );
 				comp->body->activate(true);
 				break;

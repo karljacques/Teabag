@@ -20,6 +20,8 @@ public:
 		username = "nebuchadnezzar";
 	}
 
+	bool isOwner( EntID ID );
+
 	EntID GUID;
 	std::string username;
 };

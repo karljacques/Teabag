@@ -17,6 +17,7 @@ public:
 	~SnapshotManager();
 
 	void update( double dt );
+	void updateOrientation( double dt );
 
 	void handle( Event* e ); /* This is not inherited from EventListener, it is not an event listener like the others, but NetworkSystem will pass on the event to it.
 							Maybe it will be changed if this sort of behavior becomes common.  */

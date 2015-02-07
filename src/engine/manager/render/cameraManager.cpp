@@ -16,8 +16,8 @@ void CameraManager::createNewCamera(CameraComponent* comp)
 {
 	// Create camera and viewport
 	comp->camera = mRenderSystem->getSceneMgr()->createCamera( mRenderSystem->generateName() );
-	comp->camera->setNearClipDistance(1.0f);
-	comp->camera->setFarClipDistance(2000.0f);
+	comp->camera->setNearClipDistance(0.01f);
+	comp->camera->setFarClipDistance(200.0f);
 
 	Ogre::Viewport* viewport = mRenderSystem->getRenderWindow()->addViewport( comp->camera );
 	viewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));

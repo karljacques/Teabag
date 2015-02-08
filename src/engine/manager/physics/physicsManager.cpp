@@ -1,27 +1,13 @@
 #include "pch.h"
 #include "physicsManager.h"
 #include "../../core/event/eventSystem.h"
+#include "../../core/physics/physicsSystem.h"
 
 #define MOVE_TOLERANCE 0.00001
-#define GRAVITY_ACCELERATION -9.81f
 
 PhysicsManager::PhysicsManager( )
 {
 		
-		// Build the broadphase
-		mBroadphase = unique_ptr<btBroadphaseInterface>(new btDbvtBroadphase());
-		
-		// Set up the collision configuration and dispatcher
-		mCollisionConfiguration = unique_ptr<btDefaultCollisionConfiguration>( new btDefaultCollisionConfiguration() );
-		mDispatcher = unique_ptr<btCollisionDispatcher>(new btCollisionDispatcher(mCollisionConfiguration.get()) );
-
-		// The actual physics solver
-		mSolver = unique_ptr<btSequentialImpulseConstraintSolver>(new btSequentialImpulseConstraintSolver);
-
-		// The world.
-		mWorld = unique_ptr<btDiscreteDynamicsWorld>(new btDiscreteDynamicsWorld(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get()));
-
-		mWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
 }
 
 PhysicsManager::~PhysicsManager()
@@ -38,15 +24,15 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 	/* Construct in correct position */
 	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass, new btDefaultMotionState( btTransform(rot,pos) ) , shape, nullVector);
 	comp->body = new btRigidBody(fallRigidBodyCI);
-	mWorld->addRigidBody(comp->body);
+	physics::addRigidBody(comp->body);
 
 	/* Send out event to tell new position to components */
-	Event* e = eventGetPooled(EV_CORE_TRANSFORM_UPDATE);
+	Event* e = eventsys::get(EV_CORE_TRANSFORM_UPDATE);
 	e->ID = comp->ID;
 	TransformEvent* te = e->createEventData<TransformEvent>();
 	te->position = pos;
 	te->orientation = rot;
-	eventDispatch(e);
+	eventsys::dispatch(e);
 
 	comp->position = pos;
 	comp->orientation = rot;
@@ -58,8 +44,6 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 void PhysicsManager::update( double dt )
 {
-	mWorld->stepSimulation( dt*MICROSECONDS_TO_SECONDS_FACTOR,1 );
-
 	/*	Process all of the positional components and check if they have moved - if so send out position updates.
 		This will also be where you send out events for collisions etc */
 	for( auto i=mComponents.begin(); i != mComponents.end(); i++ )
@@ -75,7 +59,7 @@ void PhysicsManager::update( double dt )
 			comp->orientation =  comp->body->getWorldTransform().getRotation();
 
 			/* Create event */
-			Event* e = eventGetPooled( EV_CORE_TRANSFORM_UPDATE,comp->ID,this );
+			Event* e = eventsys::get( EV_CORE_TRANSFORM_UPDATE,comp->ID,this );
 			TransformEvent* me = e->createEventData<TransformEvent>();
 
 			me->orientation =comp->orientation;
@@ -85,15 +69,13 @@ void PhysicsManager::update( double dt )
 			me->velocity = comp->body->getLinearVelocity();
 			me->angularVelocity = comp->body->getAngularVelocity();
 
-			eventDispatch(e);
+			eventsys::dispatch(e);
 		}
 	}
 }
 
 void PhysicsManager::handle( Event* e )
 {
-	
-
 	if( componentExists(e->ID) )
 	{
 		PhysicsComponent* comp = getComponentByID<PhysicsComponent>( e->ID );

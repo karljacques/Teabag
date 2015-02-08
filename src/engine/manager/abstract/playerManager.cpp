@@ -6,14 +6,14 @@
 PlayerManager::PlayerManager(NetworkComponentManager* networkSystem) : mNetworkSystem(networkSystem)
 {
 	// Get my GUID
-	mLocalPlayer= networkGetPlayerGUID();
+	mLocalPlayer= network::getPlayerGUID();
 
 	// Add local player to the list
 	shared_ptr<Player> local = shared_ptr<Player>( new Player() );
 	local->GUID = mLocalPlayer;
 	this->addPlayer( local );
 
-	printm("Local GUID:" + std::to_string(local->GUID));
+	::printm("Local GUID:" + std::to_string(local->GUID));
 }
 
 void PlayerManager::addPlayer(EntID guid, std::string username)
@@ -69,7 +69,7 @@ void PlayerManager::handle(Event* e)
 			PlayerEvent* p = e->getData<PlayerEvent>();
 			this->addPlayer( p->pGUID, std::string( p->username ) );
 
-			printm("New Player Connecting: " + std::string( p->username ) + "  with GUID: " + std::to_string( p->pGUID ) );
+			::printm("New Player Connecting: " + std::string( p->username ) + "  with GUID: " + std::to_string( p->pGUID ) );
 
 			// As I am host, inform clients of new player
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
@@ -78,7 +78,7 @@ void PlayerManager::handle(Event* e)
 			ne->d_initialised = true;
 #endif
 			ne->clone( e );
-			networkSendEvent( ne, HIGH_PRIORITY, RELIABLE );
+			network::sendEvent( ne, HIGH_PRIORITY, RELIABLE );
 			delete ne;
 
 			break;
@@ -90,12 +90,12 @@ void PlayerManager::handle(Event* e)
 			// Check if this is a notification that the host has acknowledged the current player
 			if( p->pGUID == getLocalPlayer()->GUID )
 			{
-				printm("Host has acknowledged your player connection.");
+				::printm("Host has acknowledged your player connection.");
 			}
 			else
 			{
 				this->addPlayer(p->pGUID, std::string( p->username ) );
-				printm( "New player has joined: " + std::string( p->username ) );
+				::printm( "New player has joined: " + std::string( p->username ) );
 			}
 			break;
 		}
@@ -112,7 +112,7 @@ void PlayerManager::handle(Event* e)
 			memcpy( pe->username, p->username.c_str(), p->username.size() + 1 );
 			pe->pGUID = mLocalPlayer;
 
-			networkSendEvent(ne, HIGH_PRIORITY,RELIABLE );
+			network::sendEvent(ne, HIGH_PRIORITY,RELIABLE );
 			delete ne;
 			break;
 		}

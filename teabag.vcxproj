@@ -104,6 +104,8 @@
     <ClCompile Include="src\engine\core\event\eventSystem.cpp" />
     <ClCompile Include="src\engine\core\input\inputSystem.cpp" />
     <ClCompile Include="src\engine\core\network\snapshotManager.cpp" />
+    <ClCompile Include="src\engine\core\physics\physicsSystem.cpp" />
+    <ClCompile Include="src\engine\core\render\renderSystem.cpp" />
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp" />
     <ClCompile Include="src\engine\core\user-interface\debugDisplaySystem.cpp" />
     <ClCompile Include="src\engine\core\user-interface\ogreConsole.cpp" />
@@ -144,7 +146,9 @@
     <ClInclude Include="src\engine\core\input\inputSystem.h" />
     <ClInclude Include="src\engine\core\network\snapshot.h" />
     <ClInclude Include="src\engine\core\network\snapshotManager.h" />
+    <ClInclude Include="src\engine\core\physics\physicsSystem.h" />
     <ClInclude Include="src\engine\core\render\OSXUtils.h" />
+    <ClInclude Include="src\engine\core\render\renderSystem.h" />
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h" />
     <ClInclude Include="src\engine\core\user-interface\debugDisplaySystem.h" />
     <ClInclude Include="src\engine\core\user-interface\ogreConsole.h" />

@@ -1,25 +1,32 @@
+#ifndef networkSystem_h__
+#define networkSystem_h__
+
 #include "networkComponentManager.h"
 #include "../../core/user-interface/ogreConsole.h"
 
-void			networkInit();
-void			networkDestroy();
+namespace network
+{
+	void init( void );
+	void destroy( void );
 
-void			networkShutdown();
-void			networkSetClient();
-void			networkSetServer();
+	void shutdown( void );
+	void setModeClient( void );
+	void setModeServer( void );
 
-bool			networkGetMode(); 
+	bool getMode( void ); 
 
-void			networkSendEvent( Event* e, PacketPriority p, PacketReliability r );
-unsigned char	networkGetPacketIdentifier( RakNet::Packet* p );
+	void sendEvent( Event* e, PacketPriority p, PacketReliability r );
+	unsigned char getPacketIdentifier( RakNet::Packet* p );
 
-void			networkConnect( const char* ip );
-int				networkGetNumberOfConnections();
+	void connect( const char* ip );
+	int	getNumberOfConnections( void );
 
-void			networkHandleIncomingPackets();
+	void update( void );
 
-int				networkPingPeerIndex( int client );
+	int	pingPeerIndex( int client );
 
-PlayerGUID		networkGetPlayerGUID();
+	PlayerGUID getPlayerGUID( void );
 
-RakNet::RakPeerInterface* networkGetPeer();
+	RakNet::RakPeerInterface* getPeer( void );
+}
+#endif // networkSystem_h__

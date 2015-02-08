@@ -19,10 +19,9 @@ NetworkComponentManager::~NetworkComponentManager()
 	delete mSnapshotManager;
 }
 
-
 void NetworkComponentManager::update(double dt)
 {
-	if( networkGetMode() )
+	if( network::getMode() )
 	{
 		this->_update_host(dt);
 	}else
@@ -33,7 +32,7 @@ void NetworkComponentManager::update(double dt)
 
 void NetworkComponentManager::handle(Event* e)
 {
-	if( networkGetMode() )
+	if( network::getMode() )
 	{
 		this->_handle_host(e);
 	}
@@ -42,7 +41,6 @@ void NetworkComponentManager::handle(Event* e)
 		this->_handle_client(e);
 	}
 }
-
 
 EntID NetworkComponentManager::getIDByGUID( EntityGUID GUID )
 {
@@ -57,8 +55,6 @@ EntID NetworkComponentManager::getIDByGUID( EntityGUID GUID )
 
 	return 0;
 }
-
-
 
 uint32 NetworkComponentManager::_find_free_guid()
 {
@@ -99,7 +95,7 @@ void NetworkComponentManager::_handle_host(Event* e)
 	case EV_CORE_CHAT_MESSAGE:
 	case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
 		{
-			networkSendEvent(e,IMMEDIATE_PRIORITY,RELIABLE);
+			network::sendEvent(e,IMMEDIATE_PRIORITY,RELIABLE);
 			break;
 		}
 	case EV_CORE_TRANSFORM_UPDATE:
@@ -111,8 +107,8 @@ void NetworkComponentManager::_handle_host(Event* e)
 		break;
 	case EV_NETWORK_MOD_CLIENT:
 		{
-			networkShutdown();
-			networkSetClient();
+			network::shutdown();
+			network::setModeClient();
 			break;
 		}
 	}
@@ -128,17 +124,16 @@ void NetworkComponentManager::_handle_client(Event* e)
 	case EV_NETWORK_MOD_CONNECT:
 		{
 
-			printm("Switched to client mode");
+			::printm("Switched to client mode");
 			// Get the IP to connect to
 			MessageEvent* msg = e->getData<MessageEvent>();
 
 			// Connect to the IP
-			networkConnect( msg->message.c_str() );
+			network::connect( msg->message.c_str() );
 			break;
 		}
 	}
 }
-
 
 bool NetworkComponentManager::attach_eGUID(Event* e)
 {

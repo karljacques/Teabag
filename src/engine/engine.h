@@ -16,6 +16,7 @@
 #include "manager/network/networkSystem.h"
 #include "manager/render/cameraManager.h"
 #include "core/input/inputSystem.h"
+#include "core/physics/physicsSystem.h"
 
 #include "core/user-interface/ogreConsole.h"
 #include "manager/abstract/spectatorManager.h"
@@ -45,7 +46,7 @@ public:
 	void removeManager( weak_ptr<Manager> mgr );
 
 	// Systems getters
-	RenderSystem*		getRenderSystem(){ return mRenderSystem.get(); };
+	RenderManager*		getRenderSystem(){ return mRenderSystem.get(); };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
 	EntityManager*		getEntityManager(){return mEntityManager.get(); };
 	NetworkComponentManager*		getNetworkSystem(){return mNetworkSystem.get(); };
@@ -73,7 +74,7 @@ private:
 	shared_ptr<OgreConsole> mConsole;
 	shared_ptr<SpectatorManager> mSpectatorManager;
 
-	shared_ptr<RenderSystem> mRenderSystem;
+	shared_ptr<RenderManager> mRenderSystem;
 	shared_ptr<InputSystem> mInputSystem;
 	shared_ptr<NetworkComponentManager> mNetworkSystem;
 

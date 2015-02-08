@@ -7,7 +7,7 @@
 class CameraManager: public ComponentManager, public EventListener, public Manager
 {
 public:
-	CameraManager( RenderSystem* rend );
+	CameraManager( RenderManager* rend );
 	~CameraManager();
 
 	void createNewCamera( CameraComponent* comp );
@@ -26,7 +26,7 @@ public:
 	void update( double dt );
 private:
 
-	RenderSystem* mRenderSystem;
+	RenderManager* mRenderSystem;
 
 	// Multiple Viewport and Camera support
 	std::map<Ogre::Camera*,Ogre::Viewport*>    m_CameraMap;

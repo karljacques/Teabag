@@ -1,6 +1,6 @@
 //
 //  inputSystem.h
-//  YorkshireTea
+//  Teabag
 //
 //  Created by Karl Jacques on 24/05/2014.
 //
@@ -13,21 +13,10 @@
 #include "../event/eventSystem.h"
 #include "../../manager/manager.h"
 
-class InputSystem: public Manager
+namespace input
 {
-public:
-        
-    InputSystem(  SDL_Window* window );
-        
-    void update( double dt );
-private:
-        
-	SDL_Event		m_inputEvent;
-
-	// Window 
-	SDL_Window* mWindow;
-	bool mWindowActive;
-};
-
+	void init(  SDL_Window* window );
+	void update();
+}
 
 #endif /* defined(__YorkshireTea__inputSystem__) */

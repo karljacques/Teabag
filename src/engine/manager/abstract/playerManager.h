@@ -5,6 +5,7 @@
 #include "../../component/abstract/playerComponent.h"
 #include "../../core/entity-component/entityManager.h"
 #include "../network/networkSystem.h"
+#include "../network/networkComponentManager.h"
 
 #ifndef playerManager_h__
 #define playerManager_h__

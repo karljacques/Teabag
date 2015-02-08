@@ -2,7 +2,7 @@
 #include "cameraManager.h"
 #include "../../core/event/eventSystem.h"
 
-CameraManager::CameraManager(RenderSystem* rend)
+CameraManager::CameraManager(RenderManager* rend)
 {
 	mRenderSystem = rend;
 }
@@ -41,11 +41,11 @@ void CameraManager::lookAt(CameraComponent* comp, float3 pos)
 {
 	comp->camera->lookAt( pos );
 
-	Event* e = eventGetPooled( EV_CORE_TRANSFORM_UPDATE_ORIENTATION, comp->ID,this );
+	Event* e = eventsys::get( EV_CORE_TRANSFORM_UPDATE_ORIENTATION, comp->ID,this );
 	TransformEvent* me = e->createEventData<TransformEvent>();
 	me->orientation = comp->camera->getDerivedOrientation();
 
-	eventDispatch(e);
+	eventsys::dispatch(e);
 	
 }
 

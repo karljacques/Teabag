@@ -22,7 +22,7 @@ static std::list<std::weak_ptr<EventListener>> mEventListeners;
 static std::queue<std::weak_ptr<EventListener>> mNewEventListeners;
 static std::vector<std::weak_ptr<EventListener>> mRemovedListeners;
 
-void eventInit()
+void eventsys::init( void )
 {
 	/* Create a pool of events. */
 	for( int i=0; i<MAX_EVENT_POOL; i++ )
@@ -32,7 +32,7 @@ void eventInit()
 }
 
 /* An event given to this function must be added to a list which will then dispatch it to event listeners*/
-void eventDispatch( Event* e )
+void eventsys::dispatch( Event* e )
 {
 	/* Prevent Null Events */
 	assert( e->getEventType() != EV_NULL );
@@ -43,7 +43,7 @@ void eventDispatch( Event* e )
 }
 
 /* Dispatch events to global listeners */
-void eventUpdate( double dt )
+void eventsys::update( void )
 {
 	/* Add any pending listeners */
 	while( mNewEventListeners.size() > 0 )
@@ -71,7 +71,7 @@ void eventUpdate( double dt )
 		}
 
 		mEventList.pop();
-		eventRelease(e);
+		eventsys::release(e);
 	}
 
 	/* All done - clean up time.
@@ -95,19 +95,19 @@ void eventUpdate( double dt )
 
 /*	Add a new event listener.
 	It is the user's responsibility to check that there are no duplicates */
-void eventRegisterListener( std::weak_ptr<EventListener> e )
+void eventsys::registerListener( std::weak_ptr<EventListener> e )
 {
 	mNewEventListeners.push(e);
 }
 
 /* Remove an event listener */
-void eventDeregisterListener( std::weak_ptr<EventListener> e )
+void eventsys::deregisterListener( std::weak_ptr<EventListener> e )
 {
 	mRemovedListeners.push_back(e);
 }
 
 /* Get a new event. This must remove it from the pool of events */
-Event* eventGetPooled( int eventType, int ID, EventListener* sentBy )
+Event* eventsys::get( int eventType, int ID, EventListener* sentBy )
 {
 	Event* e;
 	/* Check there are enough events, remove it, set type and return */
@@ -133,7 +133,7 @@ Event* eventGetPooled( int eventType, int ID, EventListener* sentBy )
 }
 
 /* This should add the event back to the pool of events */
-void eventRelease(Event* e)
+void eventsys::release(Event* e)
 {
 #ifdef _DEBUG
 	e->d_initialised = false;

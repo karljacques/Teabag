@@ -11,6 +11,7 @@
 #include "manager/abstract/spectatorManager.h"
 #include <RakNetVersion.h>
 
+
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -26,16 +27,18 @@ Engine::Engine()
 #endif
 
 	// Create Systems
-    eventInit();
-	networkInit();
+    eventsys::init();
+	network::init();
+	physics::init();
 
     mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
 	
 	mPhysicsManager = shared_ptr<PhysicsManager>( new PhysicsManager() );
 	mNetworkSystem = shared_ptr<NetworkComponentManager>( new NetworkComponentManager() );
 	
-	mRenderSystem = shared_ptr<RenderSystem>( new RenderSystem( mEntityManager.get() ) );
-	mInputSystem = shared_ptr<InputSystem>( new InputSystem(  mRenderSystem->getSDLWindow() ) );
+	mRenderSystem = shared_ptr<RenderManager>( new RenderManager( ) );
+
+	input::init(mRenderSystem->getSDLWindow());
 
 	// Create the camera manager and default camera
 	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );	
@@ -56,7 +59,6 @@ Engine::Engine()
 	registerManager(mPhysicsManager);
 	registerManager(mNetworkSystem);
 	registerManager(mRenderSystem);
-	registerManager(mInputSystem);
 	registerManager(mCameraManager);
 	registerManager(mSpectatorManager);
 
@@ -71,13 +73,13 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 
 	// Register all the listening managers as listeners
-	eventRegisterListener(mPhysicsManager);
-	eventRegisterListener(mRenderSystem);
-	eventRegisterListener(mCameraManager);
-	eventRegisterListener(mSpectatorManager);
-	eventRegisterListener(mNetworkSystem);
-	eventRegisterListener(mPlayerMgr);
-	eventRegisterListener(mConsole);
+	eventsys::registerListener(mPhysicsManager);
+	eventsys::registerListener(mRenderSystem);
+	eventsys::registerListener(mCameraManager);
+	eventsys::registerListener(mSpectatorManager);
+	eventsys::registerListener(mNetworkSystem);
+	eventsys::registerListener(mPlayerMgr);
+	eventsys::registerListener(mConsole);
 
 	{
 		// Create a spectator
@@ -116,7 +118,7 @@ Engine::Engine()
 	}
 
 	mSelf = std::shared_ptr<Engine>(this,  [=](Engine*){});
-	eventRegisterListener(mSelf);
+	eventsys::registerListener(mSelf);
 
 	mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
 	registerManager(mDebugDisplaySystem);
@@ -138,8 +140,10 @@ void Engine::update()
 	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
 	mTimeSinceLastUpdate.reset();
 
-	eventUpdate(dt);
-	networkHandleIncomingPackets();
+	eventsys::update();
+	network::update();
+	input::update();
+	physics::update( dt );
 
 	// Update systems and managers
     for( auto i=mManagers.begin(); i!=mManagers.end(); i++ )
@@ -178,7 +182,7 @@ void Engine::handle( Event* e )
 
 					case SDL_SCANCODE_X:
 						{
-							if( networkGetMode() == 1 )
+							if( network::getMode() == 1 )
 							{
 								float3 size( 0.3f,0.1f,0.3f );
 								float mass = 0.5f;
@@ -200,9 +204,9 @@ void Engine::handle( Event* e )
 								assert( net->eGUID != 0 );
 								mEntityManager->getByID(box)->addComponent(net);
 
-								Event* dyn = eventGetPooled(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
+								Event* dyn = eventsys::get(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
 								dyn->eGUID = net->eGUID;
-								eventDispatch( dyn );
+								eventsys::dispatch( dyn );
 
 								
 							}

@@ -1,5 +1,5 @@
-#ifndef networkSystem_h__
-#define networkSystem_h__
+#ifndef networkComponentManager_h__
+#define networkComponentManager_h__
 
 #include "../../core/event/eventListener.h"
 #include "../../core/network/snapshotManager.h"
@@ -49,4 +49,4 @@ protected:
 	SnapshotManager*	mSnapshotManager;
 
 };
-#endif // networkSystem_h__
+#endif // networkComponentManager_h__

@@ -14,11 +14,8 @@
 #include "../../core/render/OSXUtils.h"
 #endif
 
-RenderSystem::RenderSystem( EntityManager* ent )
+RenderManager::RenderManager( )
 {
-
-	// Dependency injection
-	mEntityMgr = ent;
 
     // The idea here is to open an SDL window *without* creating a GL context
     // and let Ogre create its own GL context, since it seems to be a little
@@ -94,7 +91,7 @@ RenderSystem::RenderSystem( EntityManager* ent )
 	
 }
 
-RenderSystem::~RenderSystem()
+RenderManager::~RenderManager()
 {
 
 	// Shut down ogre
@@ -102,33 +99,33 @@ RenderSystem::~RenderSystem()
 	m_Root->destroySceneManager( m_SceneMgr );
 }
 
-Ogre::Root* RenderSystem::getOgreRoot()
+Ogre::Root* RenderManager::getOgreRoot()
 {
     return m_Root.get();
 }
 
-Ogre::SceneManager* RenderSystem::getSceneMgr()
+Ogre::SceneManager* RenderManager::getSceneMgr()
 {
     return m_SceneMgr;
 }
 
-Ogre::RenderWindow* RenderSystem::getRenderWindow()
+Ogre::RenderWindow* RenderManager::getRenderWindow()
 {
     return m_RenderWindow;
 }
 
-Ogre::SceneNode* RenderSystem::getRootSceneNode()
+Ogre::SceneNode* RenderManager::getRootSceneNode()
 {
     return m_RootSceneNode;
 }
 
-void RenderSystem::renderOneFrame()
+void RenderManager::renderOneFrame()
 {
     m_Root->renderOneFrame();
 }
 
 
-Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"*/)
+Ogre::String RenderManager::generateName(const Ogre::String& prefix /*= "Unnamed"*/)
 {
 	static std::map<Ogre::String, int> countMap;
 	if (countMap.find(prefix) == countMap.end())
@@ -137,12 +134,12 @@ Ogre::String RenderSystem::generateName(const Ogre::String& prefix /*= "Unnamed"
 }
 
 
-void RenderSystem::initComponent( RenderComponent* comp )
+void RenderManager::initComponent( RenderComponent* comp )
 {
 	comp->mSceneNode = getRootSceneNode()->createChildSceneNode();
 }
 
-void RenderSystem::setAsBox( RenderComponent* comp, float3 dim )
+void RenderManager::setAsBox( RenderComponent* comp, float3 dim )
 
 {
 	Ogre::ManualObject* cube = new Ogre::ManualObject("Cube");
@@ -188,7 +185,7 @@ void RenderSystem::setAsBox( RenderComponent* comp, float3 dim )
 	comp->mSceneNode->attachObject(comp->mObject);
 }
 
-void RenderSystem::handle( Event* e )
+void RenderManager::handle( Event* e )
 {
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
@@ -204,7 +201,7 @@ void RenderSystem::handle( Event* e )
 	}
 }
 
-void RenderSystem::update( double dt )
+void RenderManager::update( double dt )
 {
 	// Make sure to pump messages in all render windows
 	Ogre::WindowEventUtilities::messagePump();

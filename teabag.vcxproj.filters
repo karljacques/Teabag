@@ -60,6 +60,12 @@
     <ClCompile Include="src\engine\manager\network\networkComponentManager.cpp">
       <Filter>engine\manager\network</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\physics\physicsSystem.cpp">
+      <Filter>engine\core\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\render\renderSystem.cpp">
+      <Filter>engine\core\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -170,6 +176,12 @@
     <ClInclude Include="src\engine\manager\network\networkComponentManager.h">
       <Filter>engine\manager\network</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\physics\physicsSystem.h">
+      <Filter>engine\core\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\render\renderSystem.h">
+      <Filter>engine\core\render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -237,6 +249,9 @@
     </Filter>
     <Filter Include="engine\core\typedef">
       <UniqueIdentifier>{37b47662-6c34-4fed-80ad-a4e5d8aaf1c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\physics">
+      <UniqueIdentifier>{81d33512-ad1c-47f7-8ec0-8e4aa5baa696}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

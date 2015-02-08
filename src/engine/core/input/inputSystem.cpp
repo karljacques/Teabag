@@ -6,10 +6,13 @@
 //
 //
 #include "pch.h"
-
 #include "inputSystem.h"
 
-InputSystem::InputSystem(  SDL_Window* window )
+static SDL_Window*	mWindow;
+static bool			mWindowActive;
+static SDL_Event	m_inputEvent;
+
+void input::init(  SDL_Window* window )
 {
 	mWindow = window;
 	mWindowActive = false; // start unfocused
@@ -18,7 +21,7 @@ InputSystem::InputSystem(  SDL_Window* window )
 
 }
 
-void InputSystem::update( double dt )
+void input::update()
 {
 	while( SDL_PollEvent( &m_inputEvent ) )
 	{
@@ -29,12 +32,12 @@ void InputSystem::update( double dt )
 				if( m_inputEvent.key.repeat == false || m_inputEvent.key.keysym.scancode == SDL_SCANCODE_BACKSPACE ) // Allow backspace to have repeat strokes
 				{
 					// Key down, create and dispatch event
-					Event*	e = eventGetPooled(EV_CORE_KEY_PRESS );
+					Event*	e = eventsys::get(EV_CORE_KEY_PRESS );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mPressed = true;
 					ke->mReleased =false;
 					ke->mKeycode = m_inputEvent.key.keysym.scancode;
-					eventDispatch( e );
+					eventsys::dispatch( e );
 				}
 				
 			}
@@ -43,22 +46,22 @@ void InputSystem::update( double dt )
 			case SDL_KEYUP:
 				{
 					// Key down, create and dispatch event
-					Event*	e = eventGetPooled(EV_CORE_KEY_RELEASE );
+					Event*	e = eventsys::get(EV_CORE_KEY_RELEASE );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mPressed = false;
 					ke->mReleased = true;
 					ke->mKeycode = m_inputEvent.key.keysym.scancode;
-					eventDispatch( e );
+					eventsys::dispatch( e );
 					
 				}
 			break;
 
 			case SDL_TEXTINPUT:
 				{
-					Event* e = eventGetPooled(EV_CORE_TEXT_INPUT );
+					Event* e = eventsys::get(EV_CORE_TEXT_INPUT );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mKey = *m_inputEvent.text.text;
-					eventDispatch(e);
+					eventsys::dispatch(e);
 					
 				}
 			break;
@@ -77,10 +80,10 @@ void InputSystem::update( double dt )
 
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					Event* e = eventGetPooled( EV_CORE_MOUSE_PRESS );
+					Event* e = eventsys::get( EV_CORE_MOUSE_PRESS );
 					MouseEvent* m = e->createEventData<MouseEvent>();
 					m->mMouseButton = m_inputEvent.button.button;
-					eventDispatch(e);
+					eventsys::dispatch(e);
 				}
 			break;
 				
@@ -106,12 +109,12 @@ void InputSystem::update( double dt )
 		int DeltaY = MouseY - y;
 		if( DeltaX != 0 || DeltaY != 0 )
 		{
-			Event* e = eventGetPooled( EV_CORE_MOUSE_MOVEMENT );
+			Event* e = eventsys::get( EV_CORE_MOUSE_MOVEMENT );
 			MouseEvent* m = e->createEventData<MouseEvent>();
 			m->mMouseMoveX = DeltaX;
 			m->mMouseMoveY = DeltaY;
 
-			eventDispatch( e );
+			eventsys::dispatch( e );
 		}
 		
 		SDL_WarpMouseInWindow(  mWindow, x, y );

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "networkSystem.h"
 #include "../../core/event/eventSystem.h"
+#include "networkComponentManager.h"
 
 #define MAX_CONNECTIONS 16
 #define SERVER_PORT 2343
@@ -11,8 +12,16 @@ static RakNet::RakPeerInterface*	peer;
 static bool			host;
 static PlayerGUID	localGUID;
 
+namespace network
+{
+	char* _encode_event(Event* e, int &offset);
+	Event* _decode_event( char* data );
 
-void	networkInit()
+	void _update_client( void );
+	void _update_server( void );
+}
+
+void network::init( void )
 {
 	netCompMgr = new NetworkComponentManager();
 	peer = RakNet::RakPeerInterface::GetInstance();
@@ -22,20 +31,20 @@ void	networkInit()
 																															could change upon shutting down RakNet
 																															and restarting it. Something to bare in mind*/
 	// Set as server by default.
-	networkSetServer();
+	network::setModeServer();
 }
 
-void	networkDestroy()
+void network::destroy( void )
 {
 	RakNet::RakPeerInterface::DestroyInstance(peer);
 }
 
-void	networkShutdown()
+void network::shutdown( void )
 {
 	peer->Shutdown(0);
 }
 
-void	networkSetClient()
+void network::setModeClient( void )
 {
 	// Must call net_shutdown() first.
 	RakNet::SocketDescriptor socketDescriptors[1] = {
@@ -49,7 +58,7 @@ void	networkSetClient()
 	host = false;
 }
 
-void	networkSetServer()
+void network::setModeServer( void )
 {
 	// Must call net_shutdown() first.
 	RakNet::SocketDescriptor socketDescriptors[1] = {
@@ -61,12 +70,12 @@ void	networkSetServer()
 	host = true;
 }
 
-bool	networkGetMode()
+bool network::getMode( void )
 {
 	return host;
 }
 
-char*	networkEncodeEvent(Event* e, int &offset)
+char* network::_encode_event(Event* e, int &offset)
 {
 	// Cast event to char*, make room for the packet ID and timestamp, and TIMESTAMP_ID
 	char* payload = new char[ sizeof(Event) + 11 ];
@@ -98,7 +107,7 @@ char*	networkEncodeEvent(Event* e, int &offset)
 	return payload;
 }
 
-Event*	networkDecodeEvent( char* data )
+Event* network::_decode_event( char* data )
 {
 	// Where to read from - has a timestamp so first byte is just ID_TIMESTAMP
 	int offset = 1;
@@ -132,15 +141,15 @@ Event*	networkDecodeEvent( char* data )
 
 }
 
-void	networkSendEvent(Event* e, PacketPriority p, PacketReliability r)
+void network::sendEvent(Event* e, PacketPriority p, PacketReliability r)
 {
 	int offset;
-	char* payload = networkEncodeEvent(e,offset);
+	char* payload = network::_encode_event(e,offset);
 	peer->Send( payload, offset, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, true );
 	delete[] payload;
 }
 
-unsigned char networkGetPacketIdentifier(RakNet::Packet* p)
+unsigned char network::getPacketIdentifier(RakNet::Packet* p)
 {
 	if ((unsigned char)p->data[0] == ID_TIMESTAMP )
 
@@ -150,20 +159,20 @@ unsigned char networkGetPacketIdentifier(RakNet::Packet* p)
 		return (unsigned char) p->data[0];
 }
 
-void	networkConnect(const char* ip)
+void network::connect(const char* ip)
 {
 	printm("Connecting to host @" + std::string(ip));
 	peer->Connect( ip, SERVER_PORT, 0,0 );
 }
 
-int		networkGetNumberOfConnections()
+int network::getNumberOfConnections( void )
 {
 	return peer->NumberOfConnections();
 }
 
-int		networkPingPeerIndex(int client)
+int	network::pingPeerIndex( int client )
 {
-	if( client < networkGetNumberOfConnections() )
+	if( client < network::getNumberOfConnections() )
 	{
 		// Return ping of specified client
 		return peer->GetAveragePing( peer->GetSystemAddressFromIndex(client) );
@@ -172,12 +181,12 @@ int		networkPingPeerIndex(int client)
 	return -1;
 }
 
-void	networkHandlePacketsServer()
+void network::_update_server( void )
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		unsigned int id = networkGetPacketIdentifier( packet ) - ID_USER_PACKET_ENUM;
+		unsigned int id = network::getPacketIdentifier( packet ) - ID_USER_PACKET_ENUM;
 
 		switch( id )
 		{
@@ -190,11 +199,11 @@ void	networkHandlePacketsServer()
 		case DPT_EVENT:
 			{
 				// Decode the event
-				Event* tmp = networkDecodeEvent((char*)packet->data);
+				Event* tmp = network::_decode_event((char*)packet->data);
 				assert( tmp != nullptr );
-				Event* e = eventGetPooled( tmp->getEventType() );
+				Event* e = eventsys::get( tmp->getEventType() );
 				e->clone(tmp);
-				eventDispatch(e);
+				eventsys::dispatch(e);
 				delete tmp;
 				break;
 			}
@@ -209,13 +218,13 @@ void	networkHandlePacketsServer()
 	} 
 }
 
-void	networkHandlePacketsClient()
+void network::_update_client( void )
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
 		// Get type of packet
-		int id = (int)networkGetPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
+		int id = (int)network::getPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
 
 		switch(id)
 		{
@@ -225,8 +234,8 @@ void	networkHandlePacketsClient()
 				printm("Connection Success");
 
 				// Inform engine that a connection has been established - carries no data
-				Event* e = eventGetPooled(EV_NETWORK_NEW_CONNECTION);
-				eventDispatch(e);
+				Event* e = eventsys::get(EV_NETWORK_NEW_CONNECTION);
+				eventsys::dispatch(e);
 				break;
 			}
 
@@ -250,11 +259,11 @@ void	networkHandlePacketsClient()
 		case DPT_EVENT:
 			{
 				// Decode the event
-				Event* tmp = networkDecodeEvent((char*)packet->data);
+				Event* tmp = network::_decode_event((char*)packet->data);
 				assert( tmp != nullptr );
-				Event* e = eventGetPooled( tmp->getEventType() );
+				Event* e = eventsys::get( tmp->getEventType() );
 				e->clone(tmp);
-				eventDispatch(e);
+				eventsys::dispatch(e);
 				delete tmp;
 
 				break;
@@ -266,23 +275,23 @@ void	networkHandlePacketsClient()
 	}
 }
 
-void	networkHandleIncomingPackets()
+void network::update( void )
 {
-	if( networkGetMode() )
+	if( network::getMode() )
 	{
-		networkHandlePacketsServer();
+		network::_update_server();
 	}else
 	{
-		networkHandlePacketsClient();
+		network::_update_client();
 	}
 }
 
-PlayerGUID networkGetPlayerGUID()
+PlayerGUID network::getPlayerGUID( void )
 {
 	return localGUID;
 }
 
-RakNet::RakPeerInterface* networkGetPeer()
+RakNet::RakPeerInterface* network::getPeer( void )
 {
 	return peer;
 }

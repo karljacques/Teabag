@@ -111,7 +111,7 @@ void SnapshotManager::sendSnapshot()
 		offset+=snapshot_size;
 
 		// Send the packet!!
-		networkGetPeer()->Send( payload,offset, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+		network::getPeer()->Send( payload,offset, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
 
 		delete payload;
 	}
@@ -178,7 +178,7 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 	// Dispatch network transform updates
 	for( auto i=snapshot->data.begin(); i!=snapshot->data.end(); i++ )
 	{
-		Event* e = eventGetPooled(EV_NETWORK_TRANSFORM_UPDATE);
+		Event* e = eventsys::get(EV_NETWORK_TRANSFORM_UPDATE);
 		TransformEvent* te = e->createEventData<TransformEvent>();
 		te->position = (*i).pos;
 		te->orientation = (*i).rot;
@@ -204,7 +204,7 @@ void SnapshotManager::update(double dt)
 	for( auto i=vect->begin(); i!=vect->end(); i++ )
 	{
 		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->eGUID);
-		eventDispatch(*i);
+		eventsys::dispatch(*i);
 	}
 
 }
@@ -217,6 +217,6 @@ void SnapshotManager::updateOrientation(double dt)
 	{
 		(*i)->changeEventType(EV_CORE_TRANSFORM_UPDATE_ORIENTATION);
 		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->eGUID);
-		eventDispatch(*i);
+		eventsys::dispatch(*i);
 	}
 }

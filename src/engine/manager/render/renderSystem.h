@@ -1,11 +1,3 @@
-//
-//  gfxSystem.h
-//  YorkshireTea
-//
-//  Created by Karl Jacques on 24/05/2014.
-//
-//
-
 #ifndef  __Teabag__Rendersystem__
 #define __Teabag__Rendersystem__
 
@@ -16,12 +8,12 @@
 #include "../../component/physics/physicsComponent.h"
 #include "../manager.h"
 
-class RenderSystem : public ComponentManager, public EventListener, public Manager
+class RenderManager : public ComponentManager, public EventListener, public Manager
 {
 public:
         
-    RenderSystem( EntityManager* ent );
-    ~RenderSystem();
+    RenderManager( );
+    ~RenderManager();
         
     // Getters
     Ogre::Root*           getOgreRoot();
@@ -57,8 +49,6 @@ private:
     size_t          m_WindowHandle;
 	SDL_Window*			  mWindow;
 
-	// Dependency
-	EntityManager* mEntityMgr;
 };
 
 #endif /* defined( __Teabag__Rendersystem__) */

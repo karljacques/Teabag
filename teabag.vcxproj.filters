@@ -36,9 +36,6 @@
     <ClCompile Include="src\engine\manager\render\cameraManager.cpp">
       <Filter>engine\manager\render</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\manager\render\renderSystem.cpp">
-      <Filter>engine\manager\render</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp">
       <Filter>engine\core\render\UI</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="src\engine\core\render\renderSystem.cpp">
       <Filter>engine\core\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\manager\render\renderManager.cpp">
+      <Filter>engine\manager\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +130,6 @@
     <ClInclude Include="src\engine\manager\render\cameraManager.h">
       <Filter>engine\manager\render</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\manager\render\renderSystem.h">
-      <Filter>engine\manager\render</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h">
       <Filter>engine\core\render\UI</Filter>
     </ClInclude>
@@ -172,7 +169,6 @@
     <ClInclude Include="src\engine\core\event\events\playerEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
-    <ClInclude Include="singleton.h" />
     <ClInclude Include="src\engine\manager\network\networkComponentManager.h">
       <Filter>engine\manager\network</Filter>
     </ClInclude>
@@ -181,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="src\engine\core\render\renderSystem.h">
       <Filter>engine\core\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\render\renderManager.h">
+      <Filter>engine\manager\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

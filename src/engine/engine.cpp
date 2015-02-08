@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "manager/abstract/spectatorManager.h"
 #include <RakNetVersion.h>
+#include "core/render/renderSystem.h"
 
 
 Engine::Engine()
@@ -30,6 +31,7 @@ Engine::Engine()
     eventsys::init();
 	network::init();
 	physics::init();
+	render::init();
 
     mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
 	
@@ -38,7 +40,7 @@ Engine::Engine()
 	
 	mRenderSystem = shared_ptr<RenderManager>( new RenderManager( ) );
 
-	input::init(mRenderSystem->getSDLWindow());
+	input::init(render::getSDLWindow());
 
 	// Create the camera manager and default camera
 	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );	
@@ -157,7 +159,7 @@ void Engine::update()
 	{
 		// render after everything is updated
 		mTimeSinceLastRender.reset();
-		mRenderSystem->renderOneFrame();
+		render::update();
 	}
 
 }

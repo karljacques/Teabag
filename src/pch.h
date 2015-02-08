@@ -3,9 +3,8 @@
 
 #include <Ogre.h>
 
-
-
 #include <SDL.h>
+#include <SDL_syswm.h>
 
 #include <stdint.h>
 

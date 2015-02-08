@@ -1,7 +1,7 @@
 #ifndef cameraManager_h__
 #define cameraManager_h__
 
-#include "renderSystem.h"
+#include "renderManager.h"
 #include "../../component/render/cameraComponent.h"
 
 class CameraManager: public ComponentManager, public EventListener, public Manager

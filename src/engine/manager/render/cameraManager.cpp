@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "cameraManager.h"
 #include "../../core/event/eventSystem.h"
+#include "../../core/render/renderSystem.h"
 
 CameraManager::CameraManager(RenderManager* rend)
 {
@@ -15,17 +16,17 @@ CameraManager::~CameraManager()
 void CameraManager::createNewCamera(CameraComponent* comp)
 {
 	// Create camera and viewport
-	comp->camera = mRenderSystem->getSceneMgr()->createCamera( mRenderSystem->generateName() );
+	comp->camera = render::getSceneMgr()->createCamera( render::generateName() );
 	comp->camera->setNearClipDistance(0.01f);
 	comp->camera->setFarClipDistance(200.0f);
 
-	Ogre::Viewport* viewport = mRenderSystem->getRenderWindow()->addViewport( comp->camera );
+	Ogre::Viewport* viewport = render::getRenderWindow()->addViewport( comp->camera );
 	viewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));
 
 	comp->camera->setAspectRatio(Ogre::Real(viewport->getActualWidth()) / Ogre::Real(viewport->getActualHeight()) );
 
 	// Attach to scenenode
-	comp->mSceneNode = mRenderSystem->getRootSceneNode()->createChildSceneNode();
+	comp->mSceneNode = render::getRootSceneNode()->createChildSceneNode();
 	comp->mSceneNode->attachObject( comp->camera );
 
 	// Register camera pair

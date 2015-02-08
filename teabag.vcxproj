@@ -116,14 +116,13 @@
     <ClCompile Include="src\engine\manager\network\networkSystem.cpp" />
     <ClCompile Include="src\engine\manager\physics\physicsManager.cpp" />
     <ClCompile Include="src\engine\manager\render\cameraManager.cpp" />
-    <ClCompile Include="src\engine\manager\render\renderSystem.cpp" />
+    <ClCompile Include="src\engine\manager\render\renderManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="singleton.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\engine\component\abstract\playerComponent.h" />
     <ClInclude Include="src\engine\component\abstract\spectatorComponent.h" />
@@ -160,7 +159,7 @@
     <ClInclude Include="src\engine\manager\network\networkSystem.h" />
     <ClInclude Include="src\engine\manager\physics\physicsManager.h" />
     <ClInclude Include="src\engine\manager\render\cameraManager.h" />
-    <ClInclude Include="src\engine\manager\render\renderSystem.h" />
+    <ClInclude Include="src\engine\manager\render\renderManager.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

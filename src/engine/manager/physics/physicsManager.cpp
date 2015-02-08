@@ -41,12 +41,12 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 	mWorld->addRigidBody(comp->body);
 
 	/* Send out event to tell new position to components */
-	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE);
+	Event* e = eventGetPooled(EV_CORE_TRANSFORM_UPDATE);
 	e->ID = comp->ID;
 	TransformEvent* te = e->createEventData<TransformEvent>();
 	te->position = pos;
 	te->orientation = rot;
-	EventSystem::getSingletonPtr()->dispatchEvent(e);
+	eventDispatch(e);
 
 	comp->position = pos;
 	comp->orientation = rot;
@@ -75,7 +75,7 @@ void PhysicsManager::update( double dt )
 			comp->orientation =  comp->body->getWorldTransform().getRotation();
 
 			/* Create event */
-			Event* e = EventSystem::getSingletonPtr()->getEvent( EV_CORE_TRANSFORM_UPDATE,comp->ID,this );
+			Event* e = eventGetPooled( EV_CORE_TRANSFORM_UPDATE,comp->ID,this );
 			TransformEvent* me = e->createEventData<TransformEvent>();
 
 			me->orientation =comp->orientation;
@@ -85,7 +85,7 @@ void PhysicsManager::update( double dt )
 			me->velocity = comp->body->getLinearVelocity();
 			me->angularVelocity = comp->body->getAngularVelocity();
 
-			EventSystem::getSingletonPtr()->dispatchEvent(e);
+			eventDispatch(e);
 		}
 	}
 }

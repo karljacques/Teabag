@@ -11,6 +11,10 @@ public:
 	Ogre::MovableObject* mObject;
 	Ogre::SceneNode*	 mSceneNode;
 
+	Component* clone()
+	{
+		return new RenderComponent();
+	}
 };
 
 #endif // renderComponent_h__

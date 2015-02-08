@@ -1,85 +1,25 @@
-#ifndef networkSystem_h__
-#define networkSystem_h__
+#include "networkComponentManager.h"
+#include "../../core/user-interface/ogreConsole.h"
 
-#include "../../core/event/eventListener.h"
-#include "../../core/network/snapshotManager.h"
-#include "../../core/entity-component/componentManager.h"
-#include "../../component/network/networkComponent.h"
-#include "../manager.h"
+void			networkInit();
+void			networkDestroy();
 
-#define MAX_CONNECTIONS 16
-#define SERVER_PORT 2343
-#define CLIENT_PORT 2344
+void			networkShutdown();
+void			networkSetClient();
+void			networkSetServer();
 
-typedef unsigned int uint32;
+bool			networkGetMode(); 
 
-enum DataPacketType
-{
-	DPT_EVENT,
-	DPT_SNAPSHOT
-};
+void			networkSendEvent( Event* e, PacketPriority p, PacketReliability r );
+unsigned char	networkGetPacketIdentifier( RakNet::Packet* p );
 
-using namespace RakNet;
+void			networkConnect( const char* ip );
+int				networkGetNumberOfConnections();
 
-class NetworkSystem : public EventListener, public ComponentManager, public Manager
-{
-public:
-	NetworkSystem( void );
-	~NetworkSystem( void );
+void			networkHandleIncomingPackets();
 
-	// Set client and set host
-	void				setAsServer();
-	void				setAsClient();
+int				networkPingPeerIndex( int client );
 
-	// Send and receives an event across the network
-	void				send( Event* e, PacketPriority p, PacketReliability r );
+PlayerGUID		networkGetPlayerGUID();
 
-	void				update( double dt );
-
-	void				handle( Event* e );
-	bool				isHost();
-
-	void				connect( const char* ip );
-
-	int					getConnectedClients();
-	int					pingPeer( int client );
-	EntID				getIDByGUID( EntityGUID GUID );
-
-
-	uint32				_find_free_guid();
-
-	// Takes a packet and gives you its identifier, handles the fact
-	// that it may have a timestamp
-	unsigned char		getPacketIdentifier( RakNet::Packet* p );
-	RakPeerInterface*	getPeer() {return peer;};
-	PlayerGUID			getLocalGUID();
-
-	// Takes an event with an ID and assigns the GUID of the event if it has one.
-	// WARNING: modifies an event whilst it is live in the event system.
-	// const correctness has been blown out of the window. (not that there was any, anyway! )
-	bool				attach_eGUID( Event* e );
-
-	// Getters
-	SnapshotManager*	getShapshotManager() { return mSnapshotManager; };
-
-protected:
-
-	void				_update_host( double dt );
-	void				_update_client( double dt );
-
-	void				_handle_host( Event* e );
-	void				_handle_client( Event* e );
-
-	char*				_encode_event( Event* e, int &offset );
-	Event*				_decode_event( char* data );
-	
-	
-	bool				mHost;
-	EntityGUID				mGuidCount;
-	PlayerGUID			mLocalGUID;
-
-	SnapshotManager*	mSnapshotManager;
-	RakPeerInterface*	peer;
-
-};
-#endif // networkSystem_h__
+RakNet::RakPeerInterface* networkGetPeer();

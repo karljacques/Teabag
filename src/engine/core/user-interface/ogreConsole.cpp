@@ -180,10 +180,10 @@ void OgreConsole::handle( Event* arg)
 				if( prompt.length() > 0 )
 				{
 					// It's chat - we need to send this off!
-					Event* e = EventSystem::getSingleton().getEvent(EV_CORE_CHAT_MESSAGE, 0, this );
+					Event* e = eventGetPooled(EV_CORE_CHAT_MESSAGE, 0, this );
 					MessageEvent* me = e->createEventData<MessageEvent>();
 					me->message = prompt;
-					EventSystem::getSingleton().dispatchEvent(e);
+					eventDispatch(e);
 				}
 				
 			}
@@ -362,13 +362,13 @@ void Console_Net_Connect( Ogre::StringVector& str )
 	if( str.size() > 1 )
 	{
 		// dispatch network system modifier
-		EventSystem::getSingletonPtr()->dispatchEvent( EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_MOD_CLIENT) );
+		eventDispatch( eventGetPooled(EV_NETWORK_MOD_CLIENT) );
 
 		// Tell network system to connect to this IP:
-		Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_MOD_CONNECT);
+		Event* e = eventGetPooled(EV_NETWORK_MOD_CONNECT);
 		MessageEvent* msg = e->createEventData<MessageEvent>();
 		msg->message = str[1];
-		EventSystem::getSingletonPtr()->dispatchEvent(e);
+		eventDispatch(e);
 	}else
 	{
 		printm( "No IP given." );
@@ -380,20 +380,20 @@ void Console_Set_Username( Ogre::StringVector& str )
 	if( str.size() > 1 )
 	{
 		// Dispatch an event to change player name
-		Event* e = EventSystem::getSingleton().getEvent( EV_PLAYER_SET_NAME );
+		Event* e = eventGetPooled( EV_PLAYER_SET_NAME );
 		MessageEvent* msg = e->createEventData<MessageEvent>();
 		msg->message = str[1];
-		EventSystem::getSingleton().dispatchEvent( e );
+		eventDispatch( e );
 	}
 
 }
 
 void printm(std::string message)
 {
-	Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_PRINT_CONSOLE);
+	Event* e = eventGetPooled(EV_CORE_PRINT_CONSOLE);
 	MessageEvent* msg = e->createEventData<MessageEvent>();
 
 	msg->message = message;
 
-	EventSystem::getSingletonPtr()->dispatchEvent(e);
+	eventDispatch(e);
 }

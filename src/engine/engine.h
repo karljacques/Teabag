@@ -48,7 +48,7 @@ public:
 	RenderSystem*		getRenderSystem(){ return mRenderSystem.get(); };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
 	EntityManager*		getEntityManager(){return mEntityManager.get(); };
-	NetworkSystem*		getNetworkSystem(){return mNetworkSystem.get(); };
+	NetworkComponentManager*		getNetworkSystem(){return mNetworkSystem.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
 	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
 
@@ -75,7 +75,7 @@ private:
 
 	shared_ptr<RenderSystem> mRenderSystem;
 	shared_ptr<InputSystem> mInputSystem;
-	shared_ptr<NetworkSystem> mNetworkSystem;
+	shared_ptr<NetworkComponentManager> mNetworkSystem;
 
 	std::list<weak_ptr<Manager>> mManagers;
 };

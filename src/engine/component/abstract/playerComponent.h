@@ -9,6 +9,10 @@ struct PlayerComponent
 		GUID = 0;
 	}
 
+	Component* clone()
+	{
+
+	}
 	EntID GUID;
 };
 #endif // playerComponent_h__

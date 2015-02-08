@@ -1,51 +1,43 @@
 #include "pch.h"
 #include "networkSystem.h"
-#include "../../core/user-interface/ogreConsole.h"
-#include <RakNetVersion.h>
 #include "../../core/event/eventSystem.h"
-#include "../../core/event/events/messageEvent.h"
 
-using namespace RakNet;
+#define MAX_CONNECTIONS 16
+#define SERVER_PORT 2343
 
-NetworkSystem::NetworkSystem( )
+static NetworkComponentManager*		netCompMgr;
+static RakNet::RakPeerInterface*	peer;
+
+static bool			host;
+static PlayerGUID	localGUID;
+
+
+void	networkInit()
 {
+	netCompMgr = new NetworkComponentManager();
 	peer = RakNet::RakPeerInterface::GetInstance();
-	mSnapshotManager = new SnapshotManager( this );
-	mGuidCount = 0;
 
-	// Startup as server
-	RakNet::SocketDescriptor socketDescriptors[1] = {
-		RakNet::SocketDescriptor( SERVER_PORT, 0 )
-	};
-	peer->Startup( MAX_CONNECTIONS, socketDescriptors, 1 );
-	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
-
-	this->mHost = true;
-	this->mLocalGUID = RakNet::RakNetGUID::ToUint32( peer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS) ); /* It is possible that this GUID
+	host = true;
+	localGUID = RakNet::RakNetGUID::ToUint32( peer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS) ); /* It is possible that this GUID
 																															could change upon shutting down RakNet
 																															and restarting it. Something to bare in mind*/
+	// Set as server by default.
+	networkSetServer();
 }
 
-NetworkSystem::~NetworkSystem()
+void	networkDestroy()
 {
-	delete mSnapshotManager;
 	RakNet::RakPeerInterface::DestroyInstance(peer);
 }
 
-void NetworkSystem::setAsServer()
+void	networkShutdown()
 {
-	RakNet::SocketDescriptor socketDescriptors[1] = {
-		RakNet::SocketDescriptor( SERVER_PORT, 0 )
-	};
 	peer->Shutdown(0);
-	peer->Startup( MAX_CONNECTIONS, socketDescriptors, 1 );
-	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
-
-	mHost = true;
 }
 
-void NetworkSystem::setAsClient()
+void	networkSetClient()
 {
+	// Must call net_shutdown() first.
 	RakNet::SocketDescriptor socketDescriptors[1] = {
 		RakNet::SocketDescriptor( )
 	};
@@ -54,87 +46,27 @@ void NetworkSystem::setAsClient()
 	peer->Startup( 2, socketDescriptors, 1 );
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
-	mHost = false;
+	host = false;
 }
 
-void NetworkSystem::send( Event* e, PacketPriority p, PacketReliability r )
+void	networkSetServer()
 {
-	int offset;
-	char* payload = _encode_event(e,offset);
-	peer->Send( payload, offset, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, true );
-	delete[] payload;
+	// Must call net_shutdown() first.
+	RakNet::SocketDescriptor socketDescriptors[1] = {
+		RakNet::SocketDescriptor( SERVER_PORT, 0 )
+	};
+	peer->Startup( MAX_CONNECTIONS, socketDescriptors, 1 );
+	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
+
+	host = true;
 }
 
-unsigned char NetworkSystem::getPacketIdentifier(Packet *p)
+bool	networkGetMode()
 {
-	if ((unsigned char)p->data[0] == ID_TIMESTAMP )
-
-		// Returns byte after message ID and timestamp
-		return (unsigned char) p->data[sizeof(MessageID) + sizeof(RakNet::Time)];
-	else
-		return (unsigned char) p->data[0];
+	return host;
 }
 
-bool NetworkSystem::isHost()
-{
-	return mHost;
-}
-
-void NetworkSystem::update(double dt)
-{
-	if( this->isHost() )
-	{
-		this->_update_host(dt);
-	}else
-	{
-		this->_update_client(dt);
-	}
-}
-
-void NetworkSystem::handle(Event* e)
-{
-	if( this->isHost() )
-	{
-		this->_handle_host(e);
-	}
-	else
-	{
-		this->_handle_client(e);
-	}
-}
-
-
-int NetworkSystem::getConnectedClients()
-{
-	return peer->NumberOfConnections();
-}
-
-int NetworkSystem::pingPeer(int client)
-{
-	if( client < this->getConnectedClients() )
-	{
-		// Return ping of specified client
-		return peer->GetAveragePing( peer->GetSystemAddressFromIndex(client) );
-	}
-
-	return -1;
-}
-
-EntID NetworkSystem::getIDByGUID( EntityGUID GUID )
-{
-	for( auto j=mComponents.begin(); j!=mComponents.end(); j++ )
-	{
-		if( dynamic_cast<NetworkComponent*>(j->second)->eGUID == GUID )
-		{
-			assert( typeid( *j->second ) == typeid( NetworkComponent ));
-			return j->second->ID;
-		}					
-	}
-
-	return 0;
-}
-
-char* NetworkSystem::_encode_event(Event* e, int &offset )
+char*	networkEncodeEvent(Event* e, int &offset)
 {
 	// Cast event to char*, make room for the packet ID and timestamp, and TIMESTAMP_ID
 	char* payload = new char[ sizeof(Event) + 11 ];
@@ -166,7 +98,7 @@ char* NetworkSystem::_encode_event(Event* e, int &offset )
 	return payload;
 }
 
-Event* NetworkSystem::_decode_event( char* data )
+Event*	networkDecodeEvent( char* data )
 {
 	// Where to read from - has a timestamp so first byte is just ID_TIMESTAMP
 	int offset = 1;
@@ -200,18 +132,52 @@ Event* NetworkSystem::_decode_event( char* data )
 
 }
 
-uint32 NetworkSystem::_find_free_guid()
+void	networkSendEvent(Event* e, PacketPriority p, PacketReliability r)
 {
-	mGuidCount++;
-	return mGuidCount;
+	int offset;
+	char* payload = networkEncodeEvent(e,offset);
+	peer->Send( payload, offset, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, true );
+	delete[] payload;
 }
 
-void NetworkSystem::_update_host(double dt)
+unsigned char networkGetPacketIdentifier(RakNet::Packet* p)
+{
+	if ((unsigned char)p->data[0] == ID_TIMESTAMP )
+
+		// Returns byte after message ID and timestamp
+			return (unsigned char) p->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
+	else
+		return (unsigned char) p->data[0];
+}
+
+void	networkConnect(const char* ip)
+{
+	printm("Connecting to host @" + std::string(ip));
+	peer->Connect( ip, SERVER_PORT, 0,0 );
+}
+
+int		networkGetNumberOfConnections()
+{
+	return peer->NumberOfConnections();
+}
+
+int		networkPingPeerIndex(int client)
+{
+	if( client < networkGetNumberOfConnections() )
+	{
+		// Return ping of specified client
+		return peer->GetAveragePing( peer->GetSystemAddressFromIndex(client) );
+	}
+
+	return -1;
+}
+
+void	networkHandlePacketsServer()
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
-		unsigned int id = getPacketIdentifier( packet ) - ID_USER_PACKET_ENUM;
+		unsigned int id = networkGetPacketIdentifier( packet ) - ID_USER_PACKET_ENUM;
 
 		switch( id )
 		{
@@ -224,50 +190,43 @@ void NetworkSystem::_update_host(double dt)
 		case DPT_EVENT:
 			{
 				// Decode the event
-				Event* tmp = this->_decode_event((char*)packet->data);
+				Event* tmp = networkDecodeEvent((char*)packet->data);
 				assert( tmp != nullptr );
-				Event* e = EventSystem::getSingletonPtr()->getEvent( tmp->getEventType(), 0, this );
+				Event* e = eventGetPooled( tmp->getEventType() );
 				e->clone(tmp);
-				EventSystem::getSingletonPtr()->dispatchEvent(e);
+				eventDispatch(e);
 				delete tmp;
 				break;
 			}
 		case DPT_SNAPSHOT:
 			// Pass packet on to the snapshot manager, which will deal with it
-			mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
-			mSnapshotManager->updateOrientation(dt);
+			//mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
+			//mSnapshotManager->updateOrientation(dt);
 		default:
 			printm("Packet of unhandled ID" + std::to_string( id + ID_USER_PACKET_ENUM ) );
 			break;
 		}
 	} 
-
-	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
-	{
-		mSnapshotManager->sendSnapshot();
-		mSnapshotManager->startNewSnapshot();
-		mSnapshotManager->snapshotLife.reset();
-	}
 }
 
-void NetworkSystem::_update_client(double dt)
+void	networkHandlePacketsClient()
 {
 	RakNet::Packet *packet;
 	for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
 	{
 		// Get type of packet
-		int id = (int)getPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
+		int id = (int)networkGetPacketIdentifier(packet) - (int)ID_USER_PACKET_ENUM;
 
 		switch(id)
 		{
-		// RAKNET PACKETS
+			// RAKNET PACKETS
 		case (ID_CONNECTION_REQUEST_ACCEPTED - ID_USER_PACKET_ENUM):
 			{
 				printm("Connection Success");
 
 				// Inform engine that a connection has been established - carries no data
-				Event* e = EventSystem::getSingletonPtr()->getEvent(EV_NETWORK_NEW_CONNECTION, 0, this);
-				EventSystem::getSingleton().dispatchEvent(e);
+				Event* e = eventGetPooled(EV_NETWORK_NEW_CONNECTION);
+				eventDispatch(e);
 				break;
 			}
 
@@ -279,23 +238,23 @@ void NetworkSystem::_update_client(double dt)
 			printm("Connection to host lost");
 			break;
 
-		// USER PACKETS (APPLICATION - not RakNet packets)
+			// USER PACKETS (APPLICATION - not RakNet packets)
 		case DPT_SNAPSHOT:
 			{
 				// Pass packet on to the snapshot manager, which will deal with it
-				mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
-				mSnapshotManager->update(dt);
+				//mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
+				//mSnapshotManager->update(dt);
 				break;
 			}
 
 		case DPT_EVENT:
 			{
 				// Decode the event
-				Event* tmp = this->_decode_event((char*)packet->data);
+				Event* tmp = networkDecodeEvent((char*)packet->data);
 				assert( tmp != nullptr );
-				Event* e = EventSystem::getSingletonPtr()->getEvent( tmp->getEventType(), 0, this );
+				Event* e = eventGetPooled( tmp->getEventType() );
 				e->clone(tmp);
-				EventSystem::getSingletonPtr()->dispatchEvent(e);
+				eventDispatch(e);
 				delete tmp;
 
 				break;
@@ -305,85 +264,25 @@ void NetworkSystem::_update_client(double dt)
 			break;
 		}
 	}
+}
 
-	// Handle only orientation updates. i.e. The player has rotated.
-	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
+void	networkHandleIncomingPackets()
+{
+	if( networkGetMode() )
 	{
-		mSnapshotManager->sendSnapshot();
-		mSnapshotManager->startNewSnapshot();
-		mSnapshotManager->snapshotLife.reset();
+		networkHandlePacketsServer();
+	}else
+	{
+		networkHandlePacketsClient();
 	}
 }
 
-void NetworkSystem::_handle_host(Event* e)
+PlayerGUID networkGetPlayerGUID()
 {
-
-	switch( e->getEventType() )
-	{
-	case EV_CORE_CHAT_MESSAGE:
-	case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
-		{
-			this->send(e,IMMEDIATE_PRIORITY,RELIABLE);
-			break;
-		}
-	case EV_CORE_TRANSFORM_UPDATE:
-		// Assign GUID To event
-		if( this->attach_eGUID(e) )
-		{
-			mSnapshotManager->handle(e);
-		}
-		break;
-	case EV_NETWORK_MOD_CLIENT:
-		{
-			this->setAsClient();
-			break;
-		}
-	}
+	return localGUID;
 }
 
-void NetworkSystem::_handle_client(Event* e)
+RakNet::RakPeerInterface* networkGetPeer()
 {
-
-	switch (e->getEventType())
-	{
-	case EV_CORE_CHAT_MESSAGE:
-		break;
-	case EV_NETWORK_MOD_CONNECT:
-		{
-			printm("Switched to client mode");
-			// Get the IP to connect to
-			MessageEvent* msg = e->getData<MessageEvent>();
-
-			// Connect to the IP
-			this->connect( msg->message.c_str() );
-			break;
-		}
-	}
+	return peer;
 }
-
-void NetworkSystem::connect(const char* ip)
-{
-	printm("Connecting to host @" + std::string(ip));
-	peer->Connect( ip, SERVER_PORT, 0,0 );
-}
-
-PlayerGUID NetworkSystem::getLocalGUID()
-{
-	return this->mLocalGUID;
-}
-
-bool NetworkSystem::attach_eGUID(Event* e)
-{
-	// Assign GUID To event
-	if( componentExists( e->ID ) )
-	{
-		e->eGUID = static_cast<NetworkComponent*>(mComponents[e->ID])->eGUID;
-		return true;
-	}
-
-	// fail if not network component.
-	return false;
-}
-
-
-

@@ -24,7 +24,7 @@ public:
 		comp->orientation = orientation;
 
 		// Clone the body, which belongs to bullet.
-		
+		return new PhysicsComponent();
 	}
 };
 

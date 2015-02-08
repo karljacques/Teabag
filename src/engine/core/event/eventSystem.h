@@ -13,49 +13,29 @@
 
 #include "event.h"
 #include "eventListener.h"
-#include "../../manager/manager.h"
+
 
 #define MAX_EVENT_POOL 150
 
-using namespace std;
+void eventInit();
 
-class EventSystem : public Ogre::Singleton<EventSystem>, Manager
-{
-public:
+// Add an event to the queue
+void eventDispatch( Event* e );
 
-    EventSystem();
+// Loop through events and dispatch to handlers (occurs at end of loop)
+void eventUpdate( double dt );
 
-	// Add an event to the queue
-    void dispatchEvent( Event* e );
+// Event listeners
+void eventRegisterListener( std::weak_ptr<EventListener> e );
+void eventDeregisterListener( std::weak_ptr<EventListener> e );
 
-	// Loop through events and dispatch to handlers (occurs at end of loop)
-    void update( double dt );
+// Get an inactive event
+Event* eventGetPooled( int eventType, int ID = 0, EventListener* sentBy = nullptr );
 
-	// Event listeners
-    void registerListener( weak_ptr<EventListener> e );
-    void deregisterListener( weak_ptr<EventListener> e );
-
-	// Get an inactive event
-	Event* getEvent( int eventType, int ID = 0, EventListener* sentBy = nullptr );
-
-	// Puts an event back in the inactive pool.
-	void release( Event* e );
+// Puts an event back in the inactive pool.
+void eventRelease( Event* e );
 
 
-private:
 
-	// Global Events
-    std::queue<Event*> mEventList;
 
-	// Pooled Inactive Events
-	std::vector<Event*> mEventPool;
-
-	// Event Listeners
-    std::list<weak_ptr<EventListener>> mEventListeners;
-
-	// Makes system safer when adding and removing listeners
-	std::queue<weak_ptr<EventListener>> mNewEventListeners;
-	std::vector<weak_ptr<EventListener>> mRemovedListeners;
-
-};
 #endif /* defined(__YorkshireTea__eventSystem__) */

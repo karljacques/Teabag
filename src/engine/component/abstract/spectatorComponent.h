@@ -21,6 +21,11 @@ public:
 		boost = false;
 	}
 
+	Component* clone()
+	{
+		return new SpectatorComponent();
+	}
+
 	float3 dir;
 	float speed;
 

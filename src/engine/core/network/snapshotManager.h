@@ -8,12 +8,12 @@
 
 #define MAX_SNAPSHOTS 100
 
-class NetworkSystem;
+class NetworkComponentManager;
 
 class SnapshotManager : public Manager 
 {
 public:
-	SnapshotManager( NetworkSystem* networkSystem );
+	SnapshotManager( NetworkComponentManager* networkSystem );
 	~SnapshotManager();
 
 	void update( double dt );
@@ -38,7 +38,7 @@ public:
 	std::vector<Event*>* getSnapshotEvents( int timestamp );
 
 	// As the network system can be changed, this will need to be updated if the network system is changed from client to host, or vice versa
-	void updateNetworkSystem( NetworkSystem* networkSystem );
+	void updateNetworkSystem( NetworkComponentManager* networkSystem );
 	
 
 	Ogre::Timer snapshotLife;
@@ -46,7 +46,7 @@ public:
 private:
 
 	std::deque<Snapshot*> mSnapshots;
-	NetworkSystem* mNetworkSystem;
+	NetworkComponentManager* mNetworkSystem;
 	Snapshot* mCurrentSnapshot;
 
 };

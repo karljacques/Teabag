@@ -57,6 +57,9 @@
     <ClCompile Include="src\engine\manager\abstract\playerManager.cpp">
       <Filter>engine\manager\abstract</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\manager\network\networkComponentManager.cpp">
+      <Filter>engine\manager\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -164,6 +167,9 @@
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
     <ClInclude Include="singleton.h" />
+    <ClInclude Include="src\engine\manager\network\networkComponentManager.h">
+      <Filter>engine\manager\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

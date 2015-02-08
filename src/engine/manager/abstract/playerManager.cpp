@@ -3,10 +3,10 @@
 #include "../../core/user-interface/ogreConsole.h"
 #include "../../core/event/events/playerEvent.h"
 
-PlayerManager::PlayerManager(NetworkSystem* networkSystem) : mNetworkSystem(networkSystem)
+PlayerManager::PlayerManager(NetworkComponentManager* networkSystem) : mNetworkSystem(networkSystem)
 {
 	// Get my GUID
-	mLocalPlayer= mNetworkSystem->getLocalGUID();
+	mLocalPlayer= networkGetPlayerGUID();
 
 	// Add local player to the list
 	shared_ptr<Player> local = shared_ptr<Player>( new Player() );
@@ -78,7 +78,7 @@ void PlayerManager::handle(Event* e)
 			ne->d_initialised = true;
 #endif
 			ne->clone( e );
-			this->mNetworkSystem->send( ne, HIGH_PRIORITY, RELIABLE );
+			networkSendEvent( ne, HIGH_PRIORITY, RELIABLE );
 			delete ne;
 
 			break;
@@ -112,7 +112,7 @@ void PlayerManager::handle(Event* e)
 			memcpy( pe->username, p->username.c_str(), p->username.size() + 1 );
 			pe->pGUID = mLocalPlayer;
 
-			mNetworkSystem->send(ne, HIGH_PRIORITY,RELIABLE );
+			networkSendEvent(ne, HIGH_PRIORITY,RELIABLE );
 			delete ne;
 			break;
 		}

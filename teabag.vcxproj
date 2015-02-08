@@ -110,6 +110,7 @@
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\engine\manager\abstract\playerManager.cpp" />
     <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp" />
+    <ClCompile Include="src\engine\manager\network\networkComponentManager.cpp" />
     <ClCompile Include="src\engine\manager\network\networkSystem.cpp" />
     <ClCompile Include="src\engine\manager\physics\physicsManager.cpp" />
     <ClCompile Include="src\engine\manager\render\cameraManager.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="src\engine\manager\abstract\playerManager.h" />
     <ClInclude Include="src\engine\manager\abstract\spectatorManager.h" />
     <ClInclude Include="src\engine\manager\manager.h" />
+    <ClInclude Include="src\engine\manager\network\networkComponentManager.h" />
     <ClInclude Include="src\engine\manager\network\networkSystem.h" />
     <ClInclude Include="src\engine\manager\physics\physicsManager.h" />
     <ClInclude Include="src\engine\manager\render\cameraManager.h" />

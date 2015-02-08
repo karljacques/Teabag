@@ -9,11 +9,20 @@
 #include "eventSystem.h"
 #include "../user-interface/ogreConsole.h"
 
-using namespace std;
+// Global Event queue
+static std::queue<Event*> mEventList;
 
-template<> EventSystem* Ogre::Singleton<EventSystem>::msSingleton = 0;
+// Pooled Inactive Events
+static std::vector<Event*> mEventPool;
 
-EventSystem::EventSystem()
+// Event Listeners
+static std::list<std::weak_ptr<EventListener>> mEventListeners;
+
+// Makes system safer when adding and removing listeners
+static std::queue<std::weak_ptr<EventListener>> mNewEventListeners;
+static std::vector<std::weak_ptr<EventListener>> mRemovedListeners;
+
+void eventInit()
 {
 	/* Create a pool of events. */
 	for( int i=0; i<MAX_EVENT_POOL; i++ )
@@ -23,7 +32,7 @@ EventSystem::EventSystem()
 }
 
 /* An event given to this function must be added to a list which will then dispatch it to event listeners*/
-void EventSystem::dispatchEvent( Event* e )
+void eventDispatch( Event* e )
 {
 	/* Prevent Null Events */
 	assert( e->getEventType() != EV_NULL );
@@ -34,7 +43,7 @@ void EventSystem::dispatchEvent( Event* e )
 }
 
 /* Dispatch events to global listeners */
-void EventSystem::update( double dt )
+void eventUpdate( double dt )
 {
 	/* Add any pending listeners */
 	while( mNewEventListeners.size() > 0 )
@@ -50,7 +59,7 @@ void EventSystem::update( double dt )
 
 		for( auto i = mEventListeners.begin(); i != mEventListeners.end(); i++ )
 		{
-			shared_ptr<EventListener> listener = (*i).lock();
+			std::shared_ptr<EventListener> listener = (*i).lock();
 
 			if( listener )
 			{
@@ -62,7 +71,7 @@ void EventSystem::update( double dt )
 		}
 
 		mEventList.pop();
-		this->release(e);
+		eventRelease(e);
 	}
 
 	/* All done - clean up time.
@@ -86,19 +95,19 @@ void EventSystem::update( double dt )
 
 /*	Add a new event listener.
 	It is the user's responsibility to check that there are no duplicates */
-void EventSystem::registerListener( weak_ptr<EventListener> e )
+void eventRegisterListener( std::weak_ptr<EventListener> e )
 {
 	mNewEventListeners.push(e);
 }
 
 /* Remove an event listener */
-void EventSystem::deregisterListener( weak_ptr<EventListener> e )
+void eventDeregisterListener( std::weak_ptr<EventListener> e )
 {
 	mRemovedListeners.push_back(e);
 }
 
 /* Get a new event. This must remove it from the pool of events */
-Event* EventSystem::getEvent( int eventType, int ID, EventListener* sentBy )
+Event* eventGetPooled( int eventType, int ID, EventListener* sentBy )
 {
 	Event* e;
 	/* Check there are enough events, remove it, set type and return */
@@ -124,7 +133,7 @@ Event* EventSystem::getEvent( int eventType, int ID, EventListener* sentBy )
 }
 
 /* This should add the event back to the pool of events */
-void EventSystem::release(Event* e)
+void eventRelease(Event* e)
 {
 #ifdef _DEBUG
 	e->d_initialised = false;

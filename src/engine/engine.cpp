@@ -26,11 +26,13 @@ Engine::Engine()
 #endif
 
 	// Create Systems
-    new EventSystem();
+    eventInit();
+	networkInit();
+
     mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
 	
 	mPhysicsManager = shared_ptr<PhysicsManager>( new PhysicsManager() );
-	mNetworkSystem = shared_ptr<NetworkSystem>( new NetworkSystem() );
+	mNetworkSystem = shared_ptr<NetworkComponentManager>( new NetworkComponentManager() );
 	
 	mRenderSystem = shared_ptr<RenderSystem>( new RenderSystem( mEntityManager.get() ) );
 	mInputSystem = shared_ptr<InputSystem>( new InputSystem(  mRenderSystem->getSDLWindow() ) );
@@ -69,14 +71,13 @@ Engine::Engine()
     this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
 
 	// Register all the listening managers as listeners
-	EventSystem* e = EventSystem::getSingletonPtr();
-	e->registerListener(mPhysicsManager);
-	e->registerListener(mRenderSystem);
-	e->registerListener(mCameraManager);
-	e->registerListener(mSpectatorManager);
-	e->registerListener(mNetworkSystem);
-	e->registerListener(mPlayerMgr);
-	e->registerListener(mConsole);
+	eventRegisterListener(mPhysicsManager);
+	eventRegisterListener(mRenderSystem);
+	eventRegisterListener(mCameraManager);
+	eventRegisterListener(mSpectatorManager);
+	eventRegisterListener(mNetworkSystem);
+	eventRegisterListener(mPlayerMgr);
+	eventRegisterListener(mConsole);
 
 	{
 		// Create a spectator
@@ -115,7 +116,7 @@ Engine::Engine()
 	}
 
 	mSelf = std::shared_ptr<Engine>(this,  [=](Engine*){});
-	EventSystem::getSingletonPtr()->registerListener(mSelf);
+	eventRegisterListener(mSelf);
 
 	mDebugDisplaySystem.reset( new DebugDisplaySystem( mCameraManager.get() ) );
 	registerManager(mDebugDisplaySystem);
@@ -137,7 +138,8 @@ void Engine::update()
 	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
 	mTimeSinceLastUpdate.reset();
 
-	EventSystem::getSingletonPtr()->update(dt);
+	eventUpdate(dt);
+	networkHandleIncomingPackets();
 
 	// Update systems and managers
     for( auto i=mManagers.begin(); i!=mManagers.end(); i++ )
@@ -176,7 +178,7 @@ void Engine::handle( Event* e )
 
 					case SDL_SCANCODE_X:
 						{
-							if( mNetworkSystem->isHost() )
+							if( networkGetMode() == 1 )
 							{
 								float3 size( 0.3f,0.1f,0.3f );
 								float mass = 0.5f;
@@ -198,9 +200,9 @@ void Engine::handle( Event* e )
 								assert( net->eGUID != 0 );
 								mEntityManager->getByID(box)->addComponent(net);
 
-								Event* dyn = EventSystem::getSingletonPtr()->getEvent(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
+								Event* dyn = eventGetPooled(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
 								dyn->eGUID = net->eGUID;
-								EventSystem::getSingletonPtr()->dispatchEvent( dyn );
+								eventDispatch( dyn );
 
 								
 							}
@@ -237,13 +239,6 @@ void Engine::handle( Event* e )
 			break;
 
     }
-}
-
-
-void Engine::SetAsClient(const char* ip)
-{
-	mNetworkSystem->setAsClient();
-	mNetworkSystem->connect(ip);
 }
 
 void Engine::registerManager(weak_ptr<Manager> mgr)

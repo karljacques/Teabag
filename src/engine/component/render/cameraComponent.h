@@ -11,6 +11,10 @@ public:
 	Ogre::Viewport* mViewport;
 	Ogre::SceneNode* mSceneNode;
 
+	Component* clone()
+	{
+		return new CameraComponent();
+	}
 };
 
 #endif // cameraComponent_h__

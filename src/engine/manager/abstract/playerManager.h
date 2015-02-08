@@ -30,7 +30,7 @@ public:
 class PlayerManager: public Manager, public EventListener
 {
 public:
-	PlayerManager( NetworkSystem* networkSystem );
+	PlayerManager( NetworkComponentManager* networkSystem );
 
 	// Add new players that join after initial connection
 	void	addPlayer( EntID guid, std::string username );
@@ -63,7 +63,7 @@ private:
 	std::map<EntID, shared_ptr<Player>> mConnectedPlayers;
 	EntID mLocalPlayer;
 
-	NetworkSystem* mNetworkSystem;
+	NetworkComponentManager* mNetworkSystem;
 
 
 };

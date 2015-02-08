@@ -89,10 +89,10 @@ void SpectatorManager::handle( Event* e )
 			phys->body->activate((true));
 
 			// Dispatch event for the network
-			Event* e = EventSystem::getSingletonPtr()->getEvent(EV_CORE_TRANSFORM_UPDATE_ORIENTATION, s->ID, this );
+			Event* e = eventGetPooled(EV_CORE_TRANSFORM_UPDATE_ORIENTATION, s->ID, this );
 			TransformEvent* trans = e->createEventData<TransformEvent>();
 			trans->orientation = s->yAng*s->xAng;
-			EventSystem::getSingletonPtr()->dispatchEvent(e);
+			eventDispatch(e);
 		}
 		
 	}

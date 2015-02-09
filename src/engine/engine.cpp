@@ -109,7 +109,7 @@ Engine::Engine()
 
 		RenderComponent* rend = mEntityManager->createComponent<RenderComponent>(ground);
 		mRenderSystem->initComponent( rend );
-		mRenderSystem->setAsBox(rend, float3(3.0f,0.4f,5.0f));
+		mRenderSystem->setAsBox(rend, float3(3.0f,0.4f,5.0f), "SimpleGround/Textured" );
 		mEntityManager->getByID(ground)->addComponent(rend);
 
 		PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(ground);

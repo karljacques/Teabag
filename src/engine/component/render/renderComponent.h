@@ -4,16 +4,20 @@
 #include "pch.h"
 #include "engine/component/component.h"
 
+#include "engine/core/renderSystem.h"
+
 class RenderComponent : public Component
 {
 public:
 
-	Ogre::MovableObject* mObject;
+	Ogre::Entity* mObject;
 	Ogre::SceneNode*	 mSceneNode;
 
 	Component* clone()
 	{
-		return new RenderComponent();
+		RenderComponent* comp = new RenderComponent();
+		comp->mObject = mObject->clone(render::generateName());
+		return comp;
 	}
 };
 

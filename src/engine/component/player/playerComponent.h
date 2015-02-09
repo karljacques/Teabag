@@ -13,7 +13,10 @@ struct PlayerComponent : public Component
 
 	Component* clone()
 	{
-		return new PlayerComponent();
+		PlayerComponent* comp = new PlayerComponent();
+		comp->GUID = GUID;
+
+		return comp;
 	}
 	EntID GUID;
 };

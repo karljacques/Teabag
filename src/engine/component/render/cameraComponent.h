@@ -13,6 +13,8 @@ public:
 
 	Component* clone()
 	{
+		// Cloning a camera component probably isn't the best idea...
+		assert( "Camera is unclonable. Reconsider design.");
 		return new CameraComponent();
 	}
 };

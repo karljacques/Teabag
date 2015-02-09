@@ -1,0 +1,37 @@
+material SimpleCrate/Textured
+ {
+    technique
+    {
+       pass
+        {
+          texture_unit
+          {
+            texture SimpleCrateTexture.png
+            scale 1.0 1.0
+            // this means that the texture will be tiled 10 times (1/10 = 0.1)
+			
+			
+          }
+		  lighting off	 
+       }  
+    }
+ }
+ 
+ material SimpleGround/Textured
+ {
+    technique
+    {
+       pass
+        {
+          texture_unit
+          {
+            texture SimpleGroundTexture.jpg
+            scale 0.1 0.1
+            // this means that the texture will be tiled 10 times (1/10 = 0.1)
+			
+			
+          }
+		  lighting off	 
+       }  
+    }
+ }

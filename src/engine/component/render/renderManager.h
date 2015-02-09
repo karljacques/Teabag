@@ -21,7 +21,7 @@ public:
 	
 	// Component Methods
 	void initComponent( RenderComponent* comp );
-	void setAsBox( RenderComponent* comp, float3 dim );
+	void setAsBox( RenderComponent* comp, float3 dim, std::string material = "SimpleCrate/Textured" );
 
 	void handle( Event* e );
 	void update( double dt );

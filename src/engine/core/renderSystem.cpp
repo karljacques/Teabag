@@ -38,7 +38,7 @@ void render::init( void )
 	// Prepare Ogre render window parameters
 	Ogre::NameValuePairList lParams;
 	lParams["FSAA"] = "0";
-	lParams["vsync"] = "true";
+	lParams["vsync"] = "false";
 
 	// Get SDL window handle and insert into parameter list so ogre knows which
 	// external window to use.
@@ -80,10 +80,12 @@ void render::init( void )
 	m_RootSceneNode = m_SceneMgr->getRootSceneNode();
 
 	// Load resources
-	// Ogre::ResourceGroupManager::getSingleton().createResourceGroup("General");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media","FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().declareResource("dejavu.gorilla", "Material");
+	Ogre::ResourceGroupManager::getSingleton().declareResource("box.material", "Material");
+	Ogre::ResourceGroupManager::getSingleton().declareResource("SimpleCrateTexture.png", "Texture");
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("General");
 }
 
 void render::destroy( void )

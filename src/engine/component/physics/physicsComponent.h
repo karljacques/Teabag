@@ -2,6 +2,7 @@
 #define physicsComponent_h__
 
 #include "engine/component/component.h"
+#include "common.h"
 
 class PhysicsComponent :public Component
 {
@@ -13,6 +14,8 @@ public:
 	~PhysicsComponent(){};
 
 	btRigidBody* body;
+	btCollisionShape* shape;
+	btScalar mass;
 
 	float3 position;
 	Quat orientation;
@@ -24,7 +27,13 @@ public:
 		comp->orientation = orientation;
 
 		// Clone the body, which belongs to bullet.
-		return new PhysicsComponent();
+		comp->body = new btRigidBody( mass, new btDefaultMotionState( btTransform(orientation,position) ), shape, float3(0,0,0) );
+		comp->mass = mass;
+		comp->shape = shape;
+		comp->position = position;
+		comp->orientation = orientation;
+
+		return comp;
 	}
 };
 

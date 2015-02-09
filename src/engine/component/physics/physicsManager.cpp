@@ -38,6 +38,9 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 	comp->body->setWorldTransform(btTransform(rot,pos));
 	comp->body->activate(true);
 
+	comp->mass = mass;
+	comp->shape = shape;
+
 }
 
 void PhysicsManager::update( double dt )

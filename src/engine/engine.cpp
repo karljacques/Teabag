@@ -129,6 +129,23 @@ Engine::Engine()
 
 	printm("RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( RAKNET_PROTOCOL_VERSION ));
 
+	// Create box prototype
+	float3 size( 1.0f,1.0f,1.0f );
+	float mass = 4.0f;
+
+	EntID box = entitysys::createEntity();
+
+	RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
+	mRenderSystem->initComponent( rend );
+	mRenderSystem->setAsBox(rend, size);
+	entitysys::getByID(box)->addComponent(rend);
+
+	PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
+	mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,15.0f,0), Quat::RotateX( 3.14f ));
+	entitysys::getByID(box)->addComponent(phys);
+
+	mPrototypes["box"] = new EntityPrototype( entitysys::getByID(box) );
+	entitysys::destroyEntity( entitysys::getByID(box) );
 }
 
 Engine::~Engine()
@@ -182,25 +199,12 @@ void Engine::handle( Event* e )
 						{
 							if( network::getMode() == 1 )
 							{
-								float3 size( 1.0f,1.0f,1.0f );
-								float mass = 4.0f;
+								Entity* box = mPrototypes["box"]->spawn();
 
-
-								EntID box = entitysys::createEntity();
-
-								RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
-								mRenderSystem->initComponent( rend );
-								mRenderSystem->setAsBox(rend, size);
-								entitysys::getByID(box)->addComponent(rend);
-
-								PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
-								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,15.0f,0), Quat::RotateX( 3.14f ));
-								entitysys::getByID(box)->addComponent(phys);
-
-								NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box);
+								NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box->ID);
 								net->eGUID = mNetworkSystem->_find_free_guid();
 								assert( net->eGUID != 0 );
-								entitysys::getByID(box)->addComponent(net);
+								box->addComponent(net);
 
 								Event* dyn = eventsys::get(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
 								dyn->eGUID = net->eGUID;
@@ -221,22 +225,10 @@ void Engine::handle( Event* e )
 
 		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
 			{
-				float3 size( 1.0f,1.0f,1.0f );
-				float mass = 4.0f;
-
-				EntID box = entitysys::createEntity();
-
-				NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box);
+				Entity* box = mPrototypes["box"]->spawn();
+				NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box->ID);
 				net->eGUID = e->eGUID;
-
-				RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
-				mRenderSystem->initComponent( rend );
-				mRenderSystem->setAsBox(rend, size);
-				entitysys::getByID(box)->addComponent(rend);
-
-				PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
-				mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,15.0f,0), Quat::RotateX( 3.14f ));
-				entitysys::getByID(box)->addComponent(phys);
+				box->addComponent( net );
 			}
 			break;
 

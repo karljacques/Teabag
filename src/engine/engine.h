@@ -73,6 +73,8 @@ private:
 	std::shared_ptr<NetworkManager> mNetworkSystem;
 
 	std::list<std::weak_ptr<Manager>> mManagers;
+
+	std::unordered_map<std::string, EntityPrototype*> mPrototypes;
 };
 
 #endif // engine_h__

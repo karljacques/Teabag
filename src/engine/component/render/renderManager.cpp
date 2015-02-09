@@ -57,3 +57,11 @@ void RenderManager::update( double dt )
 {
 
 }
+
+void RenderManager::deinitComponent(Component* comp)
+{
+	// Cast to render component
+	RenderComponent* rend = static_cast<RenderComponent*>(comp);
+	render::getSceneMgr()->destroyEntity(rend->mObject);
+	render::getSceneMgr()->destroySceneNode(rend->mSceneNode);
+}

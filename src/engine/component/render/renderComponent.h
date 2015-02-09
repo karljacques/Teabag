@@ -20,6 +20,7 @@ public:
 		comp->mObject = mObject->clone(render::generateName());
 		comp->mSceneNode = render::getRootSceneNode()->createChildSceneNode();
 		comp->mSceneNode->attachObject(comp->mObject);
+		comp->mSceneNode->scale( mSceneNode->getScale() );
 		return comp;
 	}
 

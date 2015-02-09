@@ -32,7 +32,7 @@
 #ifndef GORILLA_H
 #define GORILLA_H
 
-#include <Ogre.h>
+#include "pch.h"
 
 #ifndef GORILLA_USES_EXCEPTIONS
 #  define GORILLA_USES_EXCEPTIONS 0

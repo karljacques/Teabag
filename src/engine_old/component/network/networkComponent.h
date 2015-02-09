@@ -1,4 +1,4 @@
-#include "engine/component/component.h"
+#include "../base/component.h"
 
 #ifndef networkComponent_h__
 #define networkComponent_h__

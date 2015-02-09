@@ -1,8 +1,6 @@
 #ifndef transformEvent_h__
 #define transformEvent_h__
 
-#include "../event.h"
-
 // Can be used to update transformation or used to apply a force.
 struct TransformEvent
 {

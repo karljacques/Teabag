@@ -1,7 +1,7 @@
 #ifndef cameraComponent_h__
 #define cameraComponent_h__
 
-#include "engine/component/component.h"
+#include "../base/component.h"
 
 class CameraComponent :public Component
 {

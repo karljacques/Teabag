@@ -1,8 +1,8 @@
 #ifndef renderComponent_h__
 #define renderComponent_h__
 
-#include "pch.h"
-#include "engine/component/component.h"
+#include "common.h"
+#include "../base/component.h"
 
 class RenderComponent : public Component
 {

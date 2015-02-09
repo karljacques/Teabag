@@ -2,15 +2,48 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\engine\engine.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\engine\core\entity-component\entity.cpp">
-      <Filter>engine\core\entity-component</Filter>
+    <ClCompile Include="src\engine\component\network\networkManager.cpp">
+      <Filter>engine\component\network</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\entity-component\entityManager.cpp">
-      <Filter>engine\core\entity-component</Filter>
+    <ClCompile Include="src\engine\component\physics\physicsManager.cpp">
+      <Filter>engine\component\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\player\playerManager.cpp">
+      <Filter>engine\component\player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\render\cameraManager.cpp">
+      <Filter>engine\component\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\render\renderManager.cpp">
+      <Filter>engine\component\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\spectator\spectatorManager.cpp">
+      <Filter>engine\component\spectator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\component.cpp">
+      <Filter>engine\component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\entity\entity.cpp">
+      <Filter>engine\component\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\component\entity\entityManager.cpp">
+      <Filter>engine\component\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\eventSystem.cpp">
+      <Filter>engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\inputSystem.cpp">
+      <Filter>engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\networkSystem.cpp">
+      <Filter>engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\physicsSystem.cpp">
+      <Filter>engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\renderSystem.cpp">
+      <Filter>engine\core</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\core\event\event.cpp">
       <Filter>engine\core\event</Filter>
@@ -18,72 +51,87 @@
     <ClCompile Include="src\engine\core\event\eventListener.cpp">
       <Filter>engine\core\event</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\event\eventSystem.cpp">
-      <Filter>engine\core\event</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\input\inputSystem.cpp">
-      <Filter>engine\core\input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\component\base\component.cpp">
-      <Filter>engine\component\base</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\network\networkSystem.cpp">
-      <Filter>engine\manager\network</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\physics\physicsManager.cpp">
-      <Filter>engine\manager\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\render\cameraManager.cpp">
-      <Filter>engine\manager\render</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp">
       <Filter>engine\core\render\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\network\snapshotManager.cpp">
-      <Filter>engine\core\network</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\abstract\spectatorManager.cpp">
-      <Filter>engine\manager\abstract</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\user-interface\debugDisplaySystem.cpp">
-      <Filter>engine\core\user-interface</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\core\user-interface\ogreConsole.cpp">
-      <Filter>engine\core\user-interface</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\abstract\playerManager.cpp">
-      <Filter>engine\manager\abstract</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\manager\network\networkComponentManager.cpp">
+    <ClCompile Include="src\engine\manager\network\snapshotManager.cpp">
       <Filter>engine\manager\network</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\physics\physicsSystem.cpp">
-      <Filter>engine\core\physics</Filter>
+    <ClCompile Include="src\engine\manager\debug\debugDisplaySystem.cpp">
+      <Filter>engine\manager\debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\core\render\renderSystem.cpp">
-      <Filter>engine\core\render</Filter>
+    <ClCompile Include="src\engine\manager\debug\ogreConsole.cpp">
+      <Filter>engine\manager\debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\manager\render\renderManager.cpp">
-      <Filter>engine\manager\render</Filter>
+    <ClCompile Include="src\engine\engine.cpp">
+      <Filter>engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
-    <ClInclude Include="src\engine\engine.h">
-      <Filter>engine</Filter>
-    </ClInclude>
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\common.h">
-      <Filter>engine</Filter>
+    <ClInclude Include="src\engine\component\network\networkComponent.h">
+      <Filter>engine\component\network</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\entity-component\componentManager.h">
-      <Filter>engine\core\entity-component</Filter>
+    <ClInclude Include="src\engine\component\network\networkManager.h">
+      <Filter>engine\component\network</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\entity-component\entity.h">
-      <Filter>engine\core\entity-component</Filter>
+    <ClInclude Include="src\engine\component\physics\physicsComponent.h">
+      <Filter>engine\component\physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\entity-component\entityManager.h">
-      <Filter>engine\core\entity-component</Filter>
+    <ClInclude Include="src\engine\component\physics\physicsManager.h">
+      <Filter>engine\component\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\player\playerComponent.h">
+      <Filter>engine\component\player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\player\playerManager.h">
+      <Filter>engine\component\player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\render\cameraComponent.h">
+      <Filter>engine\component\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\render\cameraManager.h">
+      <Filter>engine\component\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\render\renderComponent.h">
+      <Filter>engine\component\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\render\renderManager.h">
+      <Filter>engine\component\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\spectator\spectatorComponent.h">
+      <Filter>engine\component\spectator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\spectator\spectatorManager.h">
+      <Filter>engine\component\spectator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\component.h">
+      <Filter>engine\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\componentManager.h">
+      <Filter>engine\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\entity\entity.h">
+      <Filter>engine\component\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\component\entity\entityManager.h">
+      <Filter>engine\component\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\eventSystem.h">
+      <Filter>engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\inputSystem.h">
+      <Filter>engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\networkSystem.h">
+      <Filter>engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\physicsSystem.h">
+      <Filter>engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\renderSystem.h">
+      <Filter>engine\core</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\core\event\event.h">
       <Filter>engine\core\event</Filter>
@@ -91,166 +139,98 @@
     <ClInclude Include="src\engine\core\event\eventListener.h">
       <Filter>engine\core\event</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\event\eventSystem.h">
-      <Filter>engine\core\event</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\messageEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\event\events\transformEvent.h">
+    <ClInclude Include="src\engine\core\event\events\playerEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\input\inputSystem.h">
-      <Filter>engine\core\input</Filter>
+    <ClInclude Include="src\engine\core\event\events\transformEvent.h">
+      <Filter>engine\core\event\events</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\core\render\OSXUtils.h">
       <Filter>engine\core\render</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\component\base\component.h">
-      <Filter>engine\component\base</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\physics\physicsComponent.h">
-      <Filter>engine\component\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\render\cameraComponent.h">
-      <Filter>engine\component\render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\render\renderComponent.h">
-      <Filter>engine\component\render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\network\networkSystem.h">
-      <Filter>engine\manager\network</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\physics\physicsManager.h">
-      <Filter>engine\manager\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\render\cameraManager.h">
-      <Filter>engine\manager\render</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h">
       <Filter>engine\core\render\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\network\snapshotManager.h">
-      <Filter>engine\core\network</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\abstract\spectatorManager.h">
-      <Filter>engine\manager\abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\abstract\spectatorComponent.h">
-      <Filter>engine\component\abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\user-interface\debugDisplaySystem.h">
-      <Filter>engine\core\user-interface</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\user-interface\ogreConsole.h">
-      <Filter>engine\core\user-interface</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\event\events\messageEvent.h">
-      <Filter>engine\core\event\events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\network\snapshot.h">
-      <Filter>engine\core\network</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\network\networkComponent.h">
-      <Filter>engine\component\network</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\manager.h">
-      <Filter>engine\manager</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\abstract\playerComponent.h">
-      <Filter>engine\component\abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\abstract\playerManager.h">
-      <Filter>engine\manager\abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\core\event\events\playerEvent.h">
-      <Filter>engine\core\event\events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\manager\network\networkComponentManager.h">
+    <ClInclude Include="src\engine\manager\network\snapshot.h">
       <Filter>engine\manager\network</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\physics\physicsSystem.h">
-      <Filter>engine\core\physics</Filter>
+    <ClInclude Include="src\engine\manager\network\snapshotManager.h">
+      <Filter>engine\manager\network</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\core\render\renderSystem.h">
-      <Filter>engine\core\render</Filter>
+    <ClInclude Include="src\engine\manager\debug\debugDisplaySystem.h">
+      <Filter>engine\manager\debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\manager\render\renderManager.h">
-      <Filter>engine\manager\render</Filter>
+    <ClInclude Include="src\engine\manager\debug\ogreConsole.h">
+      <Filter>engine\manager\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\engine\engine.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager.h">
+      <Filter>engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
-      <UniqueIdentifier>{d83ab77d-d06d-43b5-b93e-d0e1b3bf57e3}</UniqueIdentifier>
+      <UniqueIdentifier>{a6e5b082-57a6-4e06-b6e9-ea6da69daf91}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\component">
-      <UniqueIdentifier>{6029a456-2fd4-4001-9143-2d60e984442d}</UniqueIdentifier>
+      <UniqueIdentifier>{9fa6a790-c92d-4169-87b0-5972eba54e53}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\core">
-      <UniqueIdentifier>{50db053c-f279-42b4-92ed-8817cbb041bb}</UniqueIdentifier>
+      <UniqueIdentifier>{6be5c9a4-96f0-4b4b-b01b-7d92354e0b79}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\manager">
-      <UniqueIdentifier>{9473b212-e8ef-4872-808d-da7b15b5009d}</UniqueIdentifier>
+      <UniqueIdentifier>{034ffbde-5c13-4623-84b5-bf0726718070}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\core\entity-component">
-      <UniqueIdentifier>{062a7526-a3fa-4bfb-b70b-8a0ea3dfd534}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\event">
-      <UniqueIdentifier>{27b8cec8-1854-47ac-b825-57cf140da908}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\input">
-      <UniqueIdentifier>{03c8b80c-269d-45c4-844d-b0bc797a7b41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\render">
-      <UniqueIdentifier>{a6fe11f1-7f81-45d6-b926-8cd257f4a514}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\event\events">
-      <UniqueIdentifier>{1258ed84-016a-4f0f-a91f-814240e605de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\component\base">
-      <UniqueIdentifier>{ae61beb7-8500-4768-bad4-528ca5d76539}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\component\physics">
-      <UniqueIdentifier>{ee1b3f57-34a1-4ce5-aacc-032a3b6acd31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\component\render">
-      <UniqueIdentifier>{cb0a6288-3239-4ff3-96e8-4a4cb88ecead}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\manager\network">
-      <UniqueIdentifier>{0d5c49c7-47e1-4b2d-a89a-00215fe17400}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\manager\physics">
-      <UniqueIdentifier>{5e63bcde-1412-4152-9d12-674a7cc8319c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\manager\render">
-      <UniqueIdentifier>{bef258a7-415c-4b25-9381-6d44f366dc5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\render\UI">
-      <UniqueIdentifier>{aad8f8bf-f49f-4ab5-8d65-2bf01f559478}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\network">
-      <UniqueIdentifier>{81add22d-60bc-4756-9d35-65979b360815}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\manager\abstract">
-      <UniqueIdentifier>{42cad735-92fb-4106-8f97-6ddb561427a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\component\abstract">
-      <UniqueIdentifier>{1b3da9f1-ff50-45cc-bd5f-8b8911ac19e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\core\user-interface">
-      <UniqueIdentifier>{e677b7a0-e4bb-46da-92ef-761847bb3bbd}</UniqueIdentifier>
+    <Filter Include="engine\factory">
+      <UniqueIdentifier>{63db7146-24ca-4374-b785-88fc2b5cc0c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\component\network">
-      <UniqueIdentifier>{25f929e2-3b0d-4ca7-873a-347601083025}</UniqueIdentifier>
+      <UniqueIdentifier>{90714789-8261-4cdd-b478-75069bab3333}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\core\typedef">
-      <UniqueIdentifier>{37b47662-6c34-4fed-80ad-a4e5d8aaf1c1}</UniqueIdentifier>
+    <Filter Include="engine\component\physics">
+      <UniqueIdentifier>{746c69f5-034f-494d-aed4-9319fb92caf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\core\physics">
-      <UniqueIdentifier>{81d33512-ad1c-47f7-8ec0-8e4aa5baa696}</UniqueIdentifier>
+    <Filter Include="engine\component\player">
+      <UniqueIdentifier>{9adea9b1-2054-4278-bbd1-b12a4370f797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\component\render">
+      <UniqueIdentifier>{7d670131-13e6-4997-9921-835fd732a35a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\component\spectator">
+      <UniqueIdentifier>{63d87fc9-fea0-46b6-9346-d5ce25b8b3fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\event">
+      <UniqueIdentifier>{31566dfd-6309-4565-aff2-feaefab95b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\render">
+      <UniqueIdentifier>{ebbdb134-6412-462a-a0da-87755d19f408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\manager\network">
+      <UniqueIdentifier>{91a08046-b43b-4dcc-940f-b20344a2583d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\manager\debug">
+      <UniqueIdentifier>{b09df061-90fc-4c54-b87c-35230a91aaea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\component\entity">
+      <UniqueIdentifier>{db78acc9-4c98-4ad4-beaf-ed5c805697fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\event\events">
+      <UniqueIdentifier>{781bc87b-44a9-482a-b789-77e3bb4fe0fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\render\UI">
+      <UniqueIdentifier>{e8345fca-9255-4599-9b64-f2470924a80f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

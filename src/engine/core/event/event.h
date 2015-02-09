@@ -1,11 +1,3 @@
-//
-//  event.h
-//  YorkshireTea
-//
-//  Created by Karl Jacques on 27/05/2014.
-//
-//
-
 #ifndef __YorkshireTea__event__
 #define __YorkshireTea__event__
 
@@ -13,12 +5,10 @@
 #include <Math/float3.h>
 #include <Math/Quat.h>
 
-#include "events/keyboardEvent.h"
-#include "events/mouseEvent.h"
-#include "events/transformEvent.h"
-#include "events/messageEvent.h"
 #include "eventListener.h"
-#include "../../../common.h"
+#include "common.h"
+
+#include "events/transformEvent.h"
 
 #define EVENT_PAYLOAD_SIZE sizeof(TransformEvent) // Largest Event
 

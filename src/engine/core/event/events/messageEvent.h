@@ -1,7 +1,7 @@
 #ifndef messageEvent_h__
 #define messageEvent_h__
 
-#include "..\..\..\..\common.h"
+#include "common.h"
 
 class MessageEvent
 {

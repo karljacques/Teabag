@@ -16,6 +16,7 @@
 #include <RakNetTypes.h>
 #include <BitStream.h>
 #include <GetTime.h>
+#include <RakNetVersion.h>
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>

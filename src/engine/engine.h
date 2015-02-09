@@ -1,33 +1,27 @@
-
 #ifndef engine_h__
 #define engine_h__
-
 /*
 //  Teabag
-//
-//  Created as 'Yorkshire Tea' by Karl Jacques on 26/05/2014.
-//
-//
+//  Created as 'Yorkshire Tea' in XCode on OSX by Karl Jacques on 26/05/2014.
 */
 
-#include "manager/render/renderManager.h"
-#include "manager/physics/physicsManager.h"
-#include "core/entity-component/entityManager.h"
-#include "manager/network/networkSystem.h"
-#include "manager/render/cameraManager.h"
-#include "core/input/inputSystem.h"
-#include "core/physics/physicsSystem.h"
+#include "engine/component/render/renderManager.h"
+#include "engine/component/physics/physicsManager.h"
+#include "engine/component/entity/entityManager.h"
+#include "engine/component/render/cameraManager.h"
+#include "engine/component/spectator/spectatorManager.h"
+#include "engine/component/player/playerManager.h"
+#include "engine/component/network/networkManager.h"
 
-#include "core/user-interface/ogreConsole.h"
-#include "manager/abstract/spectatorManager.h"
-#include "core/user-interface/debugDisplaySystem.h"
+#include "engine/manager/debug/debugDisplaySystem.h"
+#include "engine/manager/debug/ogreConsole.h"
 
-#include "manager/abstract/playerManager.h"
+#include "engine/core/networkSystem.h"
+#include "engine/core/inputSystem.h"
+#include "engine/core/physicsSystem.h"
+#include "engine/core/renderSystem.h"
 
-class InputSystem;
 class OgreConsole;
-
-using namespace std;
 
 class Engine : public EventListener
 {
@@ -42,14 +36,14 @@ public:
     bool isShuttingDown();
 
 	// Manager methods
-	void registerManager( weak_ptr<Manager> mgr );
-	void removeManager( weak_ptr<Manager> mgr );
+	void registerManager( std::weak_ptr<Manager> mgr );
+	void removeManager( std::weak_ptr<Manager> mgr );
 
 	// Systems getters
 	RenderManager*		getRenderSystem(){ return mRenderSystem.get(); };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
 	EntityManager*		getEntityManager(){return mEntityManager.get(); };
-	NetworkComponentManager*		getNetworkSystem(){return mNetworkSystem.get(); };
+	NetworkManager*		getNetworkSystem(){return mNetworkSystem.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
 	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
 
@@ -64,21 +58,20 @@ private:
 	
 	bool m_EngineShutdown;
 	
-	shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
-	shared_ptr<Engine> mSelf;
-	shared_ptr<PlayerManager> mPlayerMgr;
+	std::shared_ptr<DebugDisplaySystem> mDebugDisplaySystem;
+	std::shared_ptr<Engine> mSelf;
+	std::shared_ptr<PlayerManager> mPlayerMgr;
 
-	shared_ptr<EntityManager> mEntityManager;
-	shared_ptr<PhysicsManager> mPhysicsManager;
-	shared_ptr<CameraManager> mCameraManager;
-	shared_ptr<OgreConsole> mConsole;
-	shared_ptr<SpectatorManager> mSpectatorManager;
+	std::shared_ptr<EntityManager> mEntityManager;
+	std::shared_ptr<PhysicsManager> mPhysicsManager;
+	std::shared_ptr<CameraManager> mCameraManager;
+	std::shared_ptr<OgreConsole> mConsole;
+	std::shared_ptr<SpectatorManager> mSpectatorManager;
 
-	shared_ptr<RenderManager> mRenderSystem;
-	shared_ptr<InputSystem> mInputSystem;
-	shared_ptr<NetworkComponentManager> mNetworkSystem;
+	std::shared_ptr<RenderManager> mRenderSystem;
+	std::shared_ptr<NetworkManager> mNetworkSystem;
 
-	std::list<weak_ptr<Manager>> mManagers;
+	std::list<std::weak_ptr<Manager>> mManagers;
 };
 
 #endif // engine_h__

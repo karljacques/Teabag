@@ -8,7 +8,9 @@
 
 #include "pch.h"
 #include "engine.h"
-
+#include "manager/abstract/spectatorManager.h"
+#include <RakNetVersion.h>
+#include "core/render/renderSystem.h"
 
 
 Engine::Engine()
@@ -31,28 +33,28 @@ Engine::Engine()
 	physics::init();
 	render::init();
 
-    mEntityManager = std::shared_ptr<EntityManager>( new EntityManager() );
+    mEntityManager = shared_ptr<EntityManager>( new EntityManager() );
 	
-	mPhysicsManager = std::shared_ptr<PhysicsManager>( new PhysicsManager() );
-	mNetworkSystem = std::shared_ptr<NetworkManager>( new NetworkManager() );
+	mPhysicsManager = shared_ptr<PhysicsManager>( new PhysicsManager() );
+	mNetworkSystem = shared_ptr<NetworkComponentManager>( new NetworkComponentManager() );
 	
-	mRenderSystem = std::shared_ptr<RenderManager>( new RenderManager( ) );
+	mRenderSystem = shared_ptr<RenderManager>( new RenderManager( ) );
 
 	input::init(render::getSDLWindow());
 
 	// Create the camera manager and default camera
-	mCameraManager = std::shared_ptr<CameraManager>( new CameraManager() );	
+	mCameraManager = shared_ptr<CameraManager>( new CameraManager( mRenderSystem.get() ) );	
 	mEntityManager->registerComponentManager<CameraComponent>(mCameraManager.get());
 	EntID defaultCameraEntity = mEntityManager->createEntity();
 	CameraComponent* defaultCamera = mEntityManager->createComponent<CameraComponent>( defaultCameraEntity );
 
 	mCameraManager->createNewCamera( defaultCamera );
 
-	mConsole = std::shared_ptr<OgreConsole>( new OgreConsole( mCameraManager.get() ) );
+	mConsole = shared_ptr<OgreConsole>( new OgreConsole( mCameraManager.get() ) );
 
-	mSpectatorManager = std::shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) ); 
+	mSpectatorManager = shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) ); 
 
-	mPlayerMgr = std::shared_ptr<PlayerManager>( new PlayerManager( ));
+	mPlayerMgr = shared_ptr<PlayerManager>( new PlayerManager( mNetworkSystem.get() ));
 
 	// Register managers to be updated
 	registerManager(mEntityManager);
@@ -148,7 +150,7 @@ void Engine::update()
 	// Update systems and managers
     for( auto i=mManagers.begin(); i!=mManagers.end(); i++ )
 	{
-		std::shared_ptr<Manager> ptr = i->lock();
+		shared_ptr<Manager> ptr = i->lock();
 		if( ptr )
 			ptr->update(dt);
 	}
@@ -245,16 +247,16 @@ void Engine::handle( Event* e )
     }
 }
 
-void Engine::registerManager(std::weak_ptr<Manager> mgr)
+void Engine::registerManager(weak_ptr<Manager> mgr)
 {
 	mManagers.push_back(mgr);
 }
 
-void Engine::removeManager(std::weak_ptr<Manager> mgr)
+void Engine::removeManager(weak_ptr<Manager> mgr)
 {
-	mManagers.remove_if([mgr](std::weak_ptr<Manager> p){
-			std::shared_ptr<Manager> p1 = p.lock();
-			std::shared_ptr<Manager> p2 = mgr.lock();
+	mManagers.remove_if([mgr](weak_ptr<Manager> p){
+			shared_ptr<Manager> p1 = p.lock();
+			shared_ptr<Manager> p2 = mgr.lock();
 
 			if( p1 && p2 )
 				return p1 == p2;

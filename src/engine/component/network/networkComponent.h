@@ -11,11 +11,22 @@ public:
 		eGUID = 0;
 	}
 	
-	Component* clone()
+	Component* clone( EntID ID )
 	{
 		// Network component generally needs to be added post-creation
+		assert( "This shouldn't happen" );
 		NetworkComponent* comp = new NetworkComponent();
 		return comp;
+	}
+
+	void activate()
+	{
+
+	}
+
+	void deactivate()
+	{
+
 	}
 
 	EntID eGUID;

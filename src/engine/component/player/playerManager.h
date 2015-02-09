@@ -5,11 +5,12 @@
 
 #include "engine/manager.h"
 #include "engine/component/componentManager.h"
-#include "engine/component/entity/entityManager.h"
+
 #include "engine/manager/debug/ogreConsole.h"
 
 #include "engine/core/eventSystem.h"
 #include "engine/core/networkSystem.h"
+#include "engine/core/entitySystem.h"
 
 #include "engine/core/event/events/playerEvent.h"
 
@@ -26,6 +27,7 @@ public:
 
 	EntID GUID;
 	std::string username;
+
 };
 
 
@@ -59,6 +61,7 @@ public:
 	// Used when this client initially joins the game, takes initial player data
 	// and turns it into usable form.
 	void	constructFromData( char* data );
+
 
 private:
 

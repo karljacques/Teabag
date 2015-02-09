@@ -27,6 +27,6 @@ public:
 	void handle( Event* e );
 
 	void initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass, float3 pos, Quat rot);
-
+	void deinitComponent( Component* comp );
 };
 #endif // physicsManager_h__

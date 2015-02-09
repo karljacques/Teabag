@@ -17,3 +17,7 @@ void Entity::addComponent( Component* component )
 	mComponents.push_back(component);
 }
 
+void Entity::removeComponent( Component* c )
+{
+	mComponents.remove(c);
+}

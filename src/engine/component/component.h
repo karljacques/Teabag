@@ -9,7 +9,9 @@ public:
 	Component(void);
 	virtual ~Component(void);
 
-	virtual Component* clone() = 0;
+	virtual Component* clone( EntID ID ) = 0;
+	virtual void activate() = 0;
+	virtual void deactivate() = 0;
 
 	/* Local identifier, used to sync components */
 	EntID ID;

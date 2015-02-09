@@ -3,8 +3,19 @@
 
 #include "engine/component/component.h"
 
-class Entity
+class EntityPrototype;
+class Entity;
+
+namespace entitysys
 {
+	void destroyEntity( Entity* ent );
+}
+
+class Entity 
+{
+	friend class EntityPrototype;
+	friend void entitysys::destroyEntity( Entity* ent );
+
 public:
 	Entity(void);
 	~Entity(void);
@@ -20,8 +31,9 @@ public:
 
 	EntID ID;
 
-private:
-	std::vector<Component*> mComponents;
+protected:
+	
+	std::list<Component*> mComponents;
 };
 
 

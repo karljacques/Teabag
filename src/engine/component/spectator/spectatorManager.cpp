@@ -84,7 +84,7 @@ void SpectatorManager::handle( Event* e )
 			s->yAng = s->yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f );
 
 			// Get the physics component - set new orientation
-			PhysicsComponent* phys = mEntityManager->getByID(s->ID)->getComponent<PhysicsComponent>();
+			PhysicsComponent* phys = entitysys::getByID(s->ID)->getComponent<PhysicsComponent>();
 			phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
 			phys->body->activate((true));
 
@@ -98,46 +98,49 @@ void SpectatorManager::handle( Event* e )
 	}
 }
 
-SpectatorManager::SpectatorManager(EntityManager* ent)
+SpectatorManager::SpectatorManager()
 {
-	mEntityManager = ent;
+
 }
 
 void SpectatorManager::update( double dt )
 {
 	for( auto i = mComponents.begin(); i!=mComponents.end(); i++ )
 	{
+
 		SpectatorComponent* s = dynamic_cast<SpectatorComponent*>(i->second);
 		assert(s!=nullptr);
+		if( s->active )
+		{
+			float3 dir(0,0,0);
+			float speed;
 
-		float3 dir(0,0,0);
-		float speed;
+			if( s->forward )
+				dir+= float3(0,0,-1);
+			if( s->backward )
+				dir+= float3(0,0,1);
+			if( s->right )
+				dir+= float3(1,0,0);
+			if( s->left )
+				dir+= float3(-1,0,0);
+			if( s->boost )
+				speed = SPECTATOR_BOOST_SPEED;
+			else
+				speed = SPECTATOR_DEFAULT_SPEED;
 
-		if( s->forward )
-			dir+= float3(0,0,-1);
-		if( s->backward )
-			dir+= float3(0,0,1);
-		if( s->right )
-			dir+= float3(1,0,0);
-		if( s->left )
-			dir+= float3(-1,0,0);
-		if( s->boost )
-			speed = SPECTATOR_BOOST_SPEED;
-		else
-			speed = SPECTATOR_DEFAULT_SPEED;
+			// Apply new rotation to physics component
+			PhysicsComponent* phys = entitysys::getByID(s->ID)->getComponent<PhysicsComponent>();
+			phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
 
-		// Apply new rotation to physics component
-		PhysicsComponent* phys = mEntityManager->getByID(s->ID)->getComponent<PhysicsComponent>();
-		phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
-
-		// If the spectator moves, apply the force
-		if( dir.Length()>0)
-		{			
-			phys->body->applyCentralForce( Quat(phys->body->getWorldTransform().getRotation()).Transform( dir*speed )   );		
-		}
+			// If the spectator moves, apply the force
+			if( dir.Length()>0)
+			{			
+				phys->body->applyCentralForce( Quat(phys->body->getWorldTransform().getRotation()).Transform( dir*speed )   );		
+			}
 		
-		// Reactivate the body
-		phys->body->activate(true);
+			// Reactivate the body
+			phys->body->activate(true);
+		}
 	
 	}
 }

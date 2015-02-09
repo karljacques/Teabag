@@ -5,6 +5,7 @@
 #include "engine/component/component.h"
 
 #include "engine/core/renderSystem.h"
+#include "engine/core/entitySystem.h"
 
 class RenderComponent : public Component
 {
@@ -13,11 +14,23 @@ public:
 	Ogre::Entity* mObject;
 	Ogre::SceneNode*	 mSceneNode;
 
-	Component* clone()
+	Component* clone( EntID ID )
 	{
-		RenderComponent* comp = new RenderComponent();
+		RenderComponent* comp = entitysys::createComponent<RenderComponent>(ID);
 		comp->mObject = mObject->clone(render::generateName());
+		comp->mSceneNode = render::getRootSceneNode()->createChildSceneNode();
+		comp->mSceneNode->attachObject(comp->mObject);
 		return comp;
+	}
+
+	void activate()
+	{
+		this->mSceneNode->setVisible(true);
+	}
+
+	void deactivate()
+	{
+		this->mSceneNode->setVisible(false);
 	}
 };
 

@@ -151,3 +151,4 @@ bool Player::isOwner(EntID ID)
 {
 	return( mComponents.count(ID) > 0 );
 }
+

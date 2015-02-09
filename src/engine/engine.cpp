@@ -9,8 +9,6 @@
 #include "pch.h"
 #include "engine.h"
 
-
-
 Engine::Engine()
 {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -30,8 +28,6 @@ Engine::Engine()
 	network::init();
 	physics::init();
 	render::init();
-
-    mEntityManager = std::shared_ptr<EntityManager>( new EntityManager() );
 	
 	mPhysicsManager = std::shared_ptr<PhysicsManager>( new PhysicsManager() );
 	mNetworkSystem = std::shared_ptr<NetworkManager>( new NetworkManager() );
@@ -42,20 +38,16 @@ Engine::Engine()
 
 	// Create the camera manager and default camera
 	mCameraManager = std::shared_ptr<CameraManager>( new CameraManager() );	
-	mEntityManager->registerComponentManager<CameraComponent>(mCameraManager.get());
-	EntID defaultCameraEntity = mEntityManager->createEntity();
-	CameraComponent* defaultCamera = mEntityManager->createComponent<CameraComponent>( defaultCameraEntity );
+	entitysys::registerComponentManager<CameraComponent>(mCameraManager.get());
+	EntID defaultCameraEntity = entitysys::createEntity();
+	CameraComponent* defaultCamera = entitysys::createComponent<CameraComponent>( defaultCameraEntity );
 
 	mCameraManager->createNewCamera( defaultCamera );
-
 	mConsole = std::shared_ptr<OgreConsole>( new OgreConsole( mCameraManager.get() ) );
-
-	mSpectatorManager = std::shared_ptr<SpectatorManager>( new SpectatorManager( mEntityManager.get() ) ); 
-
+	mSpectatorManager = std::shared_ptr<SpectatorManager>( new SpectatorManager( ) ); 
 	mPlayerMgr = std::shared_ptr<PlayerManager>( new PlayerManager( ));
 
 	// Register managers to be updated
-	registerManager(mEntityManager);
 	registerManager(mPhysicsManager);
 	registerManager(mNetworkSystem);
 	registerManager(mRenderSystem);
@@ -63,10 +55,10 @@ Engine::Engine()
 	registerManager(mSpectatorManager);
 
 	// Register Component Managers to receive components
-	mEntityManager->registerComponentManager<PhysicsComponent>(mPhysicsManager.get());
-	mEntityManager->registerComponentManager<RenderComponent>(mRenderSystem.get());
-	mEntityManager->registerComponentManager<NetworkComponent>(mNetworkSystem.get());
-	mEntityManager->registerComponentManager<SpectatorComponent>(mSpectatorManager.get());
+	entitysys::registerComponentManager<PhysicsComponent>(mPhysicsManager.get());
+	entitysys::registerComponentManager<RenderComponent>(mRenderSystem.get());
+	entitysys::registerComponentManager<NetworkComponent>(mNetworkSystem.get());
+	entitysys::registerComponentManager<SpectatorComponent>(mSpectatorManager.get());
 
 
 	// Register the engine to receive input events
@@ -83,38 +75,48 @@ Engine::Engine()
 
 	{
 		// Create a spectator
-		EntID ent = mEntityManager->createEntity();
+		EntID ent = entitysys::createEntity();
 
-		CameraComponent* comp = mEntityManager->createComponent<CameraComponent>(ent);
-		mCameraManager->getCamera( comp );
-		mEntityManager->getByID(ent)->addComponent(comp);
+		SpectatorComponent* spec = entitysys::createComponent<SpectatorComponent>(ent);
+		entitysys::getByID(ent)->addComponent(spec);
 
-		SpectatorComponent* spec = mEntityManager->createComponent<SpectatorComponent>(ent);
-		mEntityManager->getByID(ent)->addComponent(spec);
-
-		PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(ent);
+		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ent);
 		mPhysicsManager->initComponent(phys,new btSphereShape( 0.25f ) , 1, float3(0,2,0), Quat(0,0,0,1) );
 		phys->body->setFriction(0);
 		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
-		mEntityManager->getByID(ent)->addComponent(phys);
+		entitysys::getByID(ent)->addComponent(phys);
 		phys->body->setDamping( 0.95f, 1.0f );
+
+		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ent);
+		mRenderSystem->initComponent(rend);
+		mRenderSystem->setAsBox( rend, float3( 0.25f,0.25f,0.25f ) );
+		entitysys::getByID(ent)->addComponent(rend);
+
+		EntityPrototype* spectatorPrototype = new EntityPrototype( entitysys::getByID(ent) );
+		entitysys::destroyEntity(entitysys::getByID(ent));
+
+		Entity* spectator = spectatorPrototype->spawn();
+
+		CameraComponent* comp = entitysys::createComponent<CameraComponent>(spectator->ID);
+		mCameraManager->getCamera( comp );
+		spectator->addComponent(comp);
 
 		mCameraManager->lookAt( comp, float3( 0,0,0 ));
 	}
 	
 	{
 		// Create the ground
-		EntID ground = mEntityManager->createEntity();
+		EntID ground = entitysys::createEntity();
 
-		RenderComponent* rend = mEntityManager->createComponent<RenderComponent>(ground);
+		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ground);
 		mRenderSystem->initComponent( rend );
-		mRenderSystem->setAsBox(rend, float3(3.0f,0.4f,5.0f), "SimpleGround/Textured" );
-		mEntityManager->getByID(ground)->addComponent(rend);
+		mRenderSystem->setAsBox(rend, float3(20.0f,0.4f,20.0f), "SimpleGround/Textured" );
+		entitysys::getByID(ground)->addComponent(rend);
 
-		PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(ground);
-		mPhysicsManager->initComponent( phys,new btBoxShape( float3(1.5f, 0.2f,2.5f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
-		mEntityManager->getByID(ground)->addComponent(phys);
+		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ground);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.2f,10.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
+		entitysys::getByID(ground)->addComponent(phys);
 	}
 
 	mSelf = std::shared_ptr<Engine>(this,  [=](Engine*){});
@@ -137,7 +139,7 @@ Engine::~Engine()
 void Engine::update()
 {
 	// Calculate timestep
-	double dt = mTimeSinceLastUpdate.getMicrosecondsCPU();
+	double dt = mTimeSinceLastUpdate.getMicroseconds();
 	mTimeSinceLastUpdate.reset();
 
 	eventsys::update();
@@ -152,13 +154,9 @@ void Engine::update()
 		if( ptr )
 			ptr->update(dt);
 	}
-
-	if( mTimeSinceLastRender.getMicrosecondsCPU() > 16 )
-	{
 		// render after everything is updated
 		mTimeSinceLastRender.reset();
 		render::update();
-	}
 
 }
 
@@ -184,25 +182,25 @@ void Engine::handle( Event* e )
 						{
 							if( network::getMode() == 1 )
 							{
-								float3 size( 0.3f,0.1f,0.3f );
-								float mass = 0.5f;
+								float3 size( 1.0f,1.0f,1.0f );
+								float mass = 4.0f;
 
 
-								EntID box = mEntityManager->createEntity();
+								EntID box = entitysys::createEntity();
 
-								RenderComponent* rend = mEntityManager->createComponent<RenderComponent>(box);
+								RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
 								mRenderSystem->initComponent( rend );
 								mRenderSystem->setAsBox(rend, size);
-								mEntityManager->getByID(box)->addComponent(rend);
+								entitysys::getByID(box)->addComponent(rend);
 
-								PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(box);
-								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,3,0), Quat::RotateX( 3.14f ));
-								mEntityManager->getByID(box)->addComponent(phys);
+								PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
+								mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,15.0f,0), Quat::RotateX( 3.14f ));
+								entitysys::getByID(box)->addComponent(phys);
 
-								NetworkComponent* net = mEntityManager->createComponent<NetworkComponent>(box);
+								NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box);
 								net->eGUID = mNetworkSystem->_find_free_guid();
 								assert( net->eGUID != 0 );
-								mEntityManager->getByID(box)->addComponent(net);
+								entitysys::getByID(box)->addComponent(net);
 
 								Event* dyn = eventsys::get(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
 								dyn->eGUID = net->eGUID;
@@ -223,22 +221,22 @@ void Engine::handle( Event* e )
 
 		case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
 			{
-				float3 size( 0.3f,0.1f,0.3f );
-				float mass = 0.5f;
+				float3 size( 1.0f,1.0f,1.0f );
+				float mass = 4.0f;
 
-				EntID box = mEntityManager->createEntity();
+				EntID box = entitysys::createEntity();
 
-				NetworkComponent* net = mEntityManager->createComponent<NetworkComponent>(box);
+				NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box);
 				net->eGUID = e->eGUID;
 
-				RenderComponent* rend = mEntityManager->createComponent<RenderComponent>(box);
+				RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
 				mRenderSystem->initComponent( rend );
 				mRenderSystem->setAsBox(rend, size);
-				mEntityManager->getByID(box)->addComponent(rend);
+				entitysys::getByID(box)->addComponent(rend);
 
-				PhysicsComponent* phys = mEntityManager->createComponent<PhysicsComponent>(box);
-				mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,3,0), Quat::RotateX( 3.14f ));
-				mEntityManager->getByID(box)->addComponent(phys);
+				PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
+				mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,15.0f,0), Quat::RotateX( 3.14f ));
+				entitysys::getByID(box)->addComponent(phys);
 			}
 			break;
 

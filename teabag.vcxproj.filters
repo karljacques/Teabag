@@ -24,12 +24,6 @@
     <ClCompile Include="src\engine\component\component.cpp">
       <Filter>engine\component</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\component\entity\entity.cpp">
-      <Filter>engine\component\entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\component\entity\entityManager.cpp">
-      <Filter>engine\component\entity</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\core\eventSystem.cpp">
       <Filter>engine\core</Filter>
     </ClCompile>
@@ -65,6 +59,15 @@
     </ClCompile>
     <ClCompile Include="src\engine\engine.cpp">
       <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\factory\entityPrototype.cpp">
+      <Filter>engine\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\entity\entity.cpp">
+      <Filter>engine\core\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\core\entitySystem.cpp">
+      <Filter>engine\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -111,12 +114,6 @@
     </ClInclude>
     <ClInclude Include="src\engine\component\componentManager.h">
       <Filter>engine\component</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\entity\entity.h">
-      <Filter>engine\component\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\component\entity\entityManager.h">
-      <Filter>engine\component\entity</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\core\eventSystem.h">
       <Filter>engine\core</Filter>
@@ -179,6 +176,15 @@
     <ClInclude Include="src\engine\manager.h">
       <Filter>engine</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\factory\entityPrototype.h">
+      <Filter>engine\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\entity\entity.h">
+      <Filter>engine\core\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\core\entitySystem.h">
+      <Filter>engine\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -223,14 +229,14 @@
     <Filter Include="engine\manager\debug">
       <UniqueIdentifier>{b09df061-90fc-4c54-b87c-35230a91aaea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\component\entity">
-      <UniqueIdentifier>{db78acc9-4c98-4ad4-beaf-ed5c805697fa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="engine\core\event\events">
       <UniqueIdentifier>{781bc87b-44a9-482a-b789-77e3bb4fe0fc}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine\core\render\UI">
       <UniqueIdentifier>{e8345fca-9255-4599-9b64-f2470924a80f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\core\entity">
+      <UniqueIdentifier>{8ca8b0e1-b3b7-48ec-ae00-3f53d78ae1f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

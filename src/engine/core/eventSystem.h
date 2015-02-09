@@ -16,6 +16,9 @@ namespace eventsys
 	// Add an event to the queue
 	void dispatch( Event* e );
 
+	// Dispatch an event immediately. Useful for reducing input lag etc
+	void dispatchNow( Event* e );
+
 	// Loop through events and dispatch to handlers (occurs at end of loop)
 	void update( void );
 

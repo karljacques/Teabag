@@ -48,3 +48,8 @@ void physics::update(double dt)
 {
 	world->stepSimulation( dt*MICROSECONDS_TO_SECONDS_FACTOR,1 );
 }
+
+void physics::removeRigidBody(btRigidBody* body)
+{
+	world->removeRigidBody(body);
+}

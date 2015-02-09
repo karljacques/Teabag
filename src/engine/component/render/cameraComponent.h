@@ -11,11 +11,21 @@ public:
 	Ogre::Viewport* mViewport;
 	Ogre::SceneNode* mSceneNode;
 
-	Component* clone()
+	Component* clone( EntID ID )
 	{
 		// Cloning a camera component probably isn't the best idea...
 		assert( "Camera is unclonable. Reconsider design.");
 		return new CameraComponent();
+	}
+
+	void activate()
+	{
+
+	}
+
+	void deactivate()
+	{
+
 	}
 };
 

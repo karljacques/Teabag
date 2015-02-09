@@ -20,7 +20,7 @@ void CameraManager::createNewCamera(CameraComponent* comp)
 	comp->camera->setFarClipDistance(200.0f);
 
 	Ogre::Viewport* viewport = render::getRenderWindow()->addViewport( comp->camera );
-	viewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));
+	//viewport->setBackgroundColour( Ogre::ColourValue(0.0f,0.0f,0.5f));
 
 	comp->camera->setAspectRatio(Ogre::Real(viewport->getActualWidth()) / Ogre::Real(viewport->getActualHeight()) );
 

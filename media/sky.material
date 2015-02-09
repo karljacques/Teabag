@@ -1,0 +1,19 @@
+// Images sourced from:
+//http://www.humus.name/index.php?page=Textures&&start=16
+
+material Skybox
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            depth_write off
+            texture_unit
+            {
+                cubic_texture skybox/sky.jpg separateUV
+                tex_address_mode clamp
+            }
+        }
+    }
+}

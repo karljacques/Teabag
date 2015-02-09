@@ -42,6 +42,25 @@ void eventsys::dispatch( Event* e )
 		
 }
 
+void eventsys::dispatchNow(Event* e)
+{
+	for( auto i = mEventListeners.begin(); i != mEventListeners.end(); i++ )
+	{
+		std::shared_ptr<EventListener> listener = (*i).lock();
+
+		if( listener )
+		{
+			// Don't dispatch event back to it dispatcher
+			if( listener.get() != e->sentBy )
+				listener->handle(e);
+		}
+
+	}
+
+	eventsys::release(e);
+}
+
+
 /* Dispatch events to global listeners */
 void eventsys::update( void )
 {
@@ -149,4 +168,5 @@ void eventsys::release(Event* e)
 	//else
 	//	OgreConsole::getSingletonPtr()->print("duplicate");
 }
+
 

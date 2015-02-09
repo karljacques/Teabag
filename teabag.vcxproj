@@ -97,14 +97,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\component\component.cpp" />
-    <ClCompile Include="src\engine\component\entity\entity.cpp" />
-    <ClCompile Include="src\engine\component\entity\entityManager.cpp" />
     <ClCompile Include="src\engine\component\network\networkManager.cpp" />
     <ClCompile Include="src\engine\component\physics\physicsManager.cpp" />
     <ClCompile Include="src\engine\component\player\playerManager.cpp" />
     <ClCompile Include="src\engine\component\render\cameraManager.cpp" />
     <ClCompile Include="src\engine\component\render\renderManager.cpp" />
     <ClCompile Include="src\engine\component\spectator\spectatorManager.cpp" />
+    <ClCompile Include="src\engine\core\entitySystem.cpp" />
+    <ClCompile Include="src\engine\core\entity\entity.cpp" />
     <ClCompile Include="src\engine\core\eventSystem.cpp" />
     <ClCompile Include="src\engine\core\event\event.cpp" />
     <ClCompile Include="src\engine\core\event\eventListener.cpp" />
@@ -114,6 +114,7 @@
     <ClCompile Include="src\engine\core\renderSystem.cpp" />
     <ClCompile Include="src\engine\core\render\UI\Gorilla.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
+    <ClCompile Include="src\engine\factory\entityPrototype.cpp" />
     <ClCompile Include="src\engine\manager\debug\debugDisplaySystem.cpp" />
     <ClCompile Include="src\engine\manager\debug\ogreConsole.cpp" />
     <ClCompile Include="src\engine\manager\network\snapshotManager.cpp" />
@@ -126,8 +127,6 @@
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\engine\component\component.h" />
     <ClInclude Include="src\engine\component\componentManager.h" />
-    <ClInclude Include="src\engine\component\entity\entity.h" />
-    <ClInclude Include="src\engine\component\entity\entityManager.h" />
     <ClInclude Include="src\engine\component\network\networkComponent.h" />
     <ClInclude Include="src\engine\component\network\networkManager.h" />
     <ClInclude Include="src\engine\component\physics\physicsComponent.h" />
@@ -140,6 +139,8 @@
     <ClInclude Include="src\engine\component\render\renderManager.h" />
     <ClInclude Include="src\engine\component\spectator\spectatorComponent.h" />
     <ClInclude Include="src\engine\component\spectator\spectatorManager.h" />
+    <ClInclude Include="src\engine\core\entitySystem.h" />
+    <ClInclude Include="src\engine\core\entity\entity.h" />
     <ClInclude Include="src\engine\core\eventSystem.h" />
     <ClInclude Include="src\engine\core\event\event.h" />
     <ClInclude Include="src\engine\core\event\eventListener.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="src\engine\core\render\OSXUtils.h" />
     <ClInclude Include="src\engine\core\render\UI\Gorilla.h" />
     <ClInclude Include="src\engine\engine.h" />
+    <ClInclude Include="src\engine\factory\entityPrototype.h" />
     <ClInclude Include="src\engine\manager.h" />
     <ClInclude Include="src\engine\manager\debug\debugDisplaySystem.h" />
     <ClInclude Include="src\engine\manager\debug\ogreConsole.h" />

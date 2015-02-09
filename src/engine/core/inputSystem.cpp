@@ -37,7 +37,7 @@ void input::update()
 					ke->mPressed = true;
 					ke->mReleased =false;
 					ke->mKeycode = m_inputEvent.key.keysym.scancode;
-					eventsys::dispatch( e );
+					eventsys::dispatchNow( e );
 				}
 				
 			}
@@ -51,7 +51,7 @@ void input::update()
 					ke->mPressed = false;
 					ke->mReleased = true;
 					ke->mKeycode = m_inputEvent.key.keysym.scancode;
-					eventsys::dispatch( e );
+					eventsys::dispatchNow( e );
 					
 				}
 			break;
@@ -61,7 +61,7 @@ void input::update()
 					Event* e = eventsys::get(EV_CORE_TEXT_INPUT );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mKey = *m_inputEvent.text.text;
-					eventsys::dispatch(e);
+					eventsys::dispatchNow(e);
 					
 				}
 			break;
@@ -83,7 +83,7 @@ void input::update()
 					Event* e = eventsys::get( EV_CORE_MOUSE_PRESS );
 					MouseEvent* m = e->createEventData<MouseEvent>();
 					m->mMouseButton = m_inputEvent.button.button;
-					eventsys::dispatch(e);
+					eventsys::dispatchNow(e);
 				}
 			break;
 				
@@ -114,7 +114,7 @@ void input::update()
 			m->mMouseMoveX = DeltaX;
 			m->mMouseMoveY = DeltaY;
 
-			eventsys::dispatch( e );
+			eventsys::dispatchNow( e );
 		}
 		
 		SDL_WarpMouseInWindow(  mWindow, x, y );

@@ -10,7 +10,7 @@ namespace physics
 	void destroy( void );
 
 	void addRigidBody( btRigidBody* body );
-
+	void removeRigidBody( btRigidBody* body );
 	void update( double dt );
 }
 

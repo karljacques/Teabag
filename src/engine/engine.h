@@ -7,7 +7,7 @@
 
 #include "engine/component/render/renderManager.h"
 #include "engine/component/physics/physicsManager.h"
-#include "engine/component/entity/entityManager.h"
+
 #include "engine/component/render/cameraManager.h"
 #include "engine/component/spectator/spectatorManager.h"
 #include "engine/component/player/playerManager.h"
@@ -20,6 +20,9 @@
 #include "engine/core/inputSystem.h"
 #include "engine/core/physicsSystem.h"
 #include "engine/core/renderSystem.h"
+#include "engine/core/entitySystem.h"
+
+#include "engine/factory/entityPrototype.h"
 
 class OgreConsole;
 
@@ -39,10 +42,9 @@ public:
 	void registerManager( std::weak_ptr<Manager> mgr );
 	void removeManager( std::weak_ptr<Manager> mgr );
 
-	// Systems getters
+	// Managers getters
 	RenderManager*		getRenderSystem(){ return mRenderSystem.get(); };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
-	EntityManager*		getEntityManager(){return mEntityManager.get(); };
 	NetworkManager*		getNetworkSystem(){return mNetworkSystem.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
 	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
@@ -62,7 +64,6 @@ private:
 	std::shared_ptr<Engine> mSelf;
 	std::shared_ptr<PlayerManager> mPlayerMgr;
 
-	std::shared_ptr<EntityManager> mEntityManager;
 	std::shared_ptr<PhysicsManager> mPhysicsManager;
 	std::shared_ptr<CameraManager> mCameraManager;
 	std::shared_ptr<OgreConsole> mConsole;

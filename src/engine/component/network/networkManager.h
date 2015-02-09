@@ -42,6 +42,7 @@ public:
 	// Getters
 	SnapshotManager*	getShapshotManager() { return mSnapshotManager; };
 
+
 protected:
 
 	void				_update_host( double dt );

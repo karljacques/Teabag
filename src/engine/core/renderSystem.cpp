@@ -82,10 +82,10 @@ void render::init( void )
 	// Load resources
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media","FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().declareResource("dejavu.gorilla", "Material");
-	Ogre::ResourceGroupManager::getSingleton().declareResource("box.material", "Material");
-	Ogre::ResourceGroupManager::getSingleton().declareResource("SimpleCrateTexture.png", "Texture");
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("General");
+	//Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("General");
+
+	m_SceneMgr->setSkyBox(true, "Skybox",80.0f );
 }
 
 void render::destroy( void )

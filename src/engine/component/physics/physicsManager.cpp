@@ -40,8 +40,15 @@ void PhysicsManager::initComponent( PhysicsComponent* comp, btCollisionShape* sh
 
 	comp->mass = mass;
 	comp->shape = shape;
-
 }
+
+void PhysicsManager::deinitComponent(Component* comp)
+{
+	// Cast component to PhysicsComponent
+	PhysicsComponent* phy = static_cast<PhysicsComponent*>(comp);
+	physics::removeRigidBody(phy->body);
+}
+
 
 void PhysicsManager::update( double dt )
 {
@@ -117,3 +124,4 @@ void PhysicsManager::handle( Event* e )
 		}
 	}
 }
+

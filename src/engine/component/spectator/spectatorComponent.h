@@ -3,6 +3,8 @@
 
 #include "engine/component/component.h"
 
+#include "engine/core/entitySystem.h"
+
 class SpectatorComponent : public Component
 {
 public:
@@ -19,11 +21,23 @@ public:
 		right = false;
 
 		boost = false;
+
+		active = false;
 	}
 
-	Component* clone()
+	Component* clone( EntID ID )
 	{
-		return new SpectatorComponent();
+		return entitysys::createComponent<SpectatorComponent>(ID);
+	}
+
+	void activate()
+	{
+		active = true;
+	}
+
+	void deactivate()
+	{
+		active = false;
 	}
 
 	float3 dir;
@@ -38,6 +52,8 @@ public:
 	bool right;
 
 	bool boost;
+
+	bool active;
 
 };
 #endif // spectatorComponent_h__

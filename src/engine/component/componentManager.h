@@ -21,6 +21,8 @@ public:
 		mComponents.erase( ID );
 	}
 
+	virtual void deinitComponent(  Component* comp  ){};
+
 	template <class T>
 	T* getComponentByID( EntID ID )
 	{

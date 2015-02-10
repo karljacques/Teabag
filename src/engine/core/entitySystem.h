@@ -4,6 +4,7 @@
 #include "entity/entity.h"
 #include "engine/manager.h"
 #include "engine/component/componentManager.h"
+#include "engine/manager/debug/ogreConsole.h"
 
 /* Don't touch these. They're for the templated functions only.
  **Insert threat here**

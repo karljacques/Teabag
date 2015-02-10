@@ -32,12 +32,14 @@ public:
 	void				handle( Event* e );
 
 	EntID				getIDByGUID( EntityGUID GUID );
+	EntityGUID			getGUIDFromID( EntID ID );
 	EntityGUID			_find_free_guid();
 
 	// Takes an event with an ID and assigns the GUID of the event if it has one.
 	// WARNING: modifies an event whilst it is live in the event system.
 	// const correctness has been blown out of the window. (not that there was any, anyway! )
 	bool				attach_eGUID( Event* e );
+
 
 	// Getters
 	SnapshotManager*	getShapshotManager() { return mSnapshotManager; };

@@ -35,11 +35,13 @@ void NetworkManager::handle(Event* e)
 
 EntID NetworkManager::getIDByGUID( EntityGUID GUID )
 {
+	assert( GUID != 0 );
 	for( auto j=mComponents.begin(); j!=mComponents.end(); j++ )
 	{
 		if( dynamic_cast<NetworkComponent*>(j->second)->eGUID == GUID )
 		{
 			assert( typeid( *j->second ) == typeid( NetworkComponent ));
+
 			return j->second->ID;
 		}					
 	}
@@ -116,6 +118,16 @@ bool NetworkManager::attach_eGUID(Event* e)
 
 	// Entity event concerns is not a networked entity
 	return false;
+}
+
+EntityGUID NetworkManager::getGUIDFromID(EntID ID)
+{
+	if( componentExists(ID) )
+	{
+		return static_cast<NetworkComponent*>(mComponents[ID])->eGUID;
+	}
+
+	return 0;
 }
 
 

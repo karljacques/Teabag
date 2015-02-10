@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "snapshotManager.h"
 
+#include "engine/manager/debug/ogreConsole.h"
 
 SnapshotManager::SnapshotManager( NetworkManager* networkSystem )
 {
@@ -18,25 +19,28 @@ void SnapshotManager::handle(Event* e)
 	// Put it on the snapshot - but first find if we already have this GUID there
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		if( e->eGUID != 0 )
+		EntityGUID GUID = mNetworkManager->getGUIDFromID(e->ID);
+		if( GUID )
 		{
+			
 			// Make the Transform
-			TransformEvent* te = e->getData<TransformEvent>();
-			Transform* trans = new Transform();
-			trans->pos = te->position;
-			trans->rot = te->orientation;
-			trans->vel = te->velocity;
-			trans->angRot = te->angularVelocity;
-			trans->GUID = e->eGUID;
+			TransformEvent* trans = e->getData<TransformEvent>();
+			Transform* t= new Transform();
+			t->pos = trans->position;
+			t->rot = trans->orientation;
+			t->vel = trans->velocity;
+			t->angRot = trans->angularVelocity;
+
+			t->GUID = GUID;
 
 			bool isInSnapshot = false;
 			// See if this object is already in the snapshot
 			for( auto i = mCurrentSnapshot->data.begin();  i!=mCurrentSnapshot->data.end(); i++ )
 			{
-				if( (*i).GUID == e->eGUID )
+				if( (*i).GUID == GUID )
 				{
 					/// It's already in the snapshot, update it with new data
-					(*i) = *trans; // This should be a copy?
+					(*i) = *t; // This should be a copy?
 					isInSnapshot = true;
 					break;
 				}
@@ -45,12 +49,12 @@ void SnapshotManager::handle(Event* e)
 			// Wasn't already in snapshot, add it
 			if( isInSnapshot == false )
 			{
-				mCurrentSnapshot->data.push_back(*trans); // < - This is the most likely thing to crash, if you're searching! I'm not sure if it will copy or what. For future reference.
+				mCurrentSnapshot->data.push_back(*t); // < - This is the most likely thing to crash, if you're searching! I'm not sure if it will copy or what. For future reference.
 			}
 
 			// Cleanup
-			delete trans;
-	}
+			delete t;
+		}
 	}
 
 	if( e->getEventType() == EV_NETWORK_INCOMING_SNAPSHOT )
@@ -59,7 +63,7 @@ void SnapshotManager::handle(Event* e)
 		unsigned char* start = e->getData<NewSnapshotEvent>()->start;
 		unsigned int length = e->getData<NewSnapshotEvent>()->length;
 
-		this->decodeSnapshot((char*)start,length);
+		this->decodeSnapshot(start,length);
 	}
 }
 
@@ -129,7 +133,7 @@ void SnapshotManager::sendSnapshot()
 	}
 }
 
-void SnapshotManager::decodeSnapshot( char* data, unsigned int packet_size )
+void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_size )
 {
 	// Create a snapshot we can put data into.
 	Snapshot* snapshot = new Snapshot();
@@ -203,48 +207,43 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 void SnapshotManager::importSnapshot(Snapshot* s)
 {
 	mSnapshots.push_back(s);
+
+	if( mSnapshots.size() > 0 )
+	{
+		std::vector<Event*>* vect = getSnapshotEvents(0);
+
+		for( auto i=vect->begin(); i!=vect->end(); i++ )
+		{
+			(*i)->ID = mNetworkManager->getIDByGUID((*i)->eGUID);
+			eventsys::dispatch(*i);
+		}
+	}
+
 }
 
 void SnapshotManager::update(double dt)
 {
 
-	if( this->snapshotLife.getMilliseconds() > 50 )
+	//Differentiate between behavior on the host and behavior on the client.
+	if( network::getMode() == true )
 	{
-		sendSnapshot();
-		startNewSnapshot();
-		snapshotLife.reset();
-	}
-
-	if( lastUpdate.getMilliseconds() > 50 )
-	{
-		if( network::getMode() == true )
+		// Host mode
+		if( this->snapshotLife.getMilliseconds() > 50 )
 		{
-			this->updateOrientation(dt);
-		}else
-		{
-			std::vector<Event*>* vect = getSnapshotEvents(0);
-
-			for( auto i=vect->begin(); i!=vect->end(); i++ )
-			{
-				(*i)->ID = mNetworkManager->getIDByGUID((*i)->eGUID);
-				printm("Mapped GUID " + std::to_string((*i)->eGUID) + " to ID: " + std::to_string( (*i)->ID ) );
-				eventsys::dispatch(*i);
-			}
-			
+			this->sendSnapshot();
+			this->startNewSnapshot();
+			this->snapshotLife.reset();
 		}
-		lastUpdate.reset();
 	}
+	else
+	{
+		
+	}
+
 
 }
 
 void SnapshotManager::updateOrientation(double dt)
 {
-	std::vector<Event*>* vect = getSnapshotEvents(0);
 
-	for( auto i=vect->begin(); i!=vect->end(); i++ )
-	{
-		(*i)->changeEventType(EV_CORE_TRANSFORM_UPDATE_ORIENTATION);
-		(*i)->ID = mNetworkManager->getIDByGUID((*i)->eGUID);
-		eventsys::dispatch(*i);
-	}
 }

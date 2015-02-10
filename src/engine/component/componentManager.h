@@ -13,6 +13,7 @@ public:
 
 	void add( Component* comp )
 	{
+		assert(comp->ID != 0 );
 		mComponents[comp->ID] = comp;
 	}
 

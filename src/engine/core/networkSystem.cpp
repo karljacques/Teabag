@@ -257,8 +257,11 @@ void network::_update_client( void )
 		case DPT_SNAPSHOT:
 			{
 				// Pass packet on to the snapshot manager, which will deal with it
-				//mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
-				//mSnapshotManager->update(dt);
+				Event* e = eventsys::get(EV_NETWORK_INCOMING_SNAPSHOT);
+				NewSnapshotEvent* snapshot = e->createEventData<NewSnapshotEvent>();
+				snapshot->start = packet->data;
+				snapshot->length = packet->length;
+				eventsys::dispatchNow(e);
 				break;
 			}
 

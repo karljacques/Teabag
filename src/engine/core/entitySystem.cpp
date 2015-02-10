@@ -2,7 +2,7 @@
 #include "entitySystem.h"
 
 static std::vector<Entity*> entities;
-static EntID mIDCount; /* TODO cheap method of finding a ID. Might have to implement a better way 
+static EntID mIDCount = 1; /* TODO cheap method of finding a ID. Might have to implement a better way 
 							if there are likely to be more than 2 million entities created during the
 							lifetime of the game. */
 
@@ -16,6 +16,7 @@ EntID entitysys::createEntity( void )
 	e->ID = mIDCount;
 	mIDCount++;
 	entities.push_back(e);
+	printm( "Created entity with ID:" + std::to_string( e->ID ));
 	return e->ID;
 }
 

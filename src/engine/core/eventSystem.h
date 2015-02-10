@@ -6,6 +6,7 @@
 #include "engine/manager/debug/ogreConsole.h"
 
 #include "engine/core/event/eventListener.h"
+#include "engine/core/networkSystem.h"
 
 #define MAX_EVENT_POOL 150
 

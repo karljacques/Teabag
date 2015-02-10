@@ -5,8 +5,8 @@
 #define MAX_CONNECTIONS 16
 #define SERVER_PORT 2343
 
-static NetworkManager*		netCompMgr;
-static RakNet::RakPeerInterface*	peer;
+static std::shared_ptr<NetworkManager> netCompMgr;
+static RakNet::RakPeerInterface* peer;
 
 static bool			host;
 static PlayerGUID	localGUID;
@@ -22,7 +22,7 @@ namespace network
 
 void network::init( void )
 {
-	netCompMgr = new NetworkManager();
+	netCompMgr = std::shared_ptr<NetworkManager>(new NetworkManager());
 	peer = RakNet::RakPeerInterface::GetInstance();
 
 	host = true;
@@ -207,9 +207,16 @@ void network::_update_server( void )
 				break;
 			}
 		case DPT_SNAPSHOT:
-			// Pass packet on to the snapshot manager, which will deal with it
-			//mSnapshotManager->decodeSnapshot((char*)packet->data, packet->length );
-			//mSnapshotManager->updateOrientation(dt);
+			{
+				 // Pass packet on to the snapshot manager, which will deal with it
+				// Handle the snapshot immediately because it will be dealloced
+				Event* e = eventsys::get(EV_NETWORK_INCOMING_SNAPSHOT);
+				NewSnapshotEvent* snapshot = e->createEventData<NewSnapshotEvent>();
+				snapshot->start = packet->data;
+				snapshot->length = packet->length;
+				eventsys::dispatchNow(e);
+				break;
+			}
 		default:
 			printm("Packet of unhandled ID" + std::to_string( id + ID_USER_PACKET_ENUM ) );
 			break;
@@ -293,4 +300,9 @@ PlayerGUID network::getPlayerGUID( void )
 RakNet::RakPeerInterface* network::getPeer( void )
 {
 	return peer;
+}
+
+std::shared_ptr<NetworkManager>	network::getNetworkManager()
+{
+	return netCompMgr;
 }

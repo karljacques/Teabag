@@ -43,9 +43,9 @@ public:
 	void removeManager( std::weak_ptr<Manager> mgr );
 
 	// Managers getters
-	RenderManager*		getRenderSystem(){ return mRenderSystem.get(); };
+	RenderManager*		getRenderSystem(){ return mRenderManager.get(); };
 	PhysicsManager*     getPhysicsManager(){ return mPhysicsManager.get(); };
-	NetworkManager*		getNetworkSystem(){return mNetworkSystem.get(); };
+	NetworkManager*		getNetworkSystem(){return mNetworkManager.get(); };
 	CameraManager*		getCameraManager(){return mCameraManager.get(); };
 	PlayerManager*		getPlayerManager(){ return mPlayerMgr.get(); };
 
@@ -69,8 +69,9 @@ private:
 	std::shared_ptr<OgreConsole> mConsole;
 	std::shared_ptr<SpectatorManager> mSpectatorManager;
 
-	std::shared_ptr<RenderManager> mRenderSystem;
-	std::shared_ptr<NetworkManager> mNetworkSystem;
+	std::shared_ptr<RenderManager> mRenderManager;
+	std::shared_ptr<NetworkManager> mNetworkManager;
+	std::shared_ptr<SnapshotManager> mSnapshotManager;
 
 	std::list<std::weak_ptr<Manager>> mManagers;
 

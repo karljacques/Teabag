@@ -6,23 +6,24 @@
 #include "engine/core/eventSystem.h"
 #include "engine/core/networkSystem.h"
 
+#include "engine/core/event/events/newSnapshotEvent.h"
+
 #include "snapshot.h"
 
 #define MAX_SNAPSHOTS 100
 
 class NetworkManager;
 
-class SnapshotManager : public Manager 
+class SnapshotManager : public Manager, public EventListener
 {
 public:
-	SnapshotManager( NetworkManager* networkSystem );
+	SnapshotManager( NetworkManager* networkManager );
 	~SnapshotManager();
 
 	void update( double dt );
 	void updateOrientation( double dt );
 
-	void handle( Event* e ); /* This is not inherited from EventListener, it is not an event listener like the others, but NetworkSystem will pass on the event to it.
-							Maybe it will be changed if this sort of behavior becomes common.  */
+	void handle( Event* e ); 
 
 	// Terminates the current snapshot, starts appending data to new snapshot
 	void startNewSnapshot();
@@ -38,9 +39,6 @@ public:
 
 	// Get events from snapshot closest to timestamp. The latest snapshot will be taken. E.g. Snapshot at 4ms and Snapshot at 9ms, if you request 8ms snapshot you will get 9ms
 	std::vector<Event*>* getSnapshotEvents( int timestamp );
-
-	// As the network system can be changed, this will need to be updated if the network system is changed from client to host, or vice versa
-	void updateNetworkSystem( NetworkManager* networkSystem );
 	
 
 	Ogre::Timer snapshotLife;
@@ -48,8 +46,10 @@ public:
 private:
 
 	std::deque<Snapshot*> mSnapshots;
-	NetworkManager* mNetworkSystem;
+	NetworkManager* mNetworkManager;
 	Snapshot* mCurrentSnapshot;
+
+	Ogre::Timer lastUpdate;
 
 };
 #endif // snapshotManager_h__

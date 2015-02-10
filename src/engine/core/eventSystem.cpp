@@ -34,6 +34,8 @@ void eventsys::init( void )
 /* An event given to this function must be added to a list which will then dispatch it to event listeners*/
 void eventsys::dispatch( Event* e )
 {
+	network::getNetworkManager()->attach_eGUID( e );
+
 	/* Prevent Null Events */
 	assert( e->getEventType() != EV_NULL );
 
@@ -44,6 +46,8 @@ void eventsys::dispatch( Event* e )
 
 void eventsys::dispatchNow(Event* e)
 {
+	network::getNetworkManager()->attach_eGUID( e );
+
 	for( auto i = mEventListeners.begin(); i != mEventListeners.end(); i++ )
 	{
 		std::shared_ptr<EventListener> listener = (*i).lock();

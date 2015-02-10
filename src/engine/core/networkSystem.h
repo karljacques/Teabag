@@ -5,6 +5,10 @@
 #include "engine/core/eventSystem.h"
 #include "engine/component/network/networkManager.h"
 
+#include "engine/core/event/events/newSnapshotEvent.h"
+
+class NetworkManager;
+
 namespace network
 {
 	void init( void );
@@ -29,5 +33,6 @@ namespace network
 	PlayerGUID getPlayerGUID( void );
 
 	RakNet::RakPeerInterface* getPeer( void );
+	std::shared_ptr<NetworkManager>	getNetworkManager();
 }
 #endif // networkSystem_h__

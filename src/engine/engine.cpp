@@ -30,9 +30,8 @@ Engine::Engine()
 	render::init();
 	
 	mPhysicsManager = std::shared_ptr<PhysicsManager>( new PhysicsManager() );
-	mNetworkSystem = std::shared_ptr<NetworkManager>( new NetworkManager() );
-	
-	mRenderSystem = std::shared_ptr<RenderManager>( new RenderManager( ) );
+	mNetworkManager = network::getNetworkManager();
+	mRenderManager = std::shared_ptr<RenderManager>( new RenderManager( ) );
 
 	input::init(render::getSDLWindow());
 
@@ -44,20 +43,24 @@ Engine::Engine()
 
 	mCameraManager->createNewCamera( defaultCamera );
 	mConsole = std::shared_ptr<OgreConsole>( new OgreConsole( mCameraManager.get() ) );
+
 	mSpectatorManager = std::shared_ptr<SpectatorManager>( new SpectatorManager( ) ); 
 	mPlayerMgr = std::shared_ptr<PlayerManager>( new PlayerManager( ));
+	mSnapshotManager = std::shared_ptr<SnapshotManager>( new SnapshotManager( mNetworkManager.get() ) );
 
 	// Register managers to be updated
 	registerManager(mPhysicsManager);
-	registerManager(mNetworkSystem);
-	registerManager(mRenderSystem);
+	registerManager(mNetworkManager);
+	registerManager(mRenderManager);
 	registerManager(mCameraManager);
 	registerManager(mSpectatorManager);
+	registerManager(mNetworkManager);
+	registerManager(mSnapshotManager);
 
 	// Register Component Managers to receive components
 	entitysys::registerComponentManager<PhysicsComponent>(mPhysicsManager.get());
-	entitysys::registerComponentManager<RenderComponent>(mRenderSystem.get());
-	entitysys::registerComponentManager<NetworkComponent>(mNetworkSystem.get());
+	entitysys::registerComponentManager<RenderComponent>(mRenderManager.get());
+	entitysys::registerComponentManager<NetworkComponent>(mNetworkManager.get());
 	entitysys::registerComponentManager<SpectatorComponent>(mSpectatorManager.get());
 
 
@@ -66,12 +69,13 @@ Engine::Engine()
 
 	// Register all the listening managers as listeners
 	eventsys::registerListener(mPhysicsManager);
-	eventsys::registerListener(mRenderSystem);
+	eventsys::registerListener(mRenderManager);
 	eventsys::registerListener(mCameraManager);
 	eventsys::registerListener(mSpectatorManager);
-	eventsys::registerListener(mNetworkSystem);
+	eventsys::registerListener(mNetworkManager);
 	eventsys::registerListener(mPlayerMgr);
 	eventsys::registerListener(mConsole);
+	eventsys::registerListener(mSnapshotManager);
 
 	{
 		// Create a spectator
@@ -87,11 +91,6 @@ Engine::Engine()
 		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
 		entitysys::getByID(ent)->addComponent(phys);
 		phys->body->setDamping( 0.95f, 1.0f );
-
-		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ent);
-		mRenderSystem->initComponent(rend);
-		mRenderSystem->setAsBox( rend, float3( 0.25f,0.25f,0.25f ) );
-		entitysys::getByID(ent)->addComponent(rend);
 
 		EntityPrototype* spectatorPrototype = new EntityPrototype( entitysys::getByID(ent) );
 		entitysys::destroyEntity(entitysys::getByID(ent));
@@ -110,8 +109,8 @@ Engine::Engine()
 		EntID ground = entitysys::createEntity();
 
 		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ground);
-		mRenderSystem->initComponent( rend );
-		mRenderSystem->setAsBox(rend, float3(20.0f,0.4f,20.0f), "SimpleGround/Textured" );
+		mRenderManager->initComponent( rend );
+		mRenderManager->setAsBox(rend, float3(20.0f,0.4f,20.0f), "SimpleGround/Textured" );
 		entitysys::getByID(ground)->addComponent(rend);
 
 		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ground);
@@ -136,8 +135,8 @@ Engine::Engine()
 	EntID box = entitysys::createEntity();
 
 	RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
-	mRenderSystem->initComponent( rend );
-	mRenderSystem->setAsBox(rend, size);
+	mRenderManager->initComponent( rend );
+	mRenderManager->setAsBox(rend, size);
 	entitysys::getByID(box)->addComponent(rend);
 
 	PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
@@ -202,23 +201,18 @@ void Engine::handle( Event* e )
 								Entity* box = mPrototypes["box"]->spawn();
 
 								NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box->ID);
-								net->eGUID = mNetworkSystem->_find_free_guid();
+								net->eGUID = mNetworkManager->_find_free_guid();
 								assert( net->eGUID != 0 );
 								box->addComponent(net);
 
 								Event* dyn = eventsys::get(EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX, 0, this);
 								dyn->eGUID = net->eGUID;
-								eventsys::dispatch( dyn );
+								eventsys::dispatch( dyn );		
 
-								
+								printm( "Created box with GUID: " + std::to_string(net->eGUID ) + " and ID:" + std::to_string(box->ID));
 							}
-							
-							
-
 							break;
 						}
-
-					
 				}
 			}
         break;
@@ -228,6 +222,7 @@ void Engine::handle( Event* e )
 				Entity* box = mPrototypes["box"]->spawn();
 				NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box->ID);
 				net->eGUID = e->eGUID;
+				printm( "Created box with GUID: " + std::to_string(net->eGUID ) + " and ID:" + std::to_string(box->ID));
 				box->addComponent( net );
 			}
 			break;

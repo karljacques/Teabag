@@ -3,13 +3,11 @@
 
 NetworkManager::NetworkManager( )
 {
-	mSnapshotManager = new SnapshotManager( this );
 	mGuidCount = 0;
 }
 
 NetworkManager::~NetworkManager()
 {
-	delete mSnapshotManager;
 }
 
 void NetworkManager::update(double dt)
@@ -59,25 +57,11 @@ void NetworkManager::_update_host(double dt)
 {
 	
 
-	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
-	{
-		mSnapshotManager->sendSnapshot();
-		mSnapshotManager->startNewSnapshot();
-		mSnapshotManager->snapshotLife.reset();
-	}
 }
 
 void NetworkManager::_update_client(double dt)
 {
 	
-
-	// Handle only orientation updates. i.e. The player has rotated.
-	if( mSnapshotManager->snapshotLife.getMilliseconds() > 50 )
-	{
-		mSnapshotManager->sendSnapshot();
-		mSnapshotManager->startNewSnapshot();
-		mSnapshotManager->snapshotLife.reset();
-	}
 }
 
 void NetworkManager::_handle_host(Event* e)
@@ -91,13 +75,6 @@ void NetworkManager::_handle_host(Event* e)
 			network::sendEvent(e,IMMEDIATE_PRIORITY,RELIABLE);
 			break;
 		}
-	case EV_CORE_TRANSFORM_UPDATE:
-		// Assign GUID To event
-		if( this->attach_eGUID(e) )
-		{
-			mSnapshotManager->handle(e);
-		}
-		break;
 	case EV_NETWORK_MOD_CLIENT:
 		{
 			network::shutdown();
@@ -137,7 +114,7 @@ bool NetworkManager::attach_eGUID(Event* e)
 		return true;
 	}
 
-	// fail if not network component.
+	// Entity event concerns is not a networked entity
 	return false;
 }
 

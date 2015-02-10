@@ -4,7 +4,7 @@
 
 SnapshotManager::SnapshotManager( NetworkManager* networkSystem )
 {
-	mNetworkSystem = networkSystem;
+	mNetworkManager = networkSystem;
 	mCurrentSnapshot = new Snapshot();
 	mSnapshots.push_back(mCurrentSnapshot);
 
@@ -18,36 +18,48 @@ void SnapshotManager::handle(Event* e)
 	// Put it on the snapshot - but first find if we already have this GUID there
 	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
 	{
-		// Make the Transform
-		TransformEvent* te = e->getData<TransformEvent>();
-		Transform* trans = new Transform();
-		trans->pos = te->position;
-		trans->rot = te->orientation;
-		trans->vel = te->velocity;
-		trans->angRot = te->angularVelocity;
-		trans->GUID = e->eGUID;
-
-		bool isInSnapshot = false;
-		// See if this object is already in the snapshot
-		for( auto i = mCurrentSnapshot->data.begin();  i!=mCurrentSnapshot->data.end(); i++ )
+		if( e->eGUID != 0 )
 		{
-			if( (*i).GUID == e->eGUID )
+			// Make the Transform
+			TransformEvent* te = e->getData<TransformEvent>();
+			Transform* trans = new Transform();
+			trans->pos = te->position;
+			trans->rot = te->orientation;
+			trans->vel = te->velocity;
+			trans->angRot = te->angularVelocity;
+			trans->GUID = e->eGUID;
+
+			bool isInSnapshot = false;
+			// See if this object is already in the snapshot
+			for( auto i = mCurrentSnapshot->data.begin();  i!=mCurrentSnapshot->data.end(); i++ )
 			{
-				/// It's already in the snapshot, update it with new data
-				(*i) = *trans; // This should be a copy?
-				isInSnapshot = true;
-				break;
+				if( (*i).GUID == e->eGUID )
+				{
+					/// It's already in the snapshot, update it with new data
+					(*i) = *trans; // This should be a copy?
+					isInSnapshot = true;
+					break;
+				}
 			}
-		}
 
-		// Wasn't already in snapshot, add it
-		if( isInSnapshot == false )
-		{
-			mCurrentSnapshot->data.push_back(*trans); // < - This is the most likely thing to crash, if you're searching! I'm not sure if it will copy or what. For future reference.
-		}
+			// Wasn't already in snapshot, add it
+			if( isInSnapshot == false )
+			{
+				mCurrentSnapshot->data.push_back(*trans); // < - This is the most likely thing to crash, if you're searching! I'm not sure if it will copy or what. For future reference.
+			}
 
-		// Cleanup
-		delete trans;
+			// Cleanup
+			delete trans;
+	}
+	}
+
+	if( e->getEventType() == EV_NETWORK_INCOMING_SNAPSHOT )
+	{
+		// Get snapshot data
+		unsigned char* start = e->getData<NewSnapshotEvent>()->start;
+		unsigned int length = e->getData<NewSnapshotEvent>()->length;
+
+		this->decodeSnapshot((char*)start,length);
 	}
 }
 
@@ -162,11 +174,6 @@ void SnapshotManager::decodeSnapshot( char* data, unsigned int packet_size )
 
 }
 
-void SnapshotManager::updateNetworkSystem(NetworkManager* networkSystem)
-{
-	mNetworkSystem = networkSystem;
-}
-
 std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 {
 	// Create the vector
@@ -185,6 +192,7 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 		te->velocity = (*i).vel;
 		te->angularVelocity = (*i).angRot;
 		e->eGUID = (*i).GUID;
+
 		vect->push_back(e);
 	}
 
@@ -199,12 +207,32 @@ void SnapshotManager::importSnapshot(Snapshot* s)
 
 void SnapshotManager::update(double dt)
 {
-	std::vector<Event*>* vect = getSnapshotEvents(0);
 
-	for( auto i=vect->begin(); i!=vect->end(); i++ )
+	if( this->snapshotLife.getMilliseconds() > 50 )
 	{
-		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->eGUID);
-		eventsys::dispatch(*i);
+		sendSnapshot();
+		startNewSnapshot();
+		snapshotLife.reset();
+	}
+
+	if( lastUpdate.getMilliseconds() > 50 )
+	{
+		if( network::getMode() == true )
+		{
+			this->updateOrientation(dt);
+		}else
+		{
+			std::vector<Event*>* vect = getSnapshotEvents(0);
+
+			for( auto i=vect->begin(); i!=vect->end(); i++ )
+			{
+				(*i)->ID = mNetworkManager->getIDByGUID((*i)->eGUID);
+				printm("Mapped GUID " + std::to_string((*i)->eGUID) + " to ID: " + std::to_string( (*i)->ID ) );
+				eventsys::dispatch(*i);
+			}
+			
+		}
+		lastUpdate.reset();
 	}
 
 }
@@ -216,7 +244,7 @@ void SnapshotManager::updateOrientation(double dt)
 	for( auto i=vect->begin(); i!=vect->end(); i++ )
 	{
 		(*i)->changeEventType(EV_CORE_TRANSFORM_UPDATE_ORIENTATION);
-		(*i)->ID = mNetworkSystem->getIDByGUID((*i)->eGUID);
+		(*i)->ID = mNetworkManager->getIDByGUID((*i)->eGUID);
 		eventsys::dispatch(*i);
 	}
 }

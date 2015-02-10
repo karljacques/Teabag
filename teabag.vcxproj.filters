@@ -185,6 +185,9 @@
     <ClInclude Include="src\engine\core\entitySystem.h">
       <Filter>engine\core</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\newSnapshotEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

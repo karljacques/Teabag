@@ -147,6 +147,7 @@
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
     <ClInclude Include="src\engine\core\event\events\messageEvent.h" />
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\newSnapshotEvent.h" />
     <ClInclude Include="src\engine\core\event\events\playerEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
     <ClInclude Include="src\engine\core\inputSystem.h" />

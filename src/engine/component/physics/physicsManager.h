@@ -9,13 +9,18 @@
 
 #include "pch.h"
 
-#include "physicsComponent.h"
+#include "engine/component/physics/physicsComponent.h"
+#include "engine/component/physics/transformComponent.h"
+#include "engine/component/physics/motionComponent.h"
 
 #include "engine/manager.h"
 #include "engine/component/componentManager.h"
 
 #include "engine/core/eventSystem.h"
 #include "engine/core/physicsSystem.h"
+
+#include "engine/core/event/events/transfromEvent.h"
+#include "engine/core/event/events/motionEvent.h"
 
 class PhysicsManager : public EventListener, public ComponentManager, public Manager
 {
@@ -26,7 +31,7 @@ public:
 	void update( double dt );
 	void handle( Event* e );
 
-	void initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass, float3 pos, Quat rot);
+	void initComponent( PhysicsComponent* comp, btCollisionShape* shape, btScalar mass );
 	void deinitComponent( Component* comp );
 };
 #endif // physicsManager_h__

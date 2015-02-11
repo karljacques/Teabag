@@ -41,27 +41,18 @@ void CameraManager::lookAt(CameraComponent* comp, float3 pos)
 {
 	comp->camera->lookAt( pos );
 
-	Event* e = eventsys::get( EV_CORE_TRANSFORM_UPDATE_ORIENTATION, comp->ID,this );
-	TransformEvent* me = e->createEventData<TransformEvent>();
-	me->orientation = comp->camera->getDerivedOrientation();
-
-	eventsys::dispatch(e);
+	// If camera has transformComponent it needs to be updated
+	if ( entitysys::getByID( comp->ID)->hasComponent<TransformComponent>())
+	{
+		TransformComponent* trans = entitysys::getByID( comp->ID )->getComponent<TransformComponent>();
+		trans->orientation = comp->camera->getDerivedOrientation();
+	}
 	
 }
 
 void CameraManager::handle(Event* e)
 {
-	// Get Component
-	if( this->componentExists(e->ID) )
-	{
-		CameraComponent* comp = getComponentByID<CameraComponent>(e->ID);
-		if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
-		{
-			TransformEvent* me = e->getData<TransformEvent>();
-			comp->mSceneNode->setPosition( me->position );
-			comp->camera->setOrientation( me->orientation );
-		}
-	}
+
 	
 }
 
@@ -73,7 +64,22 @@ Ogre::Viewport* CameraManager::getViewport()
 
 void CameraManager::update( double dt )
 {
+	for( auto i=mComponents.begin(); i!=mComponents.end(); i++ )
+	{
+		// Get if camera has TransformComponent (it should, but not strictly necessary I guess)
+		if ( entitysys::getByID( i->second->ID)->hasComponent<TransformComponent>())
+		{
+			TransformComponent* trans = entitysys::getByID( i->second->ID)->getComponent<TransformComponent>();
 
+			// Cast i to a CameraComponent so we can access its variables.
+			CameraComponent* cam = dynamic_cast<CameraComponent*>(i->second);
+			assert( cam!= nullptr );
+
+			// Update camera transform
+			cam->mSceneNode->setPosition( trans->position );
+			cam->camera->setOrientation( trans->orientation );
+		}
+	}
 }
 
 void CameraManager::getCamera(CameraComponent* comp)

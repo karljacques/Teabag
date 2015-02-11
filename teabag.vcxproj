@@ -117,6 +117,7 @@
     <ClCompile Include="src\engine\factory\entityPrototype.cpp" />
     <ClCompile Include="src\engine\manager\debug\debugDisplaySystem.cpp" />
     <ClCompile Include="src\engine\manager\debug\ogreConsole.cpp" />
+    <ClCompile Include="src\engine\manager\network\snapshot.cpp" />
     <ClCompile Include="src\engine\manager\network\snapshotManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">
@@ -129,8 +130,10 @@
     <ClInclude Include="src\engine\component\componentManager.h" />
     <ClInclude Include="src\engine\component\network\networkComponent.h" />
     <ClInclude Include="src\engine\component\network\networkManager.h" />
+    <ClInclude Include="src\engine\component\physics\motionComponent.h" />
     <ClInclude Include="src\engine\component\physics\physicsComponent.h" />
     <ClInclude Include="src\engine\component\physics\physicsManager.h" />
+    <ClInclude Include="src\engine\component\physics\transformComponent.h" />
     <ClInclude Include="src\engine\component\player\playerComponent.h" />
     <ClInclude Include="src\engine\component\player\playerManager.h" />
     <ClInclude Include="src\engine\component\render\cameraComponent.h" />
@@ -146,10 +149,11 @@
     <ClInclude Include="src\engine\core\event\eventListener.h" />
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
     <ClInclude Include="src\engine\core\event\events\messageEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\motionEvent.h" />
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\newSnapshotEvent.h" />
     <ClInclude Include="src\engine\core\event\events\playerEvent.h" />
-    <ClInclude Include="src\engine\core\event\events\transformEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\transfromEvent.h" />
     <ClInclude Include="src\engine\core\inputSystem.h" />
     <ClInclude Include="src\engine\core\networkSystem.h" />
     <ClInclude Include="src\engine\core\physicsSystem.h" />

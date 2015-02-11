@@ -88,11 +88,13 @@ void SpectatorManager::handle( Event* e )
 			phys->body->setWorldTransform( btTransform( s->yAng*s->xAng , phys->body->getWorldTransform().getOrigin()));
 			phys->body->activate((true));
 
+			/*
 			// Dispatch event for the network
 			Event* e = eventsys::get(EV_CORE_TRANSFORM_UPDATE_ORIENTATION, s->ID, this );
 			TransformEvent* trans = e->createEventData<TransformEvent>();
 			trans->orientation = s->yAng*s->xAng;
 			eventsys::dispatch(e);
+			*/
 		}
 		
 	}

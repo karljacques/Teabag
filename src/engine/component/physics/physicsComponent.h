@@ -9,12 +9,13 @@
 #include "engine/core/entitySystem.h"
 #include "engine/core/eventSystem.h"
 
+#include "engine/component/physics/transformComponent.h"
+
 class PhysicsComponent :public Component
 {
 public:
 	PhysicsComponent( ){
-		position = float3(0,0,0);
-		orientation = Quat(0,0,0,1);
+
 	};
 	~PhysicsComponent(){};
 
@@ -22,8 +23,6 @@ public:
 	btCollisionShape* shape;
 	btScalar mass;
 
-	float3 position;
-	Quat orientation;
 
 	Component* clone( EntID ID )
 	{
@@ -33,27 +32,30 @@ public:
 		PhysicsComponent* comp = entitysys::createComponent<PhysicsComponent>(ID);
 
 		// Clone the body, which belongs to bullet.
-		btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass, new btDefaultMotionState( btTransform(orientation,position) ) , shape, nullvector);
+		btTransform lTransform( Quat(0,0,0,1), float3(0,0,0));
+
+		if( entitysys::getByID(ID)->hasComponent<TransformComponent>() )
+		{
+			// Get transform component
+			TransformComponent* trans =  entitysys::getByID(ID)->getComponent<TransformComponent>();
+			lTransform = btTransform( trans->orientation, trans->position );
+		}
+		else
+		{
+			assert("Can a physics component exist without a positional component? I don't think so.");
+		}
+
+		btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI( mass, new btDefaultMotionState( lTransform ) , shape, nullvector);
 		comp->body = new btRigidBody( fallRigidBodyCI );
 
 		physics::addRigidBody(comp->body);
 		
 		comp->body->setGravity( body->getGravity() );
 		comp->body->setDamping( body->getLinearDamping(), body->getAngularDamping() );
-		comp->body->setWorldTransform(btTransform(orientation,position));
+		comp->body->setWorldTransform(lTransform);
 
 		comp->mass = mass;
 		comp->shape = shape;
-		comp->position = position;
-		comp->orientation = orientation;
-
-		/* Send out event to tell new position to components */
-		Event* e = eventsys::get(EV_CORE_TRANSFORM_UPDATE);
-		e->ID = comp->ID;
-		TransformEvent* te = e->createEventData<TransformEvent>();
-		te->position = position;
-		te->orientation = orientation;
-		eventsys::dispatch(e);
 
 		return comp;
 	}

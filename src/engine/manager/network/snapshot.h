@@ -7,14 +7,7 @@
 
 struct Transform
 {
-	Transform()
-	{
-		GUID = 0;
-		rot = Quat(0,0,0,1);
-		angRot = float3(0,0,0);
-		pos = float3(0,0,0);
-		vel = float3(0,0,0);
-	}
+	Transform();
 
 	EntityGUID GUID;
 
@@ -27,10 +20,9 @@ struct Transform
 
 struct Snapshot
 {
-	Snapshot()
-	{
-		timestamp = 0;
-	}
+	Snapshot();
+
+	void addTransform( Transform* data );
 
 	RakNet::Time timestamp;
 	std::vector<Transform> data;

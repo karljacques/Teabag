@@ -20,7 +20,7 @@ namespace entitysys
 	bool entityExists( EntID ID );
 
 	template <class T>
-	T* createComponent( EntID ID )
+	T* createComponent( EntID ID)
 	{
 		T* comp = new T();
 		comp->ID = ID;
@@ -43,8 +43,6 @@ namespace entitysys
 	{
 		componentOwners[typeid(T)] = mgr;
 	}
-
-
 }
 
 

@@ -81,11 +81,17 @@ Engine::Engine()
 		// Create a spectator
 		EntID ent = entitysys::createEntity();
 
+		TransformComponent* trans = entitysys::createComponent<TransformComponent>(ent);
+		entitysys::getByID(ent)->addComponent(trans);
+
+		MotionComponent* motion = entitysys::createComponent<MotionComponent>(ent);
+		entitysys::getByID(ent)->addComponent(motion);
+
 		SpectatorComponent* spec = entitysys::createComponent<SpectatorComponent>(ent);
 		entitysys::getByID(ent)->addComponent(spec);
 
 		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ent);
-		mPhysicsManager->initComponent(phys,new btSphereShape( 0.25f ) , 1, float3(0,2,0), Quat(0,0,0,1) );
+		mPhysicsManager->initComponent(phys,new btSphereShape( 0.25f ) , 1);
 		phys->body->setFriction(0);
 		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
@@ -108,13 +114,16 @@ Engine::Engine()
 		// Create the ground
 		EntID ground = entitysys::createEntity();
 
+		TransformComponent* trans = entitysys::createComponent<TransformComponent>(ground);
+		entitysys::getByID(ground)->addComponent(trans);
+
 		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ground);
 		mRenderManager->initComponent( rend );
 		mRenderManager->setAsBox(rend, float3(20.0f,0.4f,20.0f), "SimpleGround/Textured" );
 		entitysys::getByID(ground)->addComponent(rend);
 
 		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ground);
-		mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.2f,10.0f ) ), 0,float3(0,0,0), Quat(0,0,0,1));
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.2f,10.0f ) ), 0);
 		entitysys::getByID(ground)->addComponent(phys);
 	}
 
@@ -134,13 +143,19 @@ Engine::Engine()
 
 	EntID box = entitysys::createEntity();
 
+	TransformComponent* trans = entitysys::createComponent<TransformComponent>(box);
+	entitysys::getByID(box)->addComponent(trans);
+
+	MotionComponent* motion = entitysys::createComponent<MotionComponent>(box);
+	entitysys::getByID(box)->addComponent(motion);
+
 	RenderComponent* rend = entitysys::createComponent<RenderComponent>(box);
 	mRenderManager->initComponent( rend );
 	mRenderManager->setAsBox(rend, size);
 	entitysys::getByID(box)->addComponent(rend);
 
 	PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(box);
-	mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass,float3(0,15.0f,0), Quat::RotateX( 3.14f ));
+	mPhysicsManager->initComponent( phys,new btBoxShape( size/2.0f ), mass );
 	entitysys::getByID(box)->addComponent(phys);
 
 	mPrototypes["box"] = new EntityPrototype( entitysys::getByID(box) );
@@ -199,6 +214,9 @@ void Engine::handle( Event* e )
 							if( network::getMode() == 1 )
 							{
 								Entity* box = mPrototypes["box"]->spawn();
+
+								assert( box->hasComponent<TransformComponent>() );
+								ENT_SET_TRANSFORM( box->ID, float3(0,20,0), Quat(0,0,0,1) );
 
 								NetworkComponent* net = entitysys::createComponent<NetworkComponent>(box->ID);
 								net->eGUID = mNetworkManager->_find_free_guid();

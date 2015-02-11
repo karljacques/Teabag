@@ -8,9 +8,7 @@
 #include "eventListener.h"
 #include "common.h"
 
-#include "events/transformEvent.h"
-
-#define EVENT_PAYLOAD_SIZE sizeof(TransformEvent) // Largest Event
+#define EVENT_PAYLOAD_SIZE 128 // Largest Event
 
 // All the possible types of event used within the game.
 enum EV_EventType
@@ -29,8 +27,8 @@ enum EV_EventType
 	EV_CORE_PRINT_CONSOLE,
 
 	// Physics
-	EV_CORE_TRANSFORM_UPDATE,
-	EV_CORE_TRANSFORM_UPDATE_ORIENTATION,
+	EV_CORE_SET_TRANSFORM,
+	EV_CORE_SET_MOTION,
 
 	// TEMPORARY GAME MODIFIERS
 	EV_CLIENT_WORLD_CREATE_STATIC_BOX,
@@ -38,7 +36,6 @@ enum EV_EventType
 
 	// NETWORK
 	EV_NETWORK_INCOMING_SNAPSHOT,
-	EV_NETWORK_TRANSFORM_UPDATE,
 	EV_NETWORK_NEW_CONNECTION,
 
 	// NETWORK - PLAYER MODIFIERS

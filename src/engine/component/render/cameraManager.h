@@ -1,13 +1,20 @@
 #ifndef cameraManager_h__
 #define cameraManager_h__
 
+// Circular dependency. entity->ogreconsole->camera->entity..
+class TransformComponent;
+
 #include "cameraComponent.h"
+#include "engine/component/physics/transformComponent.h"
 
 #include "engine/component/componentManager.h"
 #include "engine/manager.h"
 
 #include "engine/core/eventSystem.h"
 #include "engine/core/renderSystem.h"
+#include "engine/core/entitySystem.h"
+
+
 
 class CameraManager: public ComponentManager, public EventListener, public Manager
 {

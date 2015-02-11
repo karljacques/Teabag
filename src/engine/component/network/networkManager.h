@@ -3,8 +3,8 @@
 
 #include "networkComponent.h"
 
-#include "engine/component/componentManager.h"
 #include "engine/manager/network/snapshotManager.h"
+#include "engine/component/componentManager.h"
 #include "engine/manager/debug/ogreConsole.h"
 #include "engine/manager.h"
 
@@ -20,10 +20,11 @@ enum DataPacketType
 	DPT_SNAPSHOT
 };
 
-class SnapshotManager;
 
 class NetworkManager : public EventListener, public ComponentManager, public Manager
 {
+	friend class SnapshotManager;
+
 public:
 	NetworkManager( void );
 	~NetworkManager( void );
@@ -35,15 +36,12 @@ public:
 	EntityGUID			getGUIDFromID( EntID ID );
 	EntityGUID			_find_free_guid();
 
+
+
 	// Takes an event with an ID and assigns the GUID of the event if it has one.
 	// WARNING: modifies an event whilst it is live in the event system.
 	// const correctness has been blown out of the window. (not that there was any, anyway! )
 	bool				attach_eGUID( Event* e );
-
-
-	// Getters
-	SnapshotManager*	getShapshotManager() { return mSnapshotManager; };
-
 
 protected:
 
@@ -54,8 +52,6 @@ protected:
 	void				_handle_client( Event* e );
 
 	EntityGUID				mGuidCount;
-
-	SnapshotManager*	mSnapshotManager;
 
 };
 #endif // networkComponentManager_h__

@@ -3,12 +3,19 @@
 
 #include "engine/manager.h"
 
+#include "engine/component/physics/transformComponent.h"
+#include "engine/component/physics/motionComponent.h"
+#include "engine/component/network/networkComponent.h"
+
 #include "engine/core/eventSystem.h"
 #include "engine/core/networkSystem.h"
 
 #include "engine/core/event/events/newSnapshotEvent.h"
 
 #include "snapshot.h"
+
+#include "engine/core/event/events/transfromEvent.h"
+#include "engine/core/event/events/motionEvent.h"
 
 #define MAX_SNAPSHOTS 100
 
@@ -38,7 +45,7 @@ public:
 	void importSnapshot( Snapshot* s );
 
 	// Get events from snapshot closest to timestamp. The latest snapshot will be taken. E.g. Snapshot at 4ms and Snapshot at 9ms, if you request 8ms snapshot you will get 9ms
-	std::vector<Event*>* getSnapshotEvents( int timestamp );
+	void getSnapshotEvents( int timestamp );
 	
 
 	Ogre::Timer snapshotLife;

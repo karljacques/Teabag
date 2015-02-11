@@ -14,49 +14,6 @@ SnapshotManager::SnapshotManager( NetworkManager* networkSystem )
 
 void SnapshotManager::handle(Event* e)
 {
-	// Check the event is of type TransformEvent
-	// Turn the TransformEvent into a Transform
-	// Put it on the snapshot - but first find if we already have this GUID there
-	if( e->getEventType() == EV_CORE_TRANSFORM_UPDATE )
-	{
-		EntityGUID GUID = mNetworkManager->getGUIDFromID(e->ID);
-		if( GUID )
-		{
-			
-			// Make the Transform
-			TransformEvent* trans = e->getData<TransformEvent>();
-			Transform* t= new Transform();
-			t->pos = trans->position;
-			t->rot = trans->orientation;
-			t->vel = trans->velocity;
-			t->angRot = trans->angularVelocity;
-
-			t->GUID = GUID;
-
-			bool isInSnapshot = false;
-			// See if this object is already in the snapshot
-			for( auto i = mCurrentSnapshot->data.begin();  i!=mCurrentSnapshot->data.end(); i++ )
-			{
-				if( (*i).GUID == GUID )
-				{
-					/// It's already in the snapshot, update it with new data
-					(*i) = *t; // This should be a copy?
-					isInSnapshot = true;
-					break;
-				}
-			}
-
-			// Wasn't already in snapshot, add it
-			if( isInSnapshot == false )
-			{
-				mCurrentSnapshot->data.push_back(*t); // < - This is the most likely thing to crash, if you're searching! I'm not sure if it will copy or what. For future reference.
-			}
-
-			// Cleanup
-			delete t;
-		}
-	}
-
 	if( e->getEventType() == EV_NETWORK_INCOMING_SNAPSHOT )
 	{
 		// Get snapshot data
@@ -178,10 +135,8 @@ void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_s
 
 }
 
-std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
+void SnapshotManager::getSnapshotEvents(int timestamp)
 {
-	// Create the vector
-	std::vector<Event*>* vect = new std::vector<Event*>;
 
 	// For the moment, just retrieve the latest snapshot
 	Snapshot* snapshot =  mSnapshots.back();
@@ -189,18 +144,20 @@ std::vector<Event*>* SnapshotManager::getSnapshotEvents(int timestamp)
 	// Dispatch network transform updates
 	for( auto i=snapshot->data.begin(); i!=snapshot->data.end(); i++ )
 	{
-		Event* e = eventsys::get(EV_NETWORK_TRANSFORM_UPDATE);
-		TransformEvent* te = e->createEventData<TransformEvent>();
-		te->position = (*i).pos;
-		te->orientation = (*i).rot;
-		te->velocity = (*i).vel;
-		te->angularVelocity = (*i).angRot;
-		e->eGUID = (*i).GUID;
+		EntID ID = mNetworkManager->getIDByGUID(i->GUID);
+			
+		// Check for existence of entity
+		if( entitysys::entityExists( ID ) )
+		{
+			Entity* ent = entitysys::getByID(ID);
 
-		vect->push_back(e);
+			// Dispatch events to update position
+			ENT_SET_TRANSFORM( ID, i->pos, i->rot );
+			ENT_SET_MOTION( ID, i->vel, i->angRot );
+		}
 	}
 
-	return vect;
+
 
 }
 
@@ -210,13 +167,7 @@ void SnapshotManager::importSnapshot(Snapshot* s)
 
 	if( mSnapshots.size() > 0 )
 	{
-		std::vector<Event*>* vect = getSnapshotEvents(0);
-
-		for( auto i=vect->begin(); i!=vect->end(); i++ )
-		{
-			(*i)->ID = mNetworkManager->getIDByGUID((*i)->eGUID);
-			eventsys::dispatch(*i);
-		}
+		getSnapshotEvents(0);
 	}
 
 }
@@ -234,6 +185,44 @@ void SnapshotManager::update(double dt)
 			this->startNewSnapshot();
 			this->snapshotLife.reset();
 		}
+
+		// Loop through all networked components, get their parent entities and update the snapshot based
+		// on their TransformComponent and MotionComponent
+		// SnapshotManager is friend to the NetworkManager so we can access it's components.
+		for( auto i=mNetworkManager->mComponents.begin(); i!=mNetworkManager->mComponents.end(); i++ )
+		{
+			// Get Entity
+			Entity* ent = entitysys::getByID(i->first);
+
+			// Get Position Component
+			if( ent->hasComponent<TransformComponent>())
+			{
+				TransformComponent* trans_comp = ent->getComponent<TransformComponent>();
+
+				// Create a Transform
+				Transform* trans = new Transform();
+				trans->GUID = static_cast<NetworkComponent*>(i->second)->eGUID;
+				trans->pos = trans_comp->position;
+				trans->rot = trans_comp->orientation;
+
+				// Get MotionComponent
+				if( ent->hasComponent<MotionComponent>() )
+				{
+					MotionComponent* motion = ent->getComponent<MotionComponent>();
+
+					// Append motion data
+					trans->vel = motion->velocity;
+					trans->angRot = motion->angularVelocity;
+				}
+
+				// Add Transform to snapshot
+				this->mCurrentSnapshot->addTransform(trans);
+				delete trans;
+			}
+
+
+		}
+
 	}
 	else
 	{

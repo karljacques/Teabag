@@ -9,6 +9,12 @@
 
 class NetworkManager;
 
+enum NetworkModes
+{
+	NET_HOST,
+	NET_CLIENT
+};
+
 namespace network
 {
 	void init( void );
@@ -18,7 +24,7 @@ namespace network
 	void setModeClient( void );
 	void setModeServer( void );
 
-	bool getMode( void ); 
+	NetworkModes getMode( void ); 
 
 	void sendEvent( Event* e, PacketPriority p, PacketReliability r );
 	unsigned char getPacketIdentifier( RakNet::Packet* p );

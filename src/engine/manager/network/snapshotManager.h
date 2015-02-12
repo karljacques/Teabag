@@ -32,31 +32,31 @@ public:
 
 	void handle( Event* e ); 
 
-	// Terminates the current snapshot, starts appending data to new snapshot
-	void startNewSnapshot();
-
-	// Send the current snapshot
-	void sendSnapshot();
-
-	// Receive and decode a snapshot
-	void decodeSnapshot( unsigned char* data, unsigned int packet_size );
-
-	// When a snapshot comes down the pipe, push it into this manager class
-	void importSnapshot( Snapshot* s );
-
-	// Get events from snapshot closest to timestamp. The latest snapshot will be taken. E.g. Snapshot at 4ms and Snapshot at 9ms, if you request 8ms snapshot you will get 9ms
-	void getSnapshotEvents( int timestamp );
-	
+	// Creates a new snapshot. Will delete an old one if the array of snapshots is full.
+	Snapshot* createSnapshot();
 
 	Ogre::Timer snapshotLife;
 
 private:
+
+	// Send the current snapshot
+	char* _encode_snapshot( Snapshot* snapshot );
+
+	// Convert char* to snapshot
+	Snapshot* _decode_snapshot( unsigned char* data, unsigned int packet_size );
+
+	// Calculate payload size - i.e. the size of the actual snapshot
+	unsigned int _getSnapshotSize( Snapshot* snapshot );
+
+	// Total packet size - including timestamp, number of transforms and packet ID, TIMESTAMP ID
+	unsigned int _getSnapshotPacketSize( Snapshot* snapshot );
 
 	std::deque<Snapshot*> mSnapshots;
 	NetworkManager* mNetworkManager;
 	Snapshot* mCurrentSnapshot;
 
 	Ogre::Timer lastUpdate;
+	bool mNewSnapshot;
 
 };
 #endif // snapshotManager_h__

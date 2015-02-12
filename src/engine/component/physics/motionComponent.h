@@ -18,6 +18,12 @@ struct MotionComponent : public Component
 	float3 velocity;
 	float3 angularVelocity;
 
+	MotionComponent()
+	{
+		velocity = float3(0,0,0);
+		angularVelocity = float3(0,0,0);
+	}
+
 	Component* clone(  EntID ID  )
 	{
 		MotionComponent* comp = entitysys::createComponent<MotionComponent>(ID);

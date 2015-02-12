@@ -12,7 +12,7 @@ NetworkManager::~NetworkManager()
 
 void NetworkManager::update(double dt)
 {
-	if( network::getMode() )
+	if( network::getMode() == NET_HOST )
 	{
 		this->_update_host(dt);
 	}else
@@ -23,7 +23,7 @@ void NetworkManager::update(double dt)
 
 void NetworkManager::handle(Event* e)
 {
-	if( network::getMode() )
+	if( network::getMode() == NET_HOST )
 	{
 		this->_handle_host(e);
 	}

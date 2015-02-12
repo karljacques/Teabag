@@ -6,10 +6,10 @@
 SnapshotManager::SnapshotManager( NetworkManager* networkSystem )
 {
 	mNetworkManager = networkSystem;
-	mCurrentSnapshot = new Snapshot();
-	mSnapshots.push_back(mCurrentSnapshot);
+	mCurrentSnapshot = createSnapshot();
 
 	snapshotLife.reset();
+	mNewSnapshot = false;
 }
 
 void SnapshotManager::handle(Event* e)
@@ -20,7 +20,9 @@ void SnapshotManager::handle(Event* e)
 		unsigned char* start = e->getData<NewSnapshotEvent>()->start;
 		unsigned int length = e->getData<NewSnapshotEvent>()->length;
 
-		this->decodeSnapshot(start,length);
+		Snapshot* incoming = this->_decode_snapshot(start,length);
+		mSnapshots.push_back(incoming);
+		mNewSnapshot = true;
 	}
 }
 
@@ -33,11 +35,11 @@ SnapshotManager::~SnapshotManager()
 	mSnapshots.clear();
 }
 
-void SnapshotManager::startNewSnapshot()
+Snapshot* SnapshotManager::createSnapshot()
 {
 	// Create a new snapshot
-	mCurrentSnapshot = new Snapshot();
-	mSnapshots.push_back(mCurrentSnapshot);
+	Snapshot* snapshot = new Snapshot();
+	mSnapshots.push_back(snapshot);
 
 	// Remove oldest snapshot if we've exceeded the maximum
 	if( mSnapshots.size() > MAX_SNAPSHOTS )
@@ -46,17 +48,119 @@ void SnapshotManager::startNewSnapshot()
 		mSnapshots.pop_front();
 	}
 
+	return snapshot;
+
 }
 
-void SnapshotManager::sendSnapshot()
+void SnapshotManager::update(double dt)
 {
-	if( mCurrentSnapshot->data.size() > 0 )
+
+	//Differentiate between behavior on the host and behavior on the client.
+	if( network::getMode() == NET_HOST )
+	{
+		// RUNNING ON HOST
+		// Loop through all networked components, get their parent entities and update the snapshot based
+		// on their TransformComponent and MotionComponent
+		// SnapshotManager is friend to the NetworkManager so we can access it's components.
+		for( auto i=mNetworkManager->mComponents.begin(); i!=mNetworkManager->mComponents.end(); i++ )
+		{
+			// Get Entity
+			Entity* ent = entitysys::getByID(i->first);
+
+			// Get Position Component
+			if( ent->hasComponent<TransformComponent>())
+			{
+				TransformComponent* trans_comp = ent->getComponent<TransformComponent>();
+
+				// Create a Transform
+				Transform* trans = new Transform();
+				trans->GUID = static_cast<NetworkComponent*>(i->second)->eGUID;
+				trans->pos = trans_comp->position;
+				trans->rot = trans_comp->orientation;
+
+				// Get MotionComponent
+				if( ent->hasComponent<MotionComponent>() )
+				{
+					MotionComponent* motion = ent->getComponent<MotionComponent>();
+
+					// Append motion data
+					trans->vel = motion->velocity;
+					trans->angRot = motion->angularVelocity;
+				}
+
+				// Add Transform to snapshot
+				this->mCurrentSnapshot->addTransform(trans);
+				delete trans;
+			}
+		}
+		// Host mode
+		if( this->snapshotLife.getMilliseconds() > 50 )
+		{
+
+			// If there are snapshots to send, do so.
+			if( mCurrentSnapshot->data.size() > 0 )
+			{
+				// Convert current snapshot to char*
+				char* payload = _encode_snapshot(mCurrentSnapshot);
+				unsigned int offset = _getSnapshotPacketSize(mCurrentSnapshot);
+
+				assert( payload != nullptr );
+				// Send snapshot packet
+				network::getPeer()->Send( payload,offset, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
+				delete payload;
+			}
+
+			// Create a new snapshot
+			mCurrentSnapshot = createSnapshot();
+			this->snapshotLife.reset();
+		}
+
+	}
+	else
+	{
+		if( mNewSnapshot )
+		{
+			// RUNNING ON CLIENT
+			// Get the lastest snapshot
+			Snapshot* snapshot =  mSnapshots.back();
+			mNewSnapshot = false;
+
+			// Dispatch network transform updates
+			for( auto i=snapshot->data.begin(); i!=snapshot->data.end(); i++ )
+			{
+				EntID ID = mNetworkManager->getIDByGUID(i->GUID);
+
+				// Check for existence of entity
+				if( entitysys::entityExists( ID ) )
+				{
+					Entity* ent = entitysys::getByID(ID);
+
+					// Dispatch events to update position
+					ENT_SET_TRANSFORM( ID, i->pos, i->rot );
+					ENT_SET_MOTION( ID, i->vel, i->angRot );
+				}
+			}
+		}
+
+	}
+
+
+}
+
+void SnapshotManager::updateOrientation(double dt)
+{
+
+}
+
+char* SnapshotManager::_encode_snapshot( Snapshot* snapshot )
+{
+	if( snapshot->data.size() > 0 )
 	{	
 		// Calculate payload size - i.e. the size of the actual snapshot
-		unsigned int snapshot_size =  mCurrentSnapshot->data.size()*sizeof(Transform) ; //Size of transforms
+		unsigned int snapshot_size = _getSnapshotSize(snapshot);
 
 		// Total packet size - including timestamp, number of transforms and packet ID, TIMESTAMP ID
-		unsigned int packet_size = snapshot_size + sizeof(RakNet::Time) + sizeof(int) + 2; 
+		unsigned int packet_size = _getSnapshotPacketSize(snapshot);
 
 		// Create data packet
 		char* payload = new char[ packet_size ];
@@ -73,24 +177,24 @@ void SnapshotManager::sendSnapshot()
 		// Set packet ID
 		payload[offset] = (unsigned char)(DPT_SNAPSHOT + ID_USER_PACKET_ENUM);
 		offset+=1;
-		
+
 		// Set number of transforms
-		int transforms = mCurrentSnapshot->data.size();
+		int transforms = snapshot->data.size();
 		memcpy( &payload[offset], &transforms, sizeof(int));
 		offset+=sizeof(int);
 
 		// Copy data to payload
-		memcpy( &payload[offset], reinterpret_cast<char*>( mCurrentSnapshot->data.data() ), snapshot_size );
+		memcpy( &payload[offset], reinterpret_cast<char*>( snapshot->data.data() ), snapshot_size );
 		offset+=snapshot_size;
 
-		// Send the packet!!
-		network::getPeer()->Send( payload,offset, IMMEDIATE_PRIORITY, RELIABLE, char(1),RakNet::UNASSIGNED_SYSTEM_ADDRESS, 1 );
-
-		delete payload;
+		return payload;
 	}
+
+	// Snapshot empty, return null.
+	return nullptr;
 }
 
-void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_size )
+Snapshot* SnapshotManager::_decode_snapshot( unsigned char* data, unsigned int packet_size )
 {
 	// Create a snapshot we can put data into.
 	Snapshot* snapshot = new Snapshot();
@@ -130,109 +234,18 @@ void SnapshotManager::decodeSnapshot( unsigned char* data, unsigned int packet_s
 		delete[] trans;
 	}
 
-	// Import the new snapshot to the snapshot manager.
-	this->importSnapshot(snapshot);
+	return snapshot;
 
 }
 
-void SnapshotManager::getSnapshotEvents(int timestamp)
+unsigned int SnapshotManager::_getSnapshotSize(Snapshot* snapshot)
 {
-
-	// For the moment, just retrieve the latest snapshot
-	Snapshot* snapshot =  mSnapshots.back();
-
-	// Dispatch network transform updates
-	for( auto i=snapshot->data.begin(); i!=snapshot->data.end(); i++ )
-	{
-		EntID ID = mNetworkManager->getIDByGUID(i->GUID);
-			
-		// Check for existence of entity
-		if( entitysys::entityExists( ID ) )
-		{
-			Entity* ent = entitysys::getByID(ID);
-
-			// Dispatch events to update position
-			ENT_SET_TRANSFORM( ID, i->pos, i->rot );
-			ENT_SET_MOTION( ID, i->vel, i->angRot );
-		}
-	}
-
-
-
+	// Calculate payload size - i.e. the size of the actual snapshot
+	return snapshot->data.size()*sizeof(Transform) ; //Size of transforms
 }
 
-void SnapshotManager::importSnapshot(Snapshot* s)
+unsigned int SnapshotManager::_getSnapshotPacketSize(Snapshot* snapshot)
 {
-	mSnapshots.push_back(s);
-
-	if( mSnapshots.size() > 0 )
-	{
-		getSnapshotEvents(0);
-	}
-
-}
-
-void SnapshotManager::update(double dt)
-{
-
-	//Differentiate between behavior on the host and behavior on the client.
-	if( network::getMode() == true )
-	{
-		// Host mode
-		if( this->snapshotLife.getMilliseconds() > 50 )
-		{
-			this->sendSnapshot();
-			this->startNewSnapshot();
-			this->snapshotLife.reset();
-		}
-
-		// Loop through all networked components, get their parent entities and update the snapshot based
-		// on their TransformComponent and MotionComponent
-		// SnapshotManager is friend to the NetworkManager so we can access it's components.
-		for( auto i=mNetworkManager->mComponents.begin(); i!=mNetworkManager->mComponents.end(); i++ )
-		{
-			// Get Entity
-			Entity* ent = entitysys::getByID(i->first);
-
-			// Get Position Component
-			if( ent->hasComponent<TransformComponent>())
-			{
-				TransformComponent* trans_comp = ent->getComponent<TransformComponent>();
-
-				// Create a Transform
-				Transform* trans = new Transform();
-				trans->GUID = static_cast<NetworkComponent*>(i->second)->eGUID;
-				trans->pos = trans_comp->position;
-				trans->rot = trans_comp->orientation;
-
-				// Get MotionComponent
-				if( ent->hasComponent<MotionComponent>() )
-				{
-					MotionComponent* motion = ent->getComponent<MotionComponent>();
-
-					// Append motion data
-					trans->vel = motion->velocity;
-					trans->angRot = motion->angularVelocity;
-				}
-
-				// Add Transform to snapshot
-				this->mCurrentSnapshot->addTransform(trans);
-				delete trans;
-			}
-
-
-		}
-
-	}
-	else
-	{
-		
-	}
-
-
-}
-
-void SnapshotManager::updateOrientation(double dt)
-{
-
+	// Total packet size - including timestamp, number of transforms and packet ID, TIMESTAMP ID
+	return _getSnapshotSize( snapshot ) + sizeof(RakNet::Time) + sizeof(int) + 2; 
 }

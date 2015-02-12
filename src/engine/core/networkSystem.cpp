@@ -8,7 +8,7 @@
 static std::shared_ptr<NetworkManager> netCompMgr;
 static RakNet::RakPeerInterface* peer;
 
-static bool			host;
+static NetworkModes	host;
 static PlayerGUID	localGUID;
 
 namespace network
@@ -25,7 +25,7 @@ void network::init( void )
 	netCompMgr = std::shared_ptr<NetworkManager>(new NetworkManager());
 	peer = RakNet::RakPeerInterface::GetInstance();
 
-	host = true;
+	host = NET_HOST;
 	localGUID = RakNet::RakNetGUID::ToUint32( peer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS) ); /* It is possible that this GUID
 																															could change upon shutting down RakNet
 																															and restarting it. Something to bare in mind*/
@@ -54,7 +54,7 @@ void network::setModeClient( void )
 	peer->Startup( 2, socketDescriptors, 1 );
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
-	host = false;
+	host = NET_CLIENT;
 }
 
 void network::setModeServer( void )
@@ -66,10 +66,10 @@ void network::setModeServer( void )
 	peer->Startup( MAX_CONNECTIONS, socketDescriptors, 1 );
 	peer->SetMaximumIncomingConnections( MAX_CONNECTIONS );
 
-	host = true;
+	host = NET_HOST;
 }
 
-bool network::getMode( void )
+NetworkModes network::getMode( void )
 {
 	return host;
 }
@@ -286,7 +286,7 @@ void network::_update_client( void )
 
 void network::update( void )
 {
-	if( network::getMode() )
+	if( network::getMode() == NET_HOST )
 	{
 		network::_update_server();
 	}else

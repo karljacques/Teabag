@@ -2,8 +2,8 @@
 #include "spectatorManager.h"
 
 
-#define SPECTATOR_DEFAULT_SPEED 12.0f
-#define SPECTATOR_BOOST_SPEED 40.0f
+#define SPECTATOR_DEFAULT_SPEED 120.0f
+#define SPECTATOR_BOOST_MULTIPLIER 5.0f
 
 void SpectatorManager::handle( Event* e )
 {
@@ -126,7 +126,7 @@ void SpectatorManager::update( double dt )
 			if( s->left )
 				dir+= float3(-1,0,0);
 			if( s->boost )
-				speed = SPECTATOR_BOOST_SPEED;
+				speed = SPECTATOR_BOOST_MULTIPLIER*SPECTATOR_DEFAULT_SPEED;
 			else
 				speed = SPECTATOR_DEFAULT_SPEED;
 

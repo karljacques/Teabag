@@ -91,7 +91,7 @@ Engine::Engine()
 		entitysys::getByID(ent)->addComponent(spec);
 
 		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ent);
-		mPhysicsManager->initComponent(phys,new btSphereShape( 0.25f ) , 1);
+		mPhysicsManager->initComponent(phys,new btSphereShape( 0.25f ) , 10);
 		phys->body->setFriction(0);
 		phys->body->setGravity(float3(0,0,0)); // Disable gravity on a spectator
 		phys->body->setAngularFactor(float3(1.0f,1.0f,1.0f));
@@ -160,6 +160,7 @@ Engine::Engine()
 
 	mPrototypes["box"] = new EntityPrototype( entitysys::getByID(box) );
 	entitysys::destroyEntity( entitysys::getByID(box) );
+	
 }
 
 Engine::~Engine()
@@ -211,7 +212,7 @@ void Engine::handle( Event* e )
 
 					case SDL_SCANCODE_X:
 						{
-							if( network::getMode() == 1 )
+							if( network::getMode() == NET_HOST )
 							{
 								Entity* box = mPrototypes["box"]->spawn();
 

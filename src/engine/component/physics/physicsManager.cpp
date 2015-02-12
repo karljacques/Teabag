@@ -66,6 +66,7 @@ void PhysicsManager::update( double dt )
 		{
 			/* Get the MotionComponent*/
 			MotionComponent* motion = entitysys::getByID(comp->ID)->getComponent<MotionComponent>();
+
 			/* Velocities for dead reckoning on networked games */
 			motion->velocity = comp->body->getLinearVelocity();
 			motion->angularVelocity = comp->body->getAngularVelocity();

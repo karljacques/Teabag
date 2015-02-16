@@ -45,7 +45,7 @@ void RenderManager::setAsSphere(RenderComponent* sphere, float radius, std::stri
 	sphere->object = ent;
 
 	sphere->sceneNode->attachObject(sphere->object);
-	sphere->sceneNode->scale( float3( radius/100.0 ) );
+	sphere->sceneNode->scale( float3( radius/100.0f ) );
 }
 
 void RenderManager::handle( Event* e )

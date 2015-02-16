@@ -26,7 +26,7 @@ namespace network
 
 	NetworkModes getMode( void ); 
 
-	void sendEvent( Event* e, PacketPriority p, PacketReliability r, RakNet::RakNetGUID destination = RakNet::UNASSIGNED_RAKNET_GUID() );
+	void sendEvent( Event* e, PacketPriority p, PacketReliability r, RakNet::RakNetGUID destination = RakNet::UNASSIGNED_RAKNET_GUID );
 	unsigned char getPacketIdentifier( RakNet::Packet* p );
 
 	void connect( const char* ip );

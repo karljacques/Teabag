@@ -218,6 +218,9 @@
     <ClInclude Include="src\engine\manager\game\frame.h">
       <Filter>engine\manager\game</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\spawnEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

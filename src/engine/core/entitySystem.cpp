@@ -63,12 +63,14 @@ void entitysys::destroyComponent( Component* comp )
 {
 	std::type_index type = typeid( *comp );
 
+	// Unregister from component owners
 	if( componentOwners.count( type  ) > 0 )
 	{
 		componentOwners[type]->removeComponent(comp->ID);
 		componentOwners[type]->deinitComponent(comp);
 	}
 
+	// Unregister from entity
 	entitysys::getByID(comp->ID)->removeComponent(comp);
 
 	delete comp;
@@ -77,4 +79,9 @@ void entitysys::destroyComponent( Component* comp )
 ComponentManager* entitysys::getComponentManager(Component* comp)
 {
 	return componentOwners[typeid(*comp)];
+}
+
+bool entitysys::hasComponentManager(Component* comp)
+{
+	return ( componentOwners.count( typeid( *comp ) ) > 0 );
 }

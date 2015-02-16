@@ -50,7 +50,14 @@ namespace entitysys
 		return componentOwners[typeid(T)];
 	}
 
+	template <class T>
+	bool hasComponentManager()
+	{
+		return( componentOwners.count(typeid(T)) > 0 );
+	}
+
 	ComponentManager* getComponentManager( Component* comp );
+	bool hasComponentManager( Component* comp );
 }
 
 

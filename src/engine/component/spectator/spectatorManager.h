@@ -3,6 +3,7 @@
 
 #include "spectatorComponent.h"
 #include "engine/component/physics/physicsComponent.h"
+#include "engine/component/player/playerComponent.h"
 
 #include "engine/component/componentManager.h"
 

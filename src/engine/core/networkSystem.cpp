@@ -142,7 +142,7 @@ Event* network::_decode_event( char* data )
 
 void network::sendEvent(Event* e, PacketPriority p, PacketReliability r, RakNet::RakNetGUID destination )
 {
-	bool broadcast = !(RakNet::UNASSIGNED_RAKNET_GUID == destination );
+	bool broadcast = (RakNet::UNASSIGNED_RAKNET_GUID == destination );
 	int offset;
 	char* payload = network::_encode_event(e,offset);
 	peer->Send( payload, offset, p, r, char(1), destination, broadcast );

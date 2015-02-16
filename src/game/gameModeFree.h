@@ -1,10 +1,10 @@
 #ifndef gameModeFree_h__
 #define gameModeFree_h__
 
-
-
 #include "engine/manager/game/frame.h"
 #include "game/SpectatorFactory.h"
+
+#include "engine/core/event/events/spawnEvent.h"
 
 class GameModeFree : public Frame
 {
@@ -24,7 +24,9 @@ public:
 private:
 
 	SpectatorFactory mSpectatorFactory;
-	std::vector<Entity*> mEntities;
+	std::vector<Entity*> mSpectators;
+
+	Entity* mLocalSpectator;
 
 };
 #endif // gameModeFree_h__

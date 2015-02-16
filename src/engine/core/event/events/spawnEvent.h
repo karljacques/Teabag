@@ -4,7 +4,7 @@
 struct SpawnEvent
 {
 	PlayerGUID pGUID;
-	EntityGUID eGUID;
+	EntGUID eGUID;
 
 	std::string name;
 };

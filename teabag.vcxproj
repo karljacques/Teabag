@@ -156,6 +156,7 @@
     <ClInclude Include="src\engine\core\event\events\mouseEvent.h" />
     <ClInclude Include="src\engine\core\event\events\newSnapshotEvent.h" />
     <ClInclude Include="src\engine\core\event\events\playerEvent.h" />
+    <ClInclude Include="src\engine\core\event\events\spawnEvent.h" />
     <ClInclude Include="src\engine\core\event\events\transfromEvent.h" />
     <ClInclude Include="src\engine\core\inputSystem.h" />
     <ClInclude Include="src\engine\core\networkSystem.h" />

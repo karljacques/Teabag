@@ -9,6 +9,9 @@ EntityPrototype::EntityPrototype( Entity* ent)
 	for( auto i=_prototype->mComponents.begin();i!=_prototype->mComponents.end();i++)
 	{
 		(*i)->deactivate();
+		// Remove component from it's manager if it has one.
+		if( entitysys::hasComponentManager( *i ))
+			entitysys::getComponentManager(*i)->removeComponent((*i)->ID);
 	}
 
 }

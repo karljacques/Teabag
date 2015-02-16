@@ -71,7 +71,7 @@ void PlayerManager::handle(Event* e)
 
 			// As I am host, inform clients of new player - dispatch local event too.
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
-			Event* newEvent = eventsys::get( EV_NETWORK_PLAYER_JOINED, 0, this );
+			Event* newEvent = eventsys::get( EV_NETWORK_PLAYER_JOINED );
 
 			newEvent->clone( e );
 			network::sendEvent( newEvent, HIGH_PRIORITY, RELIABLE );

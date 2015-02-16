@@ -33,7 +33,7 @@ void NetworkManager::handle(Event* e)
 	}
 }
 
-EntID NetworkManager::getIDByGUID( EntityGUID GUID )
+EntID NetworkManager::getIDByGUID( EntGUID GUID )
 {
 	assert( GUID != 0 );
 	for( auto j=mComponents.begin(); j!=mComponents.end(); j++ )
@@ -49,7 +49,7 @@ EntID NetworkManager::getIDByGUID( EntityGUID GUID )
 	return 0;
 }
 
-uint32 NetworkManager::_find_free_guid()
+uint32 NetworkManager::assignGUID()
 {
 	mGuidCount++;
 	return mGuidCount;
@@ -120,7 +120,7 @@ bool NetworkManager::attach_eGUID(Event* e)
 	return false;
 }
 
-EntityGUID NetworkManager::getGUIDFromID(EntID ID)
+EntGUID NetworkManager::getGUIDFromID(EntID ID)
 {
 	if( componentExists(ID) )
 	{

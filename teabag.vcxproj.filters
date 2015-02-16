@@ -72,6 +72,15 @@
     <ClCompile Include="src\engine\manager\network\snapshot.cpp">
       <Filter>engine\manager\network</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\gameModeFree.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\SpectatorFactory.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\manager\game\frame.cpp">
+      <Filter>engine\manager\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -200,6 +209,15 @@
     <ClInclude Include="src\engine\core\event\events\motionEvent.h">
       <Filter>engine\core\event\events</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\gameModeFree.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\SpectatorFactory.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\game\frame.h">
+      <Filter>engine\manager\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -252,6 +270,12 @@
     </Filter>
     <Filter Include="engine\core\entity">
       <UniqueIdentifier>{8ca8b0e1-b3b7-48ec-ae00-3f53d78ae1f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{13c88011-3911-4305-b2e6-3b763b37faa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\manager\game">
+      <UniqueIdentifier>{6d5bf241-d1ae-4e5b-81b5-d0c34c072cca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -14,43 +14,41 @@
 
 #include "engine/core/event/events/playerEvent.h"
 
-class Player : public ComponentManager
+class Player 
 {
 public:
 	Player()
 	{
-		GUID = 0;
+		pGUID = 0;
 		username = "nebuchadnezzar";
 	}
 
-	bool isOwner( EntID ID );
-
-	EntID GUID;
+	PlayerGUID pGUID;
 	std::string username;
 
 };
 
 
-class PlayerManager: public Manager, public EventListener
+class PlayerManager: public Manager, public EventListener, public ComponentManager
 {
 public:
 	PlayerManager( );
 
 	// Add new players that join after initial connection
-	void	addPlayer( EntID guid, std::string username );
+	void	addPlayer( PlayerGUID guid, std::string username );
 	void	addPlayer( std::shared_ptr<Player> player );
 
 	// Get and remove players
-	std::shared_ptr<Player> getPlayerByGUID( EntID guid );
-	bool	playerExists( EntID guid );
-	void	removePlayerByGUID( EntID guid );
+	std::shared_ptr<Player> getPlayerByGUID( PlayerGUID guid );
+	bool	playerExists( PlayerGUID guid );
+	void	removePlayerByGUID( PlayerGUID guid );
 
 	// PlayerManager statistics
 	unsigned int getNumberOfConnectedPlayers();
 
 	// Current player manipulation
 	std::shared_ptr<Player>	getLocalPlayer();
-	EntID				getLocalGUID();
+	PlayerGUID				getLocalGUID();
 
 	// EventListener handle
 	void	handle( Event* e );
@@ -65,8 +63,8 @@ public:
 
 private:
 
-	std::map<EntID, std::shared_ptr<Player>> mConnectedPlayers;
-	EntID mLocalPlayer;
+	std::map<PlayerGUID, std::shared_ptr<Player>> mConnectedPlayers;
+	PlayerGUID mLocalPlayer;
 
 
 };

@@ -16,6 +16,7 @@
 
 RenderManager::RenderManager( )
 {  
+
 }
 
 RenderManager::~RenderManager()
@@ -24,18 +25,27 @@ RenderManager::~RenderManager()
 
 void RenderManager::initComponent( RenderComponent* comp )
 {
-	comp->mSceneNode = render::getRootSceneNode()->createChildSceneNode();
+	comp->sceneNode = render::getRootSceneNode()->createChildSceneNode();
 }
 
 void RenderManager::setAsBox( RenderComponent* comp, float3 dim, std::string material )
 
 {
-	Ogre::Entity* ent = render::getSceneMgr()->createEntity( Ogre::SceneManager::PT_CUBE );
-	ent->setMaterialName(material);
-	comp->mObject = ent;
+	comp->object = render::getSceneMgr()->createEntity( Ogre::SceneManager::PT_CUBE );
+	comp->object->setMaterialName(material);
 	
-	comp->mSceneNode->attachObject(comp->mObject);
-	comp->mSceneNode->scale( dim/100.0 );
+	comp->sceneNode->attachObject(comp->object);
+	comp->sceneNode->scale( dim/100.0 );
+}
+
+void RenderManager::setAsSphere(RenderComponent* sphere, float radius, std::string material )
+{
+	Ogre::Entity* ent = render::getSceneMgr()->createEntity( Ogre::SceneManager::PT_SPHERE );
+	ent->setMaterialName(material);
+	sphere->object = ent;
+
+	sphere->sceneNode->attachObject(sphere->object);
+	sphere->sceneNode->scale( float3( radius/100.0 ) );
 }
 
 void RenderManager::handle( Event* e )
@@ -53,8 +63,8 @@ void RenderManager::handle( Event* e )
 			TransformEvent* trans = e->getData<TransformEvent>();
 
 			// Update internals.
-			rend->mSceneNode->setPosition(trans->position);
-			rend->mSceneNode->setOrientation(trans->orientation);
+			rend->sceneNode->setPosition(trans->position);
+			rend->sceneNode->setOrientation(trans->orientation);
 		}
 
 		break;
@@ -75,8 +85,8 @@ void RenderManager::update( double dt )
 			assert(rend!=nullptr);
 
 			// Update position
-			rend->mSceneNode->setPosition( trans->position );
-			rend->mSceneNode->setOrientation(trans->orientation);
+			rend->sceneNode->setPosition( trans->position );
+			rend->sceneNode->setOrientation(trans->orientation);
 		}
 	}
 }
@@ -85,6 +95,7 @@ void RenderManager::deinitComponent(Component* comp)
 {
 	// Cast to render component
 	RenderComponent* rend = static_cast<RenderComponent*>(comp);
-	render::getSceneMgr()->destroyEntity(rend->mObject);
-	render::getSceneMgr()->destroySceneNode(rend->mSceneNode);
+	render::getSceneMgr()->destroyEntity(rend->object);
+	render::getSceneMgr()->destroySceneNode(rend->sceneNode);
 }
+

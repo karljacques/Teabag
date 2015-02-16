@@ -12,5 +12,5 @@
 #define MICROSECONDS_TO_SECONDS_FACTOR 0.000001f
 
 typedef unsigned int EntID;
-typedef unsigned int EntityGUID;
+typedef unsigned int EntGUID;
 typedef unsigned int PlayerGUID;

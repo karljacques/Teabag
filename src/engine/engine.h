@@ -15,6 +15,7 @@
 
 #include "engine/manager/debug/debugDisplaySystem.h"
 #include "engine/manager/debug/ogreConsole.h"
+#include "engine/manager/game/frame.h"
 
 #include "engine/core/networkSystem.h"
 #include "engine/core/inputSystem.h"
@@ -23,6 +24,8 @@
 #include "engine/core/entitySystem.h"
 
 #include "engine/factory/entityPrototype.h"
+
+#include "game/gameModeFree.h"
 
 class OgreConsole;
 
@@ -41,6 +44,10 @@ public:
 	// Manager methods
 	void registerManager( std::weak_ptr<Manager> mgr );
 	void removeManager( std::weak_ptr<Manager> mgr );
+
+	// Frame handling methods
+	void queueFrame( std::shared_ptr<Frame> frame );
+	void rewindFrame( std::shared_ptr<Frame> frame );
 
 	// Managers getters
 	RenderManager*		getRenderSystem(){ return mRenderManager.get(); };
@@ -75,7 +82,8 @@ private:
 
 	std::list<std::weak_ptr<Manager>> mManagers;
 
-	std::unordered_map<std::string, EntityPrototype*> mPrototypes;
+	std::vector<std::shared_ptr<Frame>> mFrames;
+
 };
 
 #endif // engine_h__

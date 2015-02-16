@@ -8,17 +8,17 @@ PlayerManager::PlayerManager()
 
 	// Add local player to the list
 	std::shared_ptr<Player> local = std::shared_ptr<Player>( new Player() );
-	local->GUID = mLocalPlayer;
+	local->pGUID = mLocalPlayer;
 	this->addPlayer( local );
 
-	::printm("Local GUID:" + std::to_string(local->GUID));
+	::printm("Local GUID:" + std::to_string(local->pGUID));
 }
 
-void PlayerManager::addPlayer(EntID guid, std::string username)
+void PlayerManager::addPlayer(PlayerGUID guid, std::string username)
 {
 	// Construct player
 	std::shared_ptr<Player> player( new Player() );
-	player->GUID = guid;
+	player->pGUID = guid;
 	player->username = username;
 
 	// Copy the shared ptr to the map
@@ -28,15 +28,15 @@ void PlayerManager::addPlayer(EntID guid, std::string username)
 void PlayerManager::addPlayer(std::shared_ptr<Player> player)
 {
 	// If object constructed elsewhere
-	mConnectedPlayers[player->GUID] = player;
+	mConnectedPlayers[player->pGUID] = player;
 }
 
-bool PlayerManager::playerExists(EntID guid)
+bool PlayerManager::playerExists(PlayerGUID guid)
 {
 	return ( mConnectedPlayers.count(guid) > 0 );
 }
 
-std::shared_ptr<Player> PlayerManager::getPlayerByGUID(EntID guid)
+std::shared_ptr<Player> PlayerManager::getPlayerByGUID(PlayerGUID guid)
 {
 	if( mConnectedPlayers.count(guid) > 0 )
 		return mConnectedPlayers[guid];
@@ -47,7 +47,7 @@ std::shared_ptr<Player> PlayerManager::getPlayerByGUID(EntID guid)
 	}
 }
 
-void PlayerManager::removePlayerByGUID(EntID guid)
+void PlayerManager::removePlayerByGUID(PlayerGUID guid)
 {
 	mConnectedPlayers.erase( guid );
 }
@@ -69,15 +69,13 @@ void PlayerManager::handle(Event* e)
 
 			::printm("New Player Connecting: " + std::string( p->username ) + "  with GUID: " + std::to_string( p->pGUID ) );
 
-			// As I am host, inform clients of new player
+			// As I am host, inform clients of new player - dispatch local event too.
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
-			Event* ne = new Event( EV_NETWORK_PLAYER_JOINED );
-#ifdef _DEBUG
-			ne->d_initialised = true;
-#endif
-			ne->clone( e );
-			network::sendEvent( ne, HIGH_PRIORITY, RELIABLE );
-			delete ne;
+			Event* newEvent = eventsys::get( EV_NETWORK_PLAYER_JOINED, 0, this );
+
+			newEvent->clone( e );
+			network::sendEvent( newEvent, HIGH_PRIORITY, RELIABLE );
+			eventsys::dispatch(newEvent);
 
 			break;
 		}
@@ -86,7 +84,7 @@ void PlayerManager::handle(Event* e)
 			PlayerEvent* p = e->getData<PlayerEvent>();
 
 			// Check if this is a notification that the host has acknowledged the current player
-			if( p->pGUID == getLocalPlayer()->GUID )
+			if( p->pGUID == getLocalPlayer()->pGUID )
 			{
 				::printm("Host has acknowledged your player connection.");
 			}
@@ -94,6 +92,13 @@ void PlayerManager::handle(Event* e)
 			{
 				this->addPlayer(p->pGUID, std::string( p->username ) );
 				::printm( "New player has joined: " + std::string( p->username ) );
+
+				// Send message to listeners that the client is ready for init data
+				// This is where you can send things like spawners and level load stuff, for example.
+				Event* initEvent = eventsys::get( EV_NETWORK_INIT_READY );
+				PlayerEvent* playerEvent = initEvent->createEventData<PlayerEvent>();
+				playerEvent->pGUID = p->pGUID;
+				eventsys::dispatch(initEvent);
 			}
 			break;
 		}
@@ -127,10 +132,9 @@ std::shared_ptr<Player> PlayerManager::getLocalPlayer()
 	return mConnectedPlayers[mLocalPlayer];
 }
 
-
-
-bool Player::isOwner(EntID ID)
+PlayerGUID PlayerManager::getLocalGUID()
 {
-	return( mComponents.count(ID) > 0 );
+	return mLocalPlayer;
 }
+
 

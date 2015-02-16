@@ -43,6 +43,14 @@ namespace entitysys
 	{
 		componentOwners[typeid(T)] = mgr;
 	}
+
+	template <class T>
+	ComponentManager* getComponentManager()
+	{
+		return componentOwners[typeid(T)];
+	}
+
+	ComponentManager* getComponentManager( Component* comp );
 }
 
 

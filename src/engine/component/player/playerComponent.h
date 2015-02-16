@@ -10,13 +10,13 @@ struct PlayerComponent : public Component
 {
 	PlayerComponent()
 	{
-		GUID = 0;
+		pGUID = 0;
 	}
 
 	Component* clone( EntID ID )
 	{
 		PlayerComponent* comp = entitysys::createComponent<PlayerComponent>(ID);
-		comp->GUID = GUID;
+		comp->pGUID = pGUID;
 
 		return comp;
 	}
@@ -31,6 +31,6 @@ struct PlayerComponent : public Component
 
 	}
 
-	EntID GUID;
+	PlayerGUID pGUID;
 };
 #endif // playerComponent_h__

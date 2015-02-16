@@ -140,11 +140,12 @@ Event* network::_decode_event( char* data )
 
 }
 
-void network::sendEvent(Event* e, PacketPriority p, PacketReliability r)
+void network::sendEvent(Event* e, PacketPriority p, PacketReliability r, RakNet::RakNetGUID destination )
 {
+	bool broadcast = !(RakNet::UNASSIGNED_RAKNET_GUID == destination );
 	int offset;
 	char* payload = network::_encode_event(e,offset);
-	peer->Send( payload, offset, p, r, char(1), RakNet::UNASSIGNED_SYSTEM_ADDRESS, true );
+	peer->Send( payload, offset, p, r, char(1), destination, broadcast );
 	delete[] payload;
 }
 

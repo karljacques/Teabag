@@ -9,6 +9,7 @@
 #include "main.h"
 #include "engine/engine.h"
 
+
 #ifdef __cplusplus
 extern "C"
 #endif
@@ -20,7 +21,6 @@ int main()
 #endif
 {
     Engine* engine = new Engine();
-
 
     while( !engine->isShuttingDown() )
     {

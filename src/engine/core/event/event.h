@@ -46,12 +46,18 @@ enum EV_EventType
 	EV_NETWORK_PLAYER_DROPPED,
 	EV_NETWORK_PLAYER_KICKED,
 
+	// NETWORK - STATE MODIFIERS
+	EV_NETWORK_INIT_READY,
+
 	// NETWORK - MODE MODIFIERS
 	EV_NETWORK_MOD_CLIENT,
 	EV_NETWORK_MOD_CONNECT,
 
 	// PLAYER MODIFERS
-	EV_PLAYER_SET_NAME
+	EV_PLAYER_SET_NAME,
+
+	// SPAWN MODIFIERS
+	EV_SPAWN_SPECTATOR
 
 };
 
@@ -78,7 +84,7 @@ public:
 	sending the event across the network. Upon object creation at the receiving end, the entity will take the eGUID 
 	from the event and attach it to the entity. 
 	In all subsequent calls, that entity can be referred to by it's eGUID. */
-	EntityGUID		eGUID;
+	EntGUID		eGUID;
 
 	/* Similar to eGUID except that this represents a local ID on this machine. This is useful where an entity may not
 	necessarily be synced across a network. That being said, it will be more efficient to merge ID and eGUID into one, 

@@ -32,9 +32,9 @@ public:
 	void				update( double dt );
 	void				handle( Event* e );
 
-	EntID				getIDByGUID( EntityGUID GUID );
-	EntityGUID			getGUIDFromID( EntID ID );
-	EntityGUID			_find_free_guid();
+	EntID				getIDByGUID( EntGUID GUID );
+	EntGUID			getGUIDFromID( EntID ID );
+	EntGUID			assignGUID();
 
 
 
@@ -51,7 +51,7 @@ protected:
 	void				_handle_host( Event* e );
 	void				_handle_client( Event* e );
 
-	EntityGUID				mGuidCount;
+	EntGUID				mGuidCount;
 
 };
 #endif // networkComponentManager_h__

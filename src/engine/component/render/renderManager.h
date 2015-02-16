@@ -27,6 +27,7 @@ public:
 	void deinitComponent( Component* comp );
 
 	void setAsBox( RenderComponent* comp, float3 dim, std::string material = "SimpleCrate/Textured" );
+	void setAsSphere( RenderComponent* sphere, float radius, std::string material = "SimpleCrate/Textured" );
 
 	void handle( Event* e );
 	void update( double dt );

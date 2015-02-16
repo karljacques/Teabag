@@ -11,27 +11,27 @@ class RenderComponent : public Component
 {
 public:
 
-	Ogre::Entity* mObject;
-	Ogre::SceneNode*	 mSceneNode;
+	Ogre::Entity* object;
+	Ogre::SceneNode*	 sceneNode;
 
 	Component* clone( EntID ID )
 	{
 		RenderComponent* comp = entitysys::createComponent<RenderComponent>(ID);
-		comp->mObject = mObject->clone(render::generateName());
-		comp->mSceneNode = render::getRootSceneNode()->createChildSceneNode();
-		comp->mSceneNode->attachObject(comp->mObject);
-		comp->mSceneNode->scale( mSceneNode->getScale() );
+		comp->object = object->clone(render::generateName());
+		comp->sceneNode = render::getRootSceneNode()->createChildSceneNode();
+		comp->sceneNode->attachObject(comp->object);
+		comp->sceneNode->scale( sceneNode->getScale() );
 		return comp;
 	}
 
 	void activate()
 	{
-		this->mSceneNode->setVisible(true);
+		this->sceneNode->setVisible(true);
 	}
 
 	void deactivate()
 	{
-		this->mSceneNode->setVisible(false);
+		this->sceneNode->setVisible(false);
 	}
 };
 

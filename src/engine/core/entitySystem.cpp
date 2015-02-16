@@ -7,7 +7,6 @@ static EntID mIDCount = 1; /* TODO cheap method of finding a ID. Might have to i
 							lifetime of the game. */
 
 // Map components of different types to the manager which will own them.
-// TODO: Needs to be a multimap - there may be multiple managers that want the same component
 std::unordered_map<std::type_index, ComponentManager*> componentOwners;
 
 EntID entitysys::createEntity( void )
@@ -73,4 +72,9 @@ void entitysys::destroyComponent( Component* comp )
 	entitysys::getByID(comp->ID)->removeComponent(comp);
 
 	delete comp;
+}
+
+ComponentManager* entitysys::getComponentManager(Component* comp)
+{
+	return componentOwners[typeid(*comp)];
 }

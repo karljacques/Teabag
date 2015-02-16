@@ -9,7 +9,7 @@ struct Transform
 {
 	Transform();
 
-	EntityGUID GUID;
+	EntGUID GUID;
 
 	Quat rot;
 	

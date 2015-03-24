@@ -22,3 +22,8 @@ EventListener::EventListener()
 {
 	m_EventType = EVT_NULL;
 }
+
+EventListener::~EventListener()
+{
+
+}

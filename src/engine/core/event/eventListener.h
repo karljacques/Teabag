@@ -13,6 +13,7 @@
 #include "event.h"
 
 class Event;
+enum EVT_EventType;
 
 class EventListener
 {
@@ -23,7 +24,7 @@ public:
 
     virtual void handle( Event* e ) = 0;
 
-    void			setEventType( const EVT_EventType eventType );
+    void			setEventType( EVT_EventType eventType );
     EVT_EventType   getEventType( );
 private:
 

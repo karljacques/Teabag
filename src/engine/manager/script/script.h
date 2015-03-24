@@ -13,10 +13,17 @@ public:
 
 	virtual void update( double dt ) = 0;
 
-	bool		 doesActionMatchTarget( ActionEvent* e );
+	void		 bind( Entity* e );
+	void		 unbind( );
+
+	// WARNING: The event must always be an ActionEvent.
+	bool		 doesActionMatchTarget( Event* e );
 
 protected:
 
 	Entity* mTarget;
+
+private:
+
 };
 #endif // script_h__

@@ -151,6 +151,7 @@
     <ClInclude Include="src\engine\core\eventSystem.h" />
     <ClInclude Include="src\engine\core\event\event.h" />
     <ClInclude Include="src\engine\core\event\eventListener.h" />
+    <ClInclude Include="src\engine\core\event\events\actionEvent.h" />
     <ClInclude Include="src\engine\core\event\events\keyboardEvent.h" />
     <ClInclude Include="src\engine\core\event\events\messageEvent.h" />
     <ClInclude Include="src\engine\core\event\events\motionEvent.h" />
@@ -171,8 +172,12 @@
     <ClInclude Include="src\engine\manager\debug\debugDisplaySystem.h" />
     <ClInclude Include="src\engine\manager\debug\ogreConsole.h" />
     <ClInclude Include="src\engine\manager\game\frame.h" />
+    <ClInclude Include="src\engine\manager\input\action.h" />
+    <ClInclude Include="src\engine\manager\input\inputToActionManager.h" />
     <ClInclude Include="src\engine\manager\network\snapshot.h" />
     <ClInclude Include="src\engine\manager\network\snapshotManager.h" />
+    <ClInclude Include="src\engine\manager\script\script.h" />
+    <ClInclude Include="src\engine\manager\script\scriptManager.h" />
     <ClInclude Include="src\game\boxFactory.h" />
     <ClInclude Include="src\game\gameModeFree.h" />
     <ClInclude Include="src\game\SpectatorFactory.h" />

@@ -227,6 +227,21 @@
     <ClInclude Include="src\game\boxFactory.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\event\events\actionEvent.h">
+      <Filter>engine\core\event\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\script\scriptManager.h">
+      <Filter>engine\manager\script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\script\script.h">
+      <Filter>engine\manager\script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\input\action.h">
+      <Filter>engine\manager\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\manager\input\inputToActionManager.h">
+      <Filter>engine\manager\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -285,6 +300,12 @@
     </Filter>
     <Filter Include="engine\manager\game">
       <UniqueIdentifier>{6d5bf241-d1ae-4e5b-81b5-d0c34c072cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\manager\script">
+      <UniqueIdentifier>{4019f508-c7bf-4fc8-ba5b-6136dcc45a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\manager\input">
+      <UniqueIdentifier>{51a8766c-89a3-4439-ba96-91c9d3035acc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

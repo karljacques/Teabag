@@ -35,7 +35,7 @@ Entity* SpectatorFactory::createRemoteSpectator(PlayerGUID pGUID, EntGUID eGUID)
 	RenderManager* renderManager = dynamic_cast<RenderManager*>(entitysys::getComponentManager(rend));
 	assert( renderManager!= nullptr );
 	renderManager->initComponent( rend );
-	renderManager->setAsSphere( rend, 0.25f );
+	renderManager->setAsSphere( rend, 0.50f );
 	spectator->addComponent(rend);
 
 	_attachNetworkingComponents( spectator->ID, pGUID, eGUID );

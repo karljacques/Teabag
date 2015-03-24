@@ -3,9 +3,16 @@
 
 GameModeFree::GameModeFree()
 {
+
+	reset();
+
 	// Create the player spectator
 	Entity* spectator = mSpectatorFactory.createLocalSpectator( network::getNetworkManager()->assignGUID() );
+	ENT_SET_TRANSFORM( spectator->ID, float3(0,2.0f,0), Quat(0,0,0,1));
 	mSpectators.push_back(spectator);
+	mEntities.push_back(spectator);
+
+	
 }
 
 GameModeFree::~GameModeFree()
@@ -26,7 +33,7 @@ FrameState GameModeFree::backgroundUpdate()
 
 void GameModeFree::handle(Event* e)
 {
-	switch( e->getEventType() )
+	switch( e->getEventID() )
 	{
 	case EV_CORE_KEY_PRESS:
 		{
@@ -55,12 +62,14 @@ void GameModeFree::handle(Event* e)
 				printm( "Created Local Spectator with eGUID " + std::to_string( sEvent->eGUID ));
 				Entity* spectator = mSpectatorFactory.createLocalSpectator( sEvent->eGUID );
 				mSpectators.push_back( spectator );
+				mEntities.push_back(spectator);
 			}
 			else
 			{
 				printm( "Created Remote Spectator with eGUID " + std::to_string( sEvent->eGUID ));
 				Entity* spectator = mSpectatorFactory.createRemoteSpectator(sEvent->pGUID, sEvent->eGUID );
 				mSpectators.push_back( spectator );
+				mEntities.push_back(spectator);
 			}
 		}
 		break;
@@ -75,7 +84,7 @@ void GameModeFree::handle(Event* e)
 			for( auto i=mSpectators.begin(); i!=mSpectators.end(); i++ )
 			{
 				// Tell the client to create it's spectator
-				Event* specCreate = eventsys::get( EV_SPAWN_SPECTATOR );
+				Event* specCreate = eventsys::get( EVT_ACTION, EV_SPAWN_SPECTATOR );
 				SpawnEvent* spawnEvent = specCreate->createEventData<SpawnEvent>();
 
 				spawnEvent->pGUID = (*i)->getComponent<PlayerComponent>()->pGUID;
@@ -85,7 +94,7 @@ void GameModeFree::handle(Event* e)
 			}
 
 			// Tell the client to create it's spectator
-			Event* specCreate = eventsys::get( EV_SPAWN_SPECTATOR );
+			Event* specCreate = eventsys::get( EVT_ACTION, EV_SPAWN_SPECTATOR );
 			SpawnEvent* spawnEvent = specCreate->createEventData<SpawnEvent>();
 
 			spawnEvent->pGUID = p->pGUID;
@@ -107,14 +116,29 @@ void GameModeFree::handle(Event* e)
 void GameModeFree::reset()
 {
 	deinit();
+
+	// Create some boxes
+	for( int i=-2; i < 2; i++ )
+	{
+		for( int y = -2; y< 2; y++ )
+		{
+			Entity* box = mBoxFactory.createBox( float3( y, 0.5f, i ), network::getNetworkManager().get()->assignGUID() );
+			mBoxes.push_back(box);
+			mEntities.push_back(box);
+		}
+
+	}
 }
 
 void GameModeFree::deinit()
 {
-	while( mSpectators.size() > 0 )
+	mSpectators.clear();
+	mBoxes.clear();
+
+	while( mEntities.size() > 0 )
 	{
-		Entity* back = mSpectators.back();
-		mSpectators.pop_back();
+		Entity* back = mEntities.back();
+		mEntities.pop_back();
 
 		entitysys::destroyEntity(back);
 	}

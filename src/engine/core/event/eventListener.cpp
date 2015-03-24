@@ -8,12 +8,17 @@
 #include "pch.h"
 #include "eventListener.h"
 
-int EventListener::getEventType()
+EVT_EventType EventListener::getEventType()
 {
     return m_EventType;
 }
 
-void EventListener::setEventType( int eventType )
+void EventListener::setEventType( EVT_EventType eventType )
 {
     m_EventType = eventType;
+}
+
+EventListener::EventListener()
+{
+	m_EventType = EVT_NULL;
 }

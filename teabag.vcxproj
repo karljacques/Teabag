@@ -120,6 +120,7 @@
     <ClCompile Include="src\engine\manager\game\frame.cpp" />
     <ClCompile Include="src\engine\manager\network\snapshot.cpp" />
     <ClCompile Include="src\engine\manager\network\snapshotManager.cpp" />
+    <ClCompile Include="src\game\boxFactory.cpp" />
     <ClCompile Include="src\game\gameModeFree.cpp" />
     <ClCompile Include="src\game\SpectatorFactory.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\engine\manager\game\frame.h" />
     <ClInclude Include="src\engine\manager\network\snapshot.h" />
     <ClInclude Include="src\engine\manager\network\snapshotManager.h" />
+    <ClInclude Include="src\game\boxFactory.h" />
     <ClInclude Include="src\game\gameModeFree.h" />
     <ClInclude Include="src\game\SpectatorFactory.h" />
     <ClInclude Include="src\main.h" />

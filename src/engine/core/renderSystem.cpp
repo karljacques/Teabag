@@ -83,9 +83,6 @@ void render::init( void )
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media","FileSystem");
 	Ogre::ResourceGroupManager::getSingleton().declareResource("dejavu.gorilla", "Material");
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	//Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("General");
-
-	m_SceneMgr->setSkyBox(true, "Skybox",80.0f );
 }
 
 void render::destroy( void )

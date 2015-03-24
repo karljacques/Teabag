@@ -8,7 +8,7 @@
 void SpectatorManager::handle( Event* e )
 {
 	/* Transform key presses into directions */
-	if( e->getEventType() == EV_CORE_KEY_PRESS )
+	if( e->getEventID() == EV_CORE_KEY_PRESS )
 	{
 		// Cast to key press
 		KeyboardEvent* k = e->getData<KeyboardEvent>();
@@ -42,7 +42,7 @@ void SpectatorManager::handle( Event* e )
 		}
 	}
 
-	if( e->getEventType() == EV_CORE_KEY_RELEASE )
+	if( e->getEventID() == EV_CORE_KEY_RELEASE )
 	{
 		KeyboardEvent* k = e->getData<KeyboardEvent>();
 
@@ -74,7 +74,7 @@ void SpectatorManager::handle( Event* e )
 		}
 	}
 	/* Handle mouse movement */
-	if( e->getEventType() == EV_CORE_MOUSE_MOVEMENT )
+	if( e->getEventID() == EV_CORE_MOUSE_MOVEMENT )
 	{
 		MouseEvent* me = e->getData<MouseEvent>();
 		
@@ -87,7 +87,7 @@ void SpectatorManager::handle( Event* e )
 			if( entitysys::getByID(s->ID)->getComponent<PlayerComponent>()->pGUID == network::getPlayerGUID() )
 			{
 				s->xAng = s->xAng*Quat::RotateX( -me->mMouseMoveY/1000.0f );
-				s->yAng = s->yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f );
+				s->yAng = s->yAng*Quat::RotateY( -me->mMouseMoveX/1000.0f ); 
 
 				// Get the physics component - set new orientation
 				PhysicsComponent* phys = entitysys::getByID(s->ID)->getComponent<PhysicsComponent>();

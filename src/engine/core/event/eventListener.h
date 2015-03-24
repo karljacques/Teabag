@@ -18,13 +18,16 @@ class EventListener
 {
 public:
 
+	EventListener();
+	virtual ~EventListener();
+
     virtual void handle( Event* e ) = 0;
 
-    void    setEventType( const int eventType );
-    int     getEventType( );
+    void			setEventType( const EVT_EventType eventType );
+    EVT_EventType   getEventType( );
 private:
 
-    int m_EventType;
+    EVT_EventType m_EventType;
 
 };
 #endif /* defined(__YorkshireTea__EventListener__) */

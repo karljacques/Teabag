@@ -3,6 +3,7 @@
 
 #include "engine/manager/game/frame.h"
 #include "game/SpectatorFactory.h"
+#include "game/boxFactory.h"
 
 #include "engine/core/event/events/spawnEvent.h"
 
@@ -24,7 +25,11 @@ public:
 private:
 
 	SpectatorFactory mSpectatorFactory;
+	BoxFactory mBoxFactory;
+
 	std::vector<Entity*> mSpectators;
+	std::vector<Entity*> mEntities;
+	std::vector<Entity*> mBoxes;
 
 	Entity* mLocalSpectator;
 

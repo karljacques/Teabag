@@ -28,7 +28,7 @@ namespace eventsys
 	void deregisterListener( std::weak_ptr<EventListener> e );
 
 	// Get an inactive event
-	Event* get( int eventType, int ID = 0, EventListener* sentBy = nullptr );
+	Event* get( EVT_EventType eventType, EV_EventID eventID,  int ID = 0, EventListener* sentBy = nullptr );
 
 	// Puts an event back in the inactive pool.
 	void release( Event* e );

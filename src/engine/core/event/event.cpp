@@ -8,23 +8,35 @@
 #include "pch.h"
 #include "event.h"
 
-Event::Event( int eventType )
+Event::Event( EVT_EventType eventType, EV_EventID eventID )
 {
-    mEventType = eventType;
+	mEventType = eventType;
+    mEventID = eventID;
+
 	eGUID = 0;
 	ID = 0;
 	sentBy = nullptr;
 }
 
-int Event::getEventType()
+EV_EventID Event::getEventID()
 {
-    return mEventType;
+    return mEventID;
 }
 
 
-void Event::changeEventType(int ev)
+void Event::changeEventID(EV_EventID ev)
 {
-	mEventType = ev;
+	mEventID = ev;
+}
+
+EVT_EventType Event::getEventType()
+{
+	return mEventType;
+}
+
+void Event::changeEventType(EVT_EventType EVT)
+{
+	this->mEventType = EVT;
 }
 
 void Event::clone( Event* e )
@@ -45,6 +57,9 @@ char* Event::getRawData()
 {
 	return data;
 }
+
+
+
 
 
 

@@ -14,7 +14,7 @@ SnapshotManager::SnapshotManager( NetworkManager* networkSystem )
 
 void SnapshotManager::handle(Event* e)
 {
-	if( e->getEventType() == EV_NETWORK_INCOMING_SNAPSHOT )
+	if( e->getEventID() == EV_NETWORK_INCOMING_SNAPSHOT )
 	{
 		// Get snapshot data
 		unsigned char* start = e->getData<NewSnapshotEvent>()->start;

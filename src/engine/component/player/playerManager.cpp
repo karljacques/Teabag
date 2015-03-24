@@ -59,7 +59,7 @@ void PlayerManager::constructFromData(char* data)
 
 void PlayerManager::handle(Event* e)
 {
-	switch( e->getEventType() )
+	switch( e->getEventID() )
 	{
 	case EV_NETWORK_PLAYER_DATA:
 		{
@@ -71,7 +71,7 @@ void PlayerManager::handle(Event* e)
 
 			// As I am host, inform clients of new player - dispatch local event too.
 			// Clone event, send to all under 'EV_NETWORK_PLAYER_JOINED'
-			Event* newEvent = eventsys::get( EV_NETWORK_PLAYER_JOINED );
+			Event* newEvent = eventsys::get( EVT_NETWORK, EV_NETWORK_PLAYER_JOINED );
 
 			newEvent->clone( e );
 			network::sendEvent( newEvent, HIGH_PRIORITY, RELIABLE );
@@ -95,7 +95,7 @@ void PlayerManager::handle(Event* e)
 
 				// Send message to listeners that the client is ready for init data
 				// This is where you can send things like spawners and level load stuff, for example.
-				Event* initEvent = eventsys::get( EV_NETWORK_INIT_READY );
+				Event* initEvent = eventsys::get( EVT_NETWORK, EV_NETWORK_INIT_READY );
 				PlayerEvent* playerEvent = initEvent->createEventData<PlayerEvent>();
 				playerEvent->pGUID = p->pGUID;
 				eventsys::dispatch(initEvent);
@@ -107,7 +107,7 @@ void PlayerManager::handle(Event* e)
 		{
 			// Signal from the network system that we've connected to a host, we'll need to send it our player data
 			Player* p = this->getPlayerByGUID(mLocalPlayer).get();
-			Event* ne = new Event( EV_NETWORK_PLAYER_DATA );
+			Event* ne = new Event( EVT_NETWORK, EV_NETWORK_PLAYER_DATA );
 			PlayerEvent* pe = ne->createEventData<PlayerEvent>();
 
 			assert( p->username.size() < USERNAME_LENGTH );

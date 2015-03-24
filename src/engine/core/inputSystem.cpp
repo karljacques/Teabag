@@ -32,7 +32,7 @@ void input::update()
 				if( m_inputEvent.key.repeat == false || m_inputEvent.key.keysym.scancode == SDL_SCANCODE_BACKSPACE ) // Allow backspace to have repeat strokes
 				{
 					// Key down, create and dispatch event
-					Event*	e = eventsys::get(EV_CORE_KEY_PRESS );
+					Event*	e = eventsys::get( EVT_CORE, EV_CORE_KEY_PRESS );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mPressed = true;
 					ke->mReleased =false;
@@ -46,7 +46,7 @@ void input::update()
 			case SDL_KEYUP:
 				{
 					// Key down, create and dispatch event
-					Event*	e = eventsys::get(EV_CORE_KEY_RELEASE );
+					Event*	e = eventsys::get(EVT_CORE, EV_CORE_KEY_RELEASE );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mPressed = false;
 					ke->mReleased = true;
@@ -58,7 +58,7 @@ void input::update()
 
 			case SDL_TEXTINPUT:
 				{
-					Event* e = eventsys::get(EV_CORE_TEXT_INPUT );
+					Event* e = eventsys::get(EVT_CORE, EV_CORE_TEXT_INPUT );
 					KeyboardEvent* ke = e->createEventData<KeyboardEvent>();
 					ke->mKey = *m_inputEvent.text.text;
 					eventsys::dispatchNow(e);
@@ -80,7 +80,7 @@ void input::update()
 
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					Event* e = eventsys::get( EV_CORE_MOUSE_PRESS );
+					Event* e = eventsys::get( EVT_CORE, EV_CORE_MOUSE_PRESS );
 					MouseEvent* m = e->createEventData<MouseEvent>();
 					m->mMouseButton = m_inputEvent.button.button;
 					eventsys::dispatchNow(e);
@@ -109,7 +109,7 @@ void input::update()
 		int DeltaY = MouseY - y;
 		if( DeltaX != 0 || DeltaY != 0 )
 		{
-			Event* e = eventsys::get( EV_CORE_MOUSE_MOVEMENT );
+			Event* e = eventsys::get( EVT_CORE, EV_CORE_MOUSE_MOVEMENT );
 			MouseEvent* m = e->createEventData<MouseEvent>();
 			m->mMouseMoveX = DeltaX;
 			m->mMouseMoveY = DeltaY;

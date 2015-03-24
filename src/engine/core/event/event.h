@@ -10,8 +10,20 @@
 
 #define EVENT_PAYLOAD_SIZE 128 // Largest Event
 
-// All the possible types of event used within the game.
-enum EV_EventType
+// All the types of event used in the engine.
+enum EVT_EventType
+{
+	EVT_NULL = 0,
+	EVT_RENDER = 1,
+	EVT_NETWORK = 2,
+	EVT_PHYSICS = 4,
+	EVT_PLAYER = 8,
+	EVT_ACTION = 16,
+	EVT_CORE = 32
+};
+
+// All the possible IDs of event used within the game.
+enum EV_EventID
 {
 	// DEFAULT
 	EV_NULL,
@@ -67,14 +79,20 @@ class Event
 {
 
 public:
-					Event( int eventType );
+	Event( EVT_EventType eventType, EV_EventID eventID );
 
 	// Returns the event type (EV_EventType) of this event.
-    int				getEventType();
+    EV_EventID		getEventID();
 
-	// Changes the event type - only use this if you know what you're doing ;-)
+	// Changes the event ID - only use this if you know what you're doing ;-)
 	// Should always be copied first
-	void			changeEventType( int ev );
+	void			changeEventID( EV_EventID ev );
+
+	// Gets the type of event, used for filtering.
+	EVT_EventType	getEventType();
+
+	// Changes the event ID - only use this if you know what you're doing ;-)
+	void			changeEventType( EVT_EventType EVT );
 
 	/* pGUID represents the GUID of the client that sent the event - it will be attached by the networkSystem before sending.*/
 	PlayerGUID		pGUID; 
@@ -130,8 +148,11 @@ public:
 
 private:
 
-	/* Type of the event. Can be set in the construct or changed using changeEventType. Retrieved with getEventType. */
-    int				mEventType;
+	/* ID of the event. Can be set in the construct or changed using changeEventID. Retrieved with getEventID. */
+    EV_EventID		mEventID;
+
+	/* Type of event, used as a broad filter so that rendering isn't receiving events concerning input, for example. */
+	EVT_EventType	mEventType;
 
 	/* This is the payload of the event, it can be casted to different classes using methods createEventData and getData */
 	char			data[EVENT_PAYLOAD_SIZE];

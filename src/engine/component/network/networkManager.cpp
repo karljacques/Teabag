@@ -69,7 +69,7 @@ void NetworkManager::_update_client(double dt)
 void NetworkManager::_handle_host(Event* e)
 {
 
-	switch( e->getEventType() )
+	switch( e->getEventID() )
 	{
 	case EV_CORE_CHAT_MESSAGE:
 	case EV_CLIENT_WORLD_CREATE_DYNAMIC_BOX:
@@ -89,7 +89,7 @@ void NetworkManager::_handle_host(Event* e)
 void NetworkManager::_handle_client(Event* e)
 {
 
-	switch (e->getEventType())
+	switch (e->getEventID())
 	{
 	case EV_CORE_CHAT_MESSAGE:
 		break;

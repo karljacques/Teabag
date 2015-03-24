@@ -64,9 +64,6 @@ Engine::Engine()
 	entitysys::registerComponentManager<SpectatorComponent>(mSpectatorManager.get());
 	entitysys::registerComponentManager<PlayerComponent>(mPlayerMgr.get());
 
-	// Register the engine to receive input events
-    this->setEventType(EV_CORE_KEY_PRESS||EV_CORE_KEY_RELEASE );
-
 	// Register all the listening managers as listeners
 	eventsys::registerListener(mPhysicsManager);
 	eventsys::registerListener(mRenderManager);
@@ -87,11 +84,12 @@ Engine::Engine()
 
 	printm("RAKNET_PROTOCOL_VERSION_LOCAL:" + std::to_string( RAKNET_PROTOCOL_VERSION ));
 
+	eventsys::update();
+
 	// Default frame
 	std::shared_ptr<Frame> defaultFrame = std::shared_ptr<Frame>( new GameModeFree( ) );
 	queueFrame(defaultFrame);
 	
-
 	// Create the ground
 	{
 		// Create the ground
@@ -102,13 +100,61 @@ Engine::Engine()
 
 		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ground);
 		mRenderManager->initComponent( rend );
-		mRenderManager->setAsBox(rend, float3(20.0f,0.4f,20.0f), "SimpleGround/Textured" );
+		mRenderManager->setAsBox(rend, float3(20.0f,0.4f,20.0f), "Grid/Grey" );
+		entitysys::getByID(ground)->addComponent(rend);
+
+
+		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ground);
+		mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.2f,10.0f ) ), 0);
+		entitysys::getByID(ground)->addComponent(phys);
+
+	}
+
+	// Create the ceiling
+	{
+		EntID ground = entitysys::createEntity();
+
+		TransformComponent* trans = entitysys::createComponent<TransformComponent>(ground);
+		entitysys::getByID(ground)->addComponent(trans);
+
+		RenderComponent* rend = entitysys::createComponent<RenderComponent>(ground);
+		mRenderManager->initComponent( rend );
+		mRenderManager->setAsBox(rend, float3(20.0f,0.4f,20.0f), "Grid/Grey" );
 		entitysys::getByID(ground)->addComponent(rend);
 
 		PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(ground);
 		mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 0.2f,10.0f ) ), 0);
 		entitysys::getByID(ground)->addComponent(phys);
+
+		ENT_SET_TRANSFORM( ground, float3(0,4.0f,0 ), Quat(0,0,0,1));
 	}
+
+	EntID wall = entitysys::createEntity();
+
+	TransformComponent* trans = entitysys::createComponent<TransformComponent>(wall);
+	entitysys::getByID(wall)->addComponent(trans);
+
+	RenderComponent* rend = entitysys::createComponent<RenderComponent>(wall);
+	mRenderManager->initComponent( rend );
+	mRenderManager->setAsBox(rend, float3(20.0f,4.0f,0.4f), "Grid/Orange" );
+	entitysys::getByID(wall)->addComponent(rend);
+
+	PhysicsComponent* phys = entitysys::createComponent<PhysicsComponent>(wall);
+	mPhysicsManager->initComponent( phys,new btBoxShape( float3(10.0f, 2.0f,0.2f ) ), 0);
+	entitysys::getByID(wall)->addComponent(phys);
+
+	ENT_SET_TRANSFORM( wall, float3(0.0f,2.0f,10.0f), Quat(0,0,0,1));
+	EntityPrototype* wallProto = new EntityPrototype( entitysys::getByID(wall) );
+
+	Entity* wall2 = wallProto->spawn();
+	ENT_SET_TRANSFORM( wall2->ID, float3( 0.0f, 2.0f, -10.0f), Quat(0,0,0,1));
+
+	Entity* wall3 = wallProto->spawn();
+	ENT_SET_TRANSFORM( wall3->ID, float3( 10.0f, 2.0f, 0.0f), Quat::RotateY( 3.14/2.0f ));
+
+	Entity* wall4 = wallProto->spawn();
+	ENT_SET_TRANSFORM( wall4->ID, float3( -10.0f, 2.0f, 0.0f), Quat::RotateY( 3.14/2.0f ));
+
 }
 
 Engine::~Engine()

@@ -78,8 +78,9 @@ void PhysicsManager::update( double dt )
 
 void PhysicsManager::handle( Event* e )
 {
-	switch ( e->getEventType() )
+	switch ( e->getEventID() )
 	{
+
 	case EV_CORE_SET_TRANSFORM:
 
 		// Get the component the event refers to

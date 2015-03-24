@@ -17,7 +17,7 @@ material SimpleCrate/Textured
     }
  }
  
- material SimpleGround/Textured
+ material Grid/Orange
  {
     technique
     {
@@ -25,8 +25,29 @@ material SimpleCrate/Textured
         {
           texture_unit
           {
-            texture SimpleGroundTexture.jpg
-            scale 0.1 0.1
+            texture grid_orange.png
+			filtering anisotropic
+            scale 0.07 0.3
+            // this means that the texture will be tiled 10 times (1/10 = 0.1)
+			
+			
+          }
+		  lighting off	 
+       }  
+    }
+ }
+ 
+  material Grid/Grey
+ {
+    technique
+    {
+       pass
+        {
+          texture_unit
+          {
+            texture grid_grey.png
+			filtering anisotropic
+            scale 0.07 0.07
             // this means that the texture will be tiled 10 times (1/10 = 0.1)
 			
 			

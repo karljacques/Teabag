@@ -81,6 +81,9 @@
     <ClCompile Include="src\engine\manager\game\frame.cpp">
       <Filter>engine\manager\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\boxFactory.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="src\engine\core\event\events\spawnEvent.h">
       <Filter>engine\core\event\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\boxFactory.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

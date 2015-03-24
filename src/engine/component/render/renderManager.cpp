@@ -50,7 +50,7 @@ void RenderManager::setAsSphere(RenderComponent* sphere, float radius, std::stri
 
 void RenderManager::handle( Event* e )
 {
-	switch ( e->getEventType() )
+	switch ( e->getEventID() )
 	{
 	case EV_CORE_SET_TRANSFORM:
 

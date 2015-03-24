@@ -19,7 +19,7 @@ void eventsys::init( void )
 	/* Create a pool of events. */
 	for( int i=0; i<MAX_EVENT_POOL; i++ )
 	{
-		mEventPool.push_back( new Event(EV_NULL));
+		mEventPool.push_back( new Event(EVT_NULL, EV_NULL));
 	}
 }
 
@@ -28,7 +28,7 @@ void eventsys::dispatch( Event* e )
 {
 
 	/* Prevent Null Events */
-	assert( e->getEventType() != EV_NULL );
+	assert( e->getEventID() != EV_NULL );
 
 	// Push to a queue so we don't invalid iterators when event handlers dispatch events themselves
 	mEventList.push(e);
@@ -120,7 +120,7 @@ void eventsys::deregisterListener( std::weak_ptr<EventListener> e )
 }
 
 /* Get a new event. This must remove it from the pool of events */
-Event* eventsys::get( int eventType, int ID, EventListener* sentBy )
+Event* eventsys::get( EVT_EventType eventType, EV_EventID eventID, int ID, EventListener* sentBy )
 {
 	Event* e;
 	/* Check there are enough events, remove it, set type and return */
@@ -129,11 +129,12 @@ Event* eventsys::get( int eventType, int ID, EventListener* sentBy )
 		e = mEventPool.back();
 		mEventPool.pop_back();
 		e->changeEventType(eventType);
+		e->changeEventID(eventID);
 	}
 	else
 	{
 		/* Not enough events in pool, create a new one. This is slower - make sure there are enough in the pool to satisfy the game */
-		e  = new Event(eventType);
+		e  = new Event(eventType,eventID);
 		
 	}
 
@@ -151,8 +152,8 @@ void eventsys::release(Event* e)
 #ifdef _DEBUG
 	e->d_initialised = false;
 #endif
-
-	e->changeEventType(EV_NULL); // Help identify rogue events
+	e->changeEventType( EVT_NULL );
+	e->changeEventID(EV_NULL); // Help identify rogue events
 
 	/* Prevent duplicates in the pool */
 	//if( std::find( mEventPool.begin(), mEventPool.end(), e ) == mEventPool.end() )

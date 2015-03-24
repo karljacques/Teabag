@@ -8,7 +8,7 @@
 	ENT_SET_MOTION( ID, float3(0,20,0), float(0,0,0));*/
 #define ENT_SET_MOTION( id_of_entity, velocity_of_entity, angvel_of_entity )\
 		{\
-			Event* setMot_event_macro = eventsys::get(EV_CORE_SET_MOTION, id_of_entity, this );\
+			Event* setMot_event_macro = eventsys::get(EVT_PHYSICS, EV_CORE_SET_MOTION, id_of_entity, this );\
 			MotionEvent* mot_event_macro = setMot_event_macro->createEventData<MotionEvent>();\
 			mot_event_macro->velocity = velocity_of_entity ;\
 			mot_event_macro->angularVelocity = angvel_of_entity;\

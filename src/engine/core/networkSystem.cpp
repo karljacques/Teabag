@@ -95,7 +95,7 @@ char* network::_encode_event(Event* e, int &offset)
 	offset+=1;
 
 	// Set event type
-	payload[offset] = (unsigned char)(e->getEventType() );
+	payload[offset] = (unsigned char)(e->getEventID() );
 	offset+=1;
 
 	// Copy in casted event to the payload, offset by 1 byte
@@ -201,7 +201,7 @@ void network::_update_server( void )
 				// Decode the event
 				Event* tmp = network::_decode_event((char*)packet->data);
 				assert( tmp != nullptr );
-				Event* e = eventsys::get( tmp->getEventType() );
+				Event* e = eventsys::get( tmp->getEventType(), tmp->getEventID() );
 				e->clone(tmp);
 				eventsys::dispatch(e);
 				delete tmp;
@@ -211,7 +211,7 @@ void network::_update_server( void )
 			{
 				 // Pass packet on to the snapshot manager, which will deal with it
 				// Handle the snapshot immediately because it will be dealloced
-				Event* e = eventsys::get(EV_NETWORK_INCOMING_SNAPSHOT);
+				Event* e = eventsys::get(EVT_NETWORK, EV_NETWORK_INCOMING_SNAPSHOT);
 				NewSnapshotEvent* snapshot = e->createEventData<NewSnapshotEvent>();
 				snapshot->start = packet->data;
 				snapshot->length = packet->length;
@@ -241,7 +241,7 @@ void network::_update_client( void )
 				printm("Connection Success");
 
 				// Inform engine that a connection has been established - carries no data
-				Event* e = eventsys::get(EV_NETWORK_NEW_CONNECTION);
+				Event* e = eventsys::get(EVT_NETWORK, EV_NETWORK_NEW_CONNECTION);
 				eventsys::dispatch(e);
 				break;
 			}
@@ -258,7 +258,7 @@ void network::_update_client( void )
 		case DPT_SNAPSHOT:
 			{
 				// Pass packet on to the snapshot manager, which will deal with it
-				Event* e = eventsys::get(EV_NETWORK_INCOMING_SNAPSHOT);
+				Event* e = eventsys::get(EVT_NETWORK, EV_NETWORK_INCOMING_SNAPSHOT);
 				NewSnapshotEvent* snapshot = e->createEventData<NewSnapshotEvent>();
 				snapshot->start = packet->data;
 				snapshot->length = packet->length;
@@ -271,7 +271,7 @@ void network::_update_client( void )
 				// Decode the event
 				Event* tmp = network::_decode_event((char*)packet->data);
 				assert( tmp != nullptr );
-				Event* e = eventsys::get( tmp->getEventType() );
+				Event* e = eventsys::get( tmp->getEventType(), tmp->getEventID() );
 				e->clone(tmp);
 				eventsys::dispatch(e);
 				delete tmp;
